@@ -11,15 +11,28 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
+import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { StringFilter } from "../../util/StringFilter";
 import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class OrganizationWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => ClusterListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => ClusterListRelationFilter)
+  @IsOptional()
+  @Field(() => ClusterListRelationFilter, {
+    nullable: true,
+  })
+  clusters?: ClusterListRelationFilter;
+
   @ApiProperty({
     required: false,
     type: StringFilter,

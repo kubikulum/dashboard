@@ -23,6 +23,8 @@ import { Organization } from "./Organization";
 import { OrganizationCountArgs } from "./OrganizationCountArgs";
 import { OrganizationFindUniqueArgs } from "./OrganizationFindUniqueArgs";
 import { UpdateOrganizationArgs } from "./UpdateOrganizationArgs";
+import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
+import { Cluster } from "../../cluster/base/Cluster";
 import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { OrganizationService } from "../organization.service";
@@ -97,6 +99,26 @@ export class OrganizationResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Cluster], { name: "clusters" })
+  @nestAccessControl.UseRoles({
+    resource: "Cluster",
+    action: "read",
+    possession: "any",
+  })
+  async findClusters(
+    @graphql.Parent() parent: Organization,
+    @graphql.Args() args: ClusterFindManyArgs
+  ): Promise<Cluster[]> {
+    const results = await this.service.findClusters(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)

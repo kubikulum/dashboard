@@ -286,5 +286,185 @@
     "resource": "Organization",
     "action": "read:any",
     "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
   }
 ]

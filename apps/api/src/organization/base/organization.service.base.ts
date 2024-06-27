@@ -10,9 +10,11 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
+
 import {
   Prisma,
   Organization as PrismaOrganization,
+  Cluster as PrismaCluster,
   User as PrismaUser,
 } from "@prisma/client";
 
@@ -49,6 +51,17 @@ export class OrganizationServiceBase {
     args: Prisma.OrganizationDeleteArgs
   ): Promise<PrismaOrganization> {
     return this.prisma.organization.delete(args);
+  }
+
+  async findClusters(
+    parentId: string,
+    args: Prisma.ClusterFindManyArgs
+  ): Promise<PrismaCluster[]> {
+    return this.prisma.organization
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .clusters(args);
   }
 
   async findMembers(

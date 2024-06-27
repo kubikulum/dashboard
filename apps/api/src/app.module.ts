@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "./user/user.module";
 import { OrganizationModule } from "./organization/organization.module";
-import { KubeflowClusterModule } from "./KubeflowCluster/kubeflowcluster.module";
+import { ClusterModule } from "./cluster/cluster.module";
 import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
@@ -21,7 +21,7 @@ import { AuthModule } from "./auth/auth.module";
     AuthModule,
     UserModule,
     OrganizationModule,
-    KubeflowClusterModule,
+    ClusterModule,
     HealthModule,
     PrismaModule,
     SecretsManagerModule,

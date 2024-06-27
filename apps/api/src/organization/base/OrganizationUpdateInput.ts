@@ -11,7 +11,7 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { UserUpdateManyWithoutOrganizationsInput } from "./UserUpdateManyWithoutOrganizationsInput";
+import { ClusterUpdateManyWithoutOrganizationsInput } from "./ClusterUpdateManyWithoutOrganizationsInput";
 import {
   ValidateNested,
   IsOptional,
@@ -19,10 +19,23 @@ import {
   MaxLength,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { UserUpdateManyWithoutOrganizationsInput } from "./UserUpdateManyWithoutOrganizationsInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class OrganizationUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => ClusterUpdateManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => ClusterUpdateManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => ClusterUpdateManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  clusters?: ClusterUpdateManyWithoutOrganizationsInput;
+
   @ApiProperty({
     required: false,
     type: () => UserUpdateManyWithoutOrganizationsInput,

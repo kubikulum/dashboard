@@ -11,27 +11,28 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { Cluster } from "../../cluster/base/Cluster";
+import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import {
-  ValidateNested,
-  IsOptional,
+  IsEnum,
   IsDate,
   IsString,
-  MaxLength,
+  ValidateNested,
+  IsOptional,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { User } from "../../user/base/User";
+import { Organization } from "../../organization/base/Organization";
 
 @ObjectType()
-class Organization {
+class Cluster {
   @ApiProperty({
-    required: false,
-    type: () => [Cluster],
+    required: true,
+    enum: EnumClusterClusterType,
   })
-  @ValidateNested()
-  @Type(() => Cluster)
-  @IsOptional()
-  clusters?: Array<Cluster>;
+  @IsEnum(EnumClusterClusterType)
+  @Field(() => EnumClusterClusterType, {
+    nullable: true,
+  })
+  clusterType?: "kubeflow" | "flyte";
 
   @ApiProperty({
     required: true,
@@ -51,45 +52,12 @@ class Organization {
 
   @ApiProperty({
     required: false,
-    type: () => [User],
+    type: () => Organization,
   })
   @ValidateNested()
-  @Type(() => User)
+  @Type(() => Organization)
   @IsOptional()
-  members?: Array<User>;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  name!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: () => User,
-  })
-  @ValidateNested()
-  @Type(() => User)
-  @IsOptional()
-  owner?: User | null;
+  organization?: Organization | null;
 
   @ApiProperty({
     required: true,
@@ -100,4 +68,4 @@ class Organization {
   updatedAt!: Date;
 }
 
-export { Organization as Organization };
+export { Cluster as Cluster };
