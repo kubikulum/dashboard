@@ -135,15 +135,12 @@ class User {
   updatedAt!: Date;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  username!: string | null;
+  @Field(() => String)
+  username!: string;
 }
 
 export { User as User };

@@ -139,7 +139,7 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  username?: string | null;
+  username?: string;
 }
 
 export { UserUpdateInput as UserUpdateInput };

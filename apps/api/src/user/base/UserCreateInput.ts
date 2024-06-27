@@ -128,15 +128,12 @@ class UserCreateInput {
   roles!: InputJsonValue;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  username?: string | null;
+  @Field(() => String)
+  username!: string;
 }
 
 export { UserCreateInput as UserCreateInput };

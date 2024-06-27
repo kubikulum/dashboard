@@ -84,6 +84,12 @@
     "attributes": "*"
   },
   {
+    "role": "admin",
+    "resource": "User",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
     "role": "owner",
     "resource": "User",
     "action": "delete:any",
@@ -97,12 +103,6 @@
   },
   {
     "role": "serviceaccountmanager",
-    "resource": "User",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "admin",
     "resource": "User",
     "action": "delete:any",
     "attributes": "*"
