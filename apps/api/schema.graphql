@@ -1,0 +1,256 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Cluster {
+  clusterType: EnumClusterClusterType
+  createdAt: DateTime!
+  id: String!
+  updatedAt: DateTime!
+}
+
+input ClusterListRelationFilter {
+  every: ClusterWhereInput
+  none: ClusterWhereInput
+  some: ClusterWhereInput
+}
+
+input ClusterOrderByInput {
+  clusterType: SortOrder
+  createdAt: SortOrder
+  id: SortOrder
+  organizationId: SortOrder
+  updatedAt: SortOrder
+}
+
+input ClusterUpdateManyWithoutOrganizationsInput {
+  connect: [ClusterWhereUniqueInput!]
+  disconnect: [ClusterWhereUniqueInput!]
+  set: [ClusterWhereUniqueInput!]
+}
+
+input ClusterWhereInput {
+  clusterType: EnumClusterClusterType
+  id: StringFilter
+  organization: OrganizationWhereUniqueInput
+}
+
+input ClusterWhereUniqueInput {
+  id: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum EnumClusterClusterType {
+  Flyte
+  Kubeflow
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type MetaQueryPayload {
+  count: Float!
+}
+
+type Mutation {
+  createUser(data: UserCreateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User!
+  updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
+}
+
+type Organization {
+  clusters(orderBy: [ClusterOrderByInput!], skip: Float, take: Float, where: ClusterWhereInput): [Cluster!]!
+  createdAt: DateTime!
+  id: String!
+  members(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
+  name: String
+  oidcId: String
+  owner: User
+  updatedAt: DateTime!
+}
+
+input OrganizationCreateNestedManyWithoutUsersInput {
+  connect: [OrganizationWhereUniqueInput!]
+}
+
+input OrganizationListRelationFilter {
+  every: OrganizationWhereInput
+  none: OrganizationWhereInput
+  some: OrganizationWhereInput
+}
+
+input OrganizationOrderByInput {
+  createdAt: SortOrder
+  id: SortOrder
+  name: SortOrder
+  oidcId: SortOrder
+  ownerId: SortOrder
+  updatedAt: SortOrder
+}
+
+input OrganizationUpdateInput {
+  clusters: ClusterUpdateManyWithoutOrganizationsInput
+  members: UserUpdateManyWithoutOrganizationsInput
+  name: String
+  oidcId: String
+  owner: UserWhereUniqueInput
+}
+
+input OrganizationUpdateManyWithoutUsersInput {
+  connect: [OrganizationWhereUniqueInput!]
+  disconnect: [OrganizationWhereUniqueInput!]
+  set: [OrganizationWhereUniqueInput!]
+}
+
+input OrganizationWhereInput {
+  clusters: ClusterListRelationFilter
+  id: StringFilter
+  members: UserListRelationFilter
+  name: StringNullableFilter
+  oidcId: StringNullableFilter
+  owner: UserWhereUniqueInput
+}
+
+input OrganizationWhereUniqueInput {
+  id: String!
+}
+
+type Query {
+  _organizationsMeta(where: OrganizationWhereInput): MetaQueryPayload!
+  _usersMeta(where: UserWhereInput): MetaQueryPayload!
+  cluster(where: ClusterWhereUniqueInput!): Cluster
+  organization(where: OrganizationWhereUniqueInput!): Organization
+  user(where: UserWhereUniqueInput!): User
+  users(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
+}
+
+enum QueryMode {
+  Default
+  Insensitive
+}
+
+enum SortOrder {
+  Asc
+  Desc
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+type User {
+  createdAt: DateTime!
+  email: String
+  firstName: String
+  id: String!
+  lastName: String
+  oidcId: String
+  organization: String
+  organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
+  ownerOrganizations: Organization
+  roles: JSON!
+  updatedAt: DateTime!
+  username: String!
+}
+
+input UserCreateInput {
+  email: String
+  firstName: String
+  lastName: String
+  oidcId: String
+  organization: String
+  organizations: OrganizationCreateNestedManyWithoutUsersInput
+  ownerOrganizations: OrganizationWhereUniqueInput
+  password: String
+  roles: JSON!
+  username: String!
+}
+
+input UserListRelationFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
+}
+
+input UserOrderByInput {
+  createdAt: SortOrder
+  email: SortOrder
+  firstName: SortOrder
+  id: SortOrder
+  lastName: SortOrder
+  oidcId: SortOrder
+  organization: SortOrder
+  ownerOrganizationsId: SortOrder
+  password: SortOrder
+  roles: SortOrder
+  updatedAt: SortOrder
+  username: SortOrder
+}
+
+input UserUpdateInput {
+  email: String
+  firstName: String
+  lastName: String
+  oidcId: String
+  organization: String
+  organizations: OrganizationUpdateManyWithoutUsersInput
+  ownerOrganizations: OrganizationWhereUniqueInput
+  password: String
+  roles: JSON
+  username: String
+}
+
+input UserUpdateManyWithoutOrganizationsInput {
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+}
+
+input UserWhereInput {
+  email: StringNullableFilter
+  firstName: StringNullableFilter
+  id: StringFilter
+  lastName: StringNullableFilter
+  oidcId: StringNullableFilter
+  organization: StringNullableFilter
+  organizations: OrganizationListRelationFilter
+  ownerOrganizations: OrganizationWhereUniqueInput
+  username: StringFilter
+}
+
+input UserWhereUniqueInput {
+  id: String!
+}
