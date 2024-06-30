@@ -328,13 +328,6 @@ export class OrganizationControllerBase {
         id: true,
         lastName: true,
         organization: true,
-
-        ownerOrganizations: {
-          select: {
-            id: true,
-          },
-        },
-
         roles: true,
         updatedAt: true,
         username: true,

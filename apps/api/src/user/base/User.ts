@@ -100,12 +100,12 @@ class User {
 
   @ApiProperty({
     required: false,
-    type: () => Organization,
+    type: () => [Organization],
   })
   @ValidateNested()
   @Type(() => Organization)
   @IsOptional()
-  ownerOrganizations?: Organization | null;
+  ownerOrganizations?: Array<Organization>;
 
   @ApiProperty({
     required: true,

@@ -15,7 +15,7 @@ model User {
   lastName           String?
   organization       String?
   organizations      Organization[] @relation(name: "members")
-  ownerOrganizations Organization?  @relation(name: "owner")
+  ownerOrganizations Organization[] @relation(name: "owner")
   password           String?
   roles              Json
   updatedAt          DateTime       @updatedAt
@@ -29,7 +29,7 @@ model Organization {
   members   User[]    @relation(name: "members")
   name      String
   owner     User?     @relation(name: "owner", fields: [ownerId], references: [id])
-  ownerId   String?   @unique
+  ownerId   String?
   updatedAt DateTime  @updatedAt
 }
 
