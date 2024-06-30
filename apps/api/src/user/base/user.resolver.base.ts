@@ -88,15 +88,7 @@ export class UserResolverBase {
     try {
       return await this.service.updateUser({
         ...args,
-        data: {
-          ...args.data,
-
-          ownerOrganizations: args.data.ownerOrganizations
-            ? {
-                connect: args.data.ownerOrganizations,
-              }
-            : undefined,
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -148,23 +140,22 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => Organization, {
-    nullable: true,
-    name: "ownerOrganizations",
-  })
+  @graphql.ResolveField(() => [Organization], { name: "ownerOrganizations" })
   @nestAccessControl.UseRoles({
     resource: "Organization",
     action: "read",
     possession: "any",
   })
-  async getOwnerOrganizations(
-    @graphql.Parent() parent: User
-  ): Promise<Organization | null> {
-    const result = await this.service.getOwnerOrganizations(parent.id);
+  async findOwnerOrganizations(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: OrganizationFindManyArgs
+  ): Promise<Organization[]> {
+    const results = await this.service.findOwnerOrganizations(parent.id, args);
 
-    if (!result) {
-      return null;
+    if (!results) {
+      return [];
     }
-    return result;
+
+    return results;
   }
 }

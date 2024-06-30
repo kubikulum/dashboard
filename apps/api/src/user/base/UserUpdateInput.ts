@@ -19,7 +19,6 @@ import {
 } from "class-validator";
 import { OrganizationUpdateManyWithoutUsersInput } from "./OrganizationUpdateManyWithoutUsersInput";
 import { Type } from "class-transformer";
-import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
@@ -87,15 +86,15 @@ class UserUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationWhereUniqueInput,
+    type: () => OrganizationUpdateManyWithoutUsersInput,
   })
   @ValidateNested()
-  @Type(() => OrganizationWhereUniqueInput)
+  @Type(() => OrganizationUpdateManyWithoutUsersInput)
   @IsOptional()
-  @Field(() => OrganizationWhereUniqueInput, {
+  @Field(() => OrganizationUpdateManyWithoutUsersInput, {
     nullable: true,
   })
-  ownerOrganizations?: OrganizationWhereUniqueInput | null;
+  ownerOrganizations?: OrganizationUpdateManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,

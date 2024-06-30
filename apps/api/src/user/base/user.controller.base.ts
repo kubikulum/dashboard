@@ -60,13 +60,6 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         organization: true,
-
-        ownerOrganizations: {
-          select: {
-            id: true,
-          },
-        },
-
         roles: true,
         updatedAt: true,
         username: true,
@@ -98,13 +91,6 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         organization: true,
-
-        ownerOrganizations: {
-          select: {
-            id: true,
-          },
-        },
-
         roles: true,
         updatedAt: true,
         username: true,
@@ -137,15 +123,7 @@ export class UserControllerBase {
     try {
       return await this.service.updateUser({
         where: params,
-        data: {
-          ...data,
-
-          ownerOrganizations: data.ownerOrganizations
-            ? {
-                connect: data.ownerOrganizations,
-              }
-            : undefined,
-        },
+        data: data,
         select: {
           createdAt: true,
           email: true,
@@ -153,13 +131,6 @@ export class UserControllerBase {
           id: true,
           lastName: true,
           organization: true,
-
-          ownerOrganizations: {
-            select: {
-              id: true,
-            },
-          },
-
           roles: true,
           updatedAt: true,
           username: true,
@@ -199,13 +170,6 @@ export class UserControllerBase {
           id: true,
           lastName: true,
           organization: true,
-
-          ownerOrganizations: {
-            select: {
-              id: true,
-            },
-          },
-
           roles: true,
           updatedAt: true,
           username: true,
@@ -314,6 +278,109 @@ export class UserControllerBase {
   ): Promise<void> {
     const data = {
       organizations: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/ownerOrganizations")
+  @ApiNestedQuery(OrganizationFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "read",
+    possession: "any",
+  })
+  async findOwnerOrganizations(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<Organization[]> {
+    const query = plainToClass(OrganizationFindManyArgs, request.query);
+    const results = await this.service.findOwnerOrganizations(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        id: true,
+        name: true,
+
+        owner: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/ownerOrganizations")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async connectOwnerOrganizations(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: OrganizationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      ownerOrganizations: {
+        connect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/ownerOrganizations")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async updateOwnerOrganizations(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: OrganizationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      ownerOrganizations: {
+        set: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/ownerOrganizations")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectOwnerOrganizations(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: OrganizationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      ownerOrganizations: {
         disconnect: body,
       },
     };

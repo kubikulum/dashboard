@@ -50,13 +50,14 @@ export class UserServiceBase {
       .organizations(args);
   }
 
-  async getOwnerOrganizations(
-    parentId: string
-  ): Promise<PrismaOrganization | null> {
+  async findOwnerOrganizations(
+    parentId: string,
+    args: Prisma.OrganizationFindManyArgs
+  ): Promise<PrismaOrganization[]> {
     return this.prisma.user
-      .findUnique({
+      .findUniqueOrThrow({
         where: { id: parentId },
       })
-      .ownerOrganizations();
+      .ownerOrganizations(args);
   }
 }
