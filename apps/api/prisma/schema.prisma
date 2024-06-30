@@ -28,7 +28,7 @@ model Organization {
   createdAt DateTime  @default(now())
   id        String    @id @default(cuid())
   members   User[]    @relation(name: "members")
-  name      String?
+  name      String
   oidcId    String?   @unique
   owner     User?     @relation(name: "owner", fields: [ownerId], references: [id])
   ownerId   String?   @unique
