@@ -49,16 +49,13 @@ class OrganizationCreateInput {
   members?: UserCreateNestedManyWithoutOrganizationsInput;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
   @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  name?: string | null;
+  @Field(() => String)
+  name!: string;
 
   @ApiProperty({
     required: false,
