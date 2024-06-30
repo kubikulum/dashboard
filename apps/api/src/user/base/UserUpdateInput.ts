@@ -71,7 +71,7 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  oidcId?: string | null;
+  oidcId?: string;
 
   @ApiProperty({
     required: false,

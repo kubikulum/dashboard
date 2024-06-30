@@ -13,7 +13,7 @@ model User {
   firstName          String?
   id                 String         @id @default(cuid())
   lastName           String?
-  oidcId             String?        @unique
+  oidcId             String         @unique
   organization       String?
   organizations      Organization[] @relation(name: "members")
   ownerOrganizations Organization?  @relation(name: "owner")

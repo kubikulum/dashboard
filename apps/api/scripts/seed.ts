@@ -16,6 +16,7 @@ async function seed() {
 
   const client = new PrismaClient();
   const data = {
+    oidcId: "",
     roles: ["user"],
     username: "admin",
   };

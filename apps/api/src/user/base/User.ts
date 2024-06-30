@@ -78,16 +78,13 @@ class User {
   lastName!: string | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
   @MaxLength(256)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId!: string | null;
+  @Field(() => String)
+  oidcId!: string;
 
   @ApiProperty({
     required: false,
