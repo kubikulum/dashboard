@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { JwtStrategyBase } from "./base/jwt.strategy.base";
 import { ConfigService } from "@nestjs/config";
-import { Auth0User } from "./base/User";
+import { LogtoUser } from "./base/User";
 import { IAuthStrategy } from "../IAuthStrategy";
 import { UserInfo } from "../UserInfo";
 import { UserService } from "src/user/user.service";
@@ -18,7 +18,9 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
     super(configService, userService);
   }
 
-  async validate(payload: Auth0User ): Promise<UserInfo> {
+  async validate(payload: LogtoUser): Promise<UserInfo> {
+
+
     const validatedUser = await this.validateBase(payload);
     // If the entity is valid, return it
     if (validatedUser) {
@@ -29,14 +31,18 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
     const user = await this.authManagementService.getUser(payload.sub);
     // Otherwise, make a new entity and return it
     const defaultData = {
-      roles: ["user"],
-      username: "admin",
+      id: payload.sub,
+      username: user.primaryEmail,
+      roles: []
     };
 
     const newUser = await this.userService.createUser({
       data: defaultData,
     });
+    const roles = payload.organizationRoles.filter((role) => role.organizationId === payload.organization_id).map((role) => role.roleName);
+    //add default user role
+    roles.push("user");
 
-    return { ...newUser, roles: newUser?.roles as string[], contextOrganizationId: payload.organization_id };
+    return { ...newUser, roles: roles, contextOrganizationId: payload.organization_id };
   }
 }

@@ -18,7 +18,7 @@ export class AuthManagementService {
 	}
 
 	private async initializeClient() {
-		const issuer = await Issuer.discover( this.configService.get('LOGTO_MANAGEMENT_ISSUER_URL') || '');
+		const issuer = await Issuer.discover(this.configService.get('LOGTO_MANAGEMENT_ISSUER_URL') || '');
 		this.client = new issuer.Client({
 			client_id: this.configService.get('LOGTO_MANAGEMENT_CLIENT_ID') || '',
 			client_secret: this.configService.get('LOGTO_MANAGEMENT_CLIENT_SECRET')
@@ -34,7 +34,71 @@ export class AuthManagementService {
 		return tokenSet;
 	}
 
-	public async getUser(id:string): Promise<any> {
+	public async addRoleToUserInOrganization(userId: string, organizationId: string, roleName: string): Promise<any> {
+		const tokenSet = await this.getOAuthToken();
+		const accessToken = tokenSet.access_token;
+		const roleId = "i57wuo72wlk7kdhih4mnu"//admin
+		const { data } = await firstValueFrom(
+			this.httpService.post(`${this.baseUrl}/organizations/${organizationId}/users/roles`, {
+
+				userIds:[userId],
+				organizationRoleIds: [roleId]
+
+			}, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+	}
+
+	public async createOrganization(name: string): Promise<any> {
+		const tokenSet = await this.getOAuthToken();
+		const accessToken = tokenSet.access_token;
+		const { data } = await firstValueFrom(
+			this.httpService.post(`${this.baseUrl}/organizations`, {
+
+				name
+
+			}, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+	}
+
+	public async addUserToOrganization(userId: string, organizationId: string): Promise<any> {
+		const tokenSet = await this.getOAuthToken();
+		const accessToken = tokenSet.access_token;
+		const { data } = await firstValueFrom(
+			this.httpService.post(`${this.baseUrl}/organizations/${organizationId}/users`, {
+				userIds:[userId]
+			}, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+
+	}
+
+	public async getUser(id: string): Promise<any> {
 		const tokenSet = await this.getOAuthToken();
 		const accessToken = tokenSet.access_token;
 
@@ -45,15 +109,15 @@ export class AuthManagementService {
 				},
 			}).pipe(
 				catchError((error) => {
-				  console.log(error.response.data);
-				  throw 'An error happened!';
+					console.log(error.response.data);
+					throw 'An error happened!';
 				}),
-			  ))
+			))
 
 		return data
 	}
 
-	public async getOrganizationsForUser(userId:string): Promise<any> {
+	public async getOrganizationsForUser(userId: string): Promise<any> {
 		const tokenSet = await this.getOAuthToken();
 		const accessToken = tokenSet.access_token;
 
@@ -64,10 +128,10 @@ export class AuthManagementService {
 				},
 			}).pipe(
 				catchError((error) => {
-				  console.log(error.response.data);
-				  throw 'An error happened!';
+					console.log(error.response.data);
+					throw 'An error happened!';
 				}),
-			  ))
+			))
 
 		return data
 	}
