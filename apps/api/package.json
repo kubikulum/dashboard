@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.4",
+    "@logto/node": "^2.5.2",
     "@nestjs/apollo": "12.0.9",
+    "@nestjs/axios": "^3.0.2",
     "@nestjs/common": "10.2.7",
     "@nestjs/config": "3.1.1",
     "@nestjs/core": "10.2.7",
@@ -32,6 +34,7 @@
     "@nestjs/swagger": "7.1.13",
     "@prisma/client": "^5.4.2",
     "@types/bcrypt": "5.0.0",
+    "axios": "^1.7.2",
     "bcrypt": "5.1.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
@@ -41,6 +44,7 @@
     "jwks-rsa": "^3.0.1",
     "nest-access-control": "^3.1.0",
     "npm-run-all": "4.1.5",
+    "openid-client": "^5.6.5",
     "passport": "0.6.0",
     "passport-http": "0.3.0",
     "passport-jwt": "4.0.1",
@@ -73,6 +77,8 @@
     "moduleNameMapper": {
       "@app/custom-validators": "<rootDir>/src/validators"
     },
-    "modulePathIgnorePatterns": ["<rootDir>/dist/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   }
 }
