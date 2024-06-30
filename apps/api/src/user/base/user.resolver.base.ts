@@ -21,9 +21,7 @@ import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterRespon
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { User } from "./User";
 import { UserCountArgs } from "./UserCountArgs";
-import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
-import { CreateUserArgs } from "./CreateUserArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
 import { OrganizationFindManyArgs } from "../../organization/base/OrganizationFindManyArgs";
@@ -53,17 +51,6 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => [User])
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "read",
-    possession: "any",
-  })
-  async users(@graphql.Args() args: UserFindManyArgs): Promise<User[]> {
-    return this.service.users(args);
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => User, { nullable: true })
   @nestAccessControl.UseRoles({
     resource: "User",
@@ -76,28 +63,6 @@ export class UserResolverBase {
       return null;
     }
     return result;
-  }
-
-  @common.UseInterceptors(AclValidateRequestInterceptor)
-  @graphql.Mutation(() => User)
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "create",
-    possession: "any",
-  })
-  async createUser(@graphql.Args() args: CreateUserArgs): Promise<User> {
-    return await this.service.createUser({
-      ...args,
-      data: {
-        ...args.data,
-
-        ownerOrganizations: args.data.ownerOrganizations
-          ? {
-              connect: args.data.ownerOrganizations,
-            }
-          : undefined,
-      },
-    });
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
