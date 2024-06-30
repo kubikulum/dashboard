@@ -68,7 +68,6 @@ export class OrganizationControllerBase {
         createdAt: true,
         id: true,
         name: true,
-        oidcId: true,
 
         owner: {
           select: {
@@ -101,7 +100,6 @@ export class OrganizationControllerBase {
         createdAt: true,
         id: true,
         name: true,
-        oidcId: true,
 
         owner: {
           select: {
@@ -135,7 +133,6 @@ export class OrganizationControllerBase {
         createdAt: true,
         id: true,
         name: true,
-        oidcId: true,
 
         owner: {
           select: {
@@ -186,7 +183,6 @@ export class OrganizationControllerBase {
           createdAt: true,
           id: true,
           name: true,
-          oidcId: true,
 
           owner: {
             select: {
@@ -331,7 +327,6 @@ export class OrganizationControllerBase {
         firstName: true,
         id: true,
         lastName: true,
-        oidcId: true,
         organization: true,
 
         ownerOrganizations: {

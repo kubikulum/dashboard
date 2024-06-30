@@ -1,12 +1,24 @@
 [
   {
-    "role": "uam",
+    "role": "admin",
     "resource": "User",
     "action": "read:own",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "User",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "User",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "User",
     "action": "read:own",
     "attributes": "*"
@@ -19,18 +31,6 @@
   },
   {
     "role": "viewer",
-    "resource": "User",
-    "action": "read:own",
-    "attributes": "*"
-  },
-  {
-    "role": "admin",
-    "resource": "User",
-    "action": "read:own",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
     "resource": "User",
     "action": "read:own",
     "attributes": "*"
@@ -60,25 +60,37 @@
     "attributes": "*"
   },
   {
-    "role": "admin",
-    "resource": "User",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
     "role": "serviceaccountmanager",
     "resource": "User",
     "action": "delete:any",
     "attributes": "*"
   },
   {
-    "role": "uam",
+    "role": "admin",
+    "resource": "User",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
     "resource": "User",
     "action": "read:any",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "User",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "User",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "User",
     "action": "read:any",
     "attributes": "*"
@@ -91,18 +103,6 @@
   },
   {
     "role": "viewer",
-    "resource": "User",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "admin",
-    "resource": "User",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
     "resource": "User",
     "action": "read:any",
     "attributes": "*"
@@ -111,16 +111,28 @@
     "role": "user",
     "resource": "Organization",
     "action": "create:any",
-    "attributes": "*,!clusters,!members,!owner,!oidcId"
+    "attributes": "*,!clusters,!members,!owner"
   },
   {
-    "role": "uam",
+    "role": "admin",
     "resource": "Organization",
     "action": "delete:any",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "Organization",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Organization",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "Organization",
     "action": "delete:any",
     "attributes": "*"
@@ -140,23 +152,23 @@
   {
     "role": "admin",
     "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
-    "resource": "Organization",
     "action": "read:any",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "Organization",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Organization",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "Organization",
     "action": "read:any",
     "attributes": "*"
@@ -175,24 +187,24 @@
   },
   {
     "role": "admin",
-    "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
     "resource": "Cluster",
     "action": "read:own",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "Cluster",
     "action": "read:own",
     "attributes": "*"
@@ -212,23 +224,23 @@
   {
     "role": "admin",
     "resource": "Cluster",
-    "action": "read:own",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Cluster",
-    "action": "read:own",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
-    "resource": "Cluster",
     "action": "update:any",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "Cluster",
     "action": "update:any",
     "attributes": "*"
@@ -248,23 +260,23 @@
   {
     "role": "admin",
     "resource": "Cluster",
-    "action": "update:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Cluster",
-    "action": "update:any",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
-    "resource": "Cluster",
     "action": "delete:any",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "Cluster",
     "action": "delete:any",
     "attributes": "*"
@@ -284,23 +296,23 @@
   {
     "role": "admin",
     "resource": "Cluster",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Cluster",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
-    "resource": "Cluster",
     "action": "read:any",
     "attributes": "*"
   },
   {
     "role": "owner",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Cluster",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
     "resource": "Cluster",
     "action": "read:any",
     "attributes": "*"
@@ -313,18 +325,6 @@
   },
   {
     "role": "viewer",
-    "resource": "Cluster",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "admin",
-    "resource": "Cluster",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
     "resource": "Cluster",
     "action": "read:any",
     "attributes": "*"
