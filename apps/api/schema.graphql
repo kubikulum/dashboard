@@ -59,7 +59,6 @@ type MetaQueryPayload {
 }
 
 type Mutation {
-  createUser(data: UserCreateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User!
   updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
@@ -74,10 +73,6 @@ type Organization {
   oidcId: String
   owner: User
   updatedAt: DateTime!
-}
-
-input OrganizationCreateNestedManyWithoutUsersInput {
-  connect: [OrganizationWhereUniqueInput!]
 }
 
 input OrganizationListRelationFilter {
@@ -128,7 +123,6 @@ type Query {
   cluster(where: ClusterWhereUniqueInput!): Cluster
   organization(where: OrganizationWhereUniqueInput!): Organization
   user(where: UserWhereUniqueInput!): User
-  users(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
 }
 
 enum QueryMode {
@@ -183,19 +177,6 @@ type User {
   ownerOrganizations: Organization
   roles: JSON!
   updatedAt: DateTime!
-  username: String!
-}
-
-input UserCreateInput {
-  email: String
-  firstName: String
-  lastName: String
-  oidcId: String
-  organization: String
-  organizations: OrganizationCreateNestedManyWithoutUsersInput
-  ownerOrganizations: OrganizationWhereUniqueInput
-  password: String
-  roles: JSON!
   username: String!
 }
 
