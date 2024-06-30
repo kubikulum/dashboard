@@ -62,15 +62,6 @@ class UserCreateInput {
   lastName?: string | null;
 
   @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(256)
-  @Field(() => String)
-  oidcId!: string;
-
-  @ApiProperty({
     required: false,
     type: String,
   })

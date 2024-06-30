@@ -59,7 +59,6 @@ export class UserControllerBase {
         firstName: true,
         id: true,
         lastName: true,
-        oidcId: true,
         organization: true,
 
         ownerOrganizations: {
@@ -98,7 +97,6 @@ export class UserControllerBase {
         firstName: true,
         id: true,
         lastName: true,
-        oidcId: true,
         organization: true,
 
         ownerOrganizations: {
@@ -154,7 +152,6 @@ export class UserControllerBase {
           firstName: true,
           id: true,
           lastName: true,
-          oidcId: true,
           organization: true,
 
           ownerOrganizations: {
@@ -201,7 +198,6 @@ export class UserControllerBase {
           firstName: true,
           id: true,
           lastName: true,
-          oidcId: true,
           organization: true,
 
           ownerOrganizations: {
@@ -244,7 +240,6 @@ export class UserControllerBase {
         createdAt: true,
         id: true,
         name: true,
-        oidcId: true,
 
         owner: {
           select: {

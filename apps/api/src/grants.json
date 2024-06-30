@@ -111,7 +111,7 @@
     "role": "user",
     "resource": "Organization",
     "action": "create:any",
-    "attributes": "*,!clusters,!members,!owner,!oidcId"
+    "attributes": "*,!clusters,!members,!owner"
   },
   {
     "role": "admin",
