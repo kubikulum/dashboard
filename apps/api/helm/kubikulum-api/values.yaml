@@ -26,7 +26,7 @@ variables:
     REDIS_PORT: "6379"
     REDIS_TTL: "5000"
     REDIS_USERNAME: ""
-    REDIS_PASSWORD: ""
+    REDIS_PASSWORD: "aabc"
   secret: {}
 
 imagePullSecrets: []
