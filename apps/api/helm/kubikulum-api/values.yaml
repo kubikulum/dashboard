@@ -22,6 +22,11 @@ variables:
     DB_PASSWORD: "admin"
     DB_PORT: "5432"
     DB_NAME: "my-db"
+    REDIS_HOST: "localhost"
+    REDIS_PORT: "6379"
+    REDIS_TTL: "5000"
+    REDIS_USERNAME: ""
+    REDIS_PASSWORD: ""
   secret: {}
 
 imagePullSecrets: []
