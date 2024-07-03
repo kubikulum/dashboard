@@ -32,7 +32,7 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
     // Otherwise, make a new entity and return it
     const defaultData = {
       id: payload.sub,
-      username: user.primaryEmail,
+      username: user.email,
       roles: []
     };
 

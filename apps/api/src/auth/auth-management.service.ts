@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 export class AuthManagementService {
 	private client!: Client;
 	private baseUrl: string;
+	private tokenSet!: TokenSet;
 
 	constructor(private readonly httpService: HttpService, protected readonly configService: ConfigService,) {
 		this.baseUrl = this.configService.get('LOGTO_MANAGEMENT_AUDIENCE') || '';
@@ -23,9 +24,10 @@ export class AuthManagementService {
 			client_id: this.configService.get('LOGTO_MANAGEMENT_CLIENT_ID') || '',
 			client_secret: this.configService.get('LOGTO_MANAGEMENT_CLIENT_SECRET')
 		});
+		this.tokenSet = await this.getOAuthToken();
 	}
 
-	public async getOAuthToken(): Promise<TokenSet> {
+	private async getOAuthToken(): Promise<TokenSet> {
 		const tokenSet = await this.client.grant({
 			grant_type: 'client_credentials',
 			resource: this.baseUrl,
@@ -34,14 +36,20 @@ export class AuthManagementService {
 		return tokenSet;
 	}
 
+	private async ensureAccessToken() {
+		if (this.tokenSet.expired()) {
+			this.tokenSet = await this.getOAuthToken();
+		}
+		return this.tokenSet.access_token;
+	}
+
 	public async addRoleToUserInOrganization(userId: string, organizationId: string, roleName: string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+		const accessToken = await this.ensureAccessToken();
 		const roleId = "i57wuo72wlk7kdhih4mnu"//admin
 		const { data } = await firstValueFrom(
 			this.httpService.post(`${this.baseUrl}/organizations/${organizationId}/users/roles`, {
 
-				userIds:[userId],
+				userIds: [userId],
 				organizationRoleIds: [roleId]
 
 			}, {
@@ -58,8 +66,7 @@ export class AuthManagementService {
 	}
 
 	public async createOrganization(name: string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+		const accessToken = await this.ensureAccessToken();
 		const { data } = await firstValueFrom(
 			this.httpService.post(`${this.baseUrl}/organizations`, {
 
@@ -78,12 +85,28 @@ export class AuthManagementService {
 		return data;
 	}
 
+	public async deleteOrganization(id: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
+		const { data } = await firstValueFrom(
+			this.httpService.delete(`${this.baseUrl}/organizations/${id}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+	}
+
+
 	public async addUserToOrganization(userId: string, organizationId: string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+		const accessToken = await this.ensureAccessToken();
 		const { data } = await firstValueFrom(
 			this.httpService.post(`${this.baseUrl}/organizations/${organizationId}/users`, {
-				userIds:[userId]
+				userIds: [userId]
 			}, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
@@ -99,8 +122,7 @@ export class AuthManagementService {
 	}
 
 	public async getUser(id: string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+		const accessToken = await this.ensureAccessToken();
 
 		const { data } = await firstValueFrom(
 			this.httpService.get(`${this.baseUrl}/users/${id}`, {
@@ -118,8 +140,7 @@ export class AuthManagementService {
 	}
 
 	public async getOrganizationsForUser(userId: string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+		const accessToken = await this.ensureAccessToken();
 
 		const { data } = await firstValueFrom(
 			this.httpService.get(`${this.baseUrl}/users/${userId}/organizations`, {

@@ -1,0 +1,12 @@
+token=eyJhbGciOiJFUzM4NCIsInR5cCI6ImF0K2p3dCIsImtpZCI6IlliUG9hMjR4ZUFVYjZmYTBHYlU1TFRTV3FyMTE1YUQtU0FXM0I1ZHpFWTAifQ.eyJvcmdhbml6YXRpb25faWQiOiJlNjFsczJ0aDN3bWUiLCJvcmdhbml6YXRpb25Sb2xlcyI6W3sib3JnYW5pemF0aW9uSWQiOiJlNjFsczJ0aDN3bWUiLCJyb2xlSWQiOiJpNTd3dW83MndsazdrZGhpaDRtbnUiLCJyb2xlTmFtZSI6ImFkbWluIn0seyJvcmdhbml6YXRpb25JZCI6Imt5enRvZG1ndGVmeiIsInJvbGVJZCI6Imk1N3d1bzcyd2xrN2tkaGloNG1udSIsInJvbGVOYW1lIjoiYWRtaW4ifSx7Im9yZ2FuaXphdGlvbklkIjoidTg0ZnVkcWh6MzF0Iiwicm9sZUlkIjoiaTU3d3VvNzJ3bGs3a2RoaWg0bW51Iiwicm9sZU5hbWUiOiJhZG1pbiJ9XSwianRpIjoieHBuU2dIalJGWGxKc01icHE4TTAzIiwic3ViIjoiOWl0bDdybXIyMHlvIiwiaWF0IjoxNzE5OTk1MzQ2LCJleHAiOjE3MTk5OTg5NDYsInNjb3BlIjoiIiwiY2xpZW50X2lkIjoicmdiM2hobmVlbnk5dDFmOTJqeDN6IiwiaXNzIjoiaHR0cHM6Ly9zaG0zcTUubG9ndG8uYXBwL29pZGMiLCJhdWQiOiJodHRwczovL2FwaS5rdWJpa3VsdW0uY29tIn0.P3lj4vyCo6wOv-t328x92eMM6XGxSGpuWAPL-gAHbmXf1m-CNz1W33tENL07ay5VufMbDe4Vm5WxqI4VbGtMmgkTbG5sY1DjjRz5DgTx6O66ObwurZZUxusikCbgccBq
+
+generate: 
+	docker run --rm \
+	--network=host \
+	-e=JAVA_OPTS='-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true' \
+	-v ${PWD}:/local openapitools/openapi-generator-cli \
+	generate \
+	-i https://api.virtual-garden.local.gardener.cloud/openapi/v3/apis/core.gardener.cloud/v1 \
+	--auth "Authorization:Bearer%20$(token)" \
+	-g typescript-nestjs \
+	-o /local/out/nestjs 

@@ -46,12 +46,12 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
 
     const user = await this.userService.user({
       where: {
-        id: payload.sub,
+        username: payload.email,
       },
     });
     const roles = payload.organizationRoles.filter((role) => role.organizationId === payload.organization_id).map((role) => role.roleName);
     //add default user role
-    roles.push("user");
+    roles.push("user");           
     return user ? { ...user, roles: roles, contextOrganizationId: payload.organization_id } : null;
   }
 }
