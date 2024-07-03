@@ -42,6 +42,18 @@ class Organization {
   createdAt!: Date;
 
   @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerProjectNamespace!: string | null;
+
+  @ApiProperty({
     required: true,
     type: String,
   })
@@ -59,28 +71,13 @@ class Organization {
   members?: Array<User>;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
   @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  name!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId!: string | null;
+  @Field(() => String)
+  name!: string;
 
   @ApiProperty({
     required: false,

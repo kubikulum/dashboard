@@ -16,7 +16,6 @@ import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
 import { OrganizationListRelationFilter } from "../../organization/base/OrganizationListRelationFilter";
-import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 
 @InputType()
 class UserWhereInput {
@@ -73,17 +72,6 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  oidcId?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: StringNullableFilter,
-  })
-  @Type(() => StringNullableFilter)
-  @IsOptional()
-  @Field(() => StringNullableFilter, {
-    nullable: true,
-  })
   organization?: StringNullableFilter;
 
   @ApiProperty({
@@ -100,15 +88,15 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationWhereUniqueInput,
+    type: () => OrganizationListRelationFilter,
   })
   @ValidateNested()
-  @Type(() => OrganizationWhereUniqueInput)
+  @Type(() => OrganizationListRelationFilter)
   @IsOptional()
-  @Field(() => OrganizationWhereUniqueInput, {
+  @Field(() => OrganizationListRelationFilter, {
     nullable: true,
   })
-  ownerOrganizations?: OrganizationWhereUniqueInput;
+  ownerOrganizations?: OrganizationListRelationFilter;
 
   @ApiProperty({
     required: false,

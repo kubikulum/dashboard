@@ -39,6 +39,17 @@ class OrganizationOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  gardenerProjectNamespace?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   id?: SortOrder;
 
   @ApiProperty({
@@ -51,17 +62,6 @@ class OrganizationOrderByInput {
     nullable: true,
   })
   name?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  oidcId?: SortOrder;
 
   @ApiProperty({
     required: false,

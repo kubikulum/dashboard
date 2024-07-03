@@ -38,6 +38,18 @@ class OrganizationCreateInput {
 
   @ApiProperty({
     required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerProjectNamespace?: string | null;
+
+  @ApiProperty({
+    required: false,
     type: () => UserCreateNestedManyWithoutOrganizationsInput,
   })
   @ValidateNested()
@@ -49,28 +61,13 @@ class OrganizationCreateInput {
   members?: UserCreateNestedManyWithoutOrganizationsInput;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
   @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  name?: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId?: string | null;
+  @Field(() => String)
+  name!: string;
 
   @ApiProperty({
     required: false,

@@ -19,7 +19,6 @@ import {
 } from "class-validator";
 import { OrganizationCreateNestedManyWithoutUsersInput } from "./OrganizationCreateNestedManyWithoutUsersInput";
 import { Type } from "class-transformer";
-import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
@@ -66,18 +65,6 @@ class UserCreateInput {
     type: String,
   })
   @IsString()
-  @MaxLength(256)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId?: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
   @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
@@ -99,15 +86,15 @@ class UserCreateInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationWhereUniqueInput,
+    type: () => OrganizationCreateNestedManyWithoutUsersInput,
   })
   @ValidateNested()
-  @Type(() => OrganizationWhereUniqueInput)
+  @Type(() => OrganizationCreateNestedManyWithoutUsersInput)
   @IsOptional()
-  @Field(() => OrganizationWhereUniqueInput, {
+  @Field(() => OrganizationCreateNestedManyWithoutUsersInput, {
     nullable: true,
   })
-  ownerOrganizations?: OrganizationWhereUniqueInput | null;
+  ownerOrganizations?: OrganizationCreateNestedManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,

@@ -19,36 +19,40 @@ const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
   createdAt: new Date(),
+  gardenerProjectNamespace: "exampleGardenerProjectNamespace",
   id: "exampleId",
   name: "exampleName",
-  oidcId: "exampleOidcId",
   updatedAt: new Date(),
 };
 const CREATE_RESULT = {
   createdAt: new Date(),
+  gardenerProjectNamespace: "exampleGardenerProjectNamespace",
   id: "exampleId",
   name: "exampleName",
-  oidcId: "exampleOidcId",
   updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
     createdAt: new Date(),
+    gardenerProjectNamespace: "exampleGardenerProjectNamespace",
     id: "exampleId",
     name: "exampleName",
-    oidcId: "exampleOidcId",
     updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
   createdAt: new Date(),
+  gardenerProjectNamespace: "exampleGardenerProjectNamespace",
   id: "exampleId",
   name: "exampleName",
-  oidcId: "exampleOidcId",
   updatedAt: new Date(),
 };
 
 const service = {
+  createOrganization() {
+    return CREATE_RESULT;
+  },
+  organizations: () => FIND_MANY_RESULT,
   organization: ({ where }: { where: { id: string } }) => {
     switch (where.id) {
       case existingId:
@@ -119,6 +123,31 @@ describe("Organization", () => {
     await app.init();
   });
 
+  test("POST /organizations", async () => {
+    await request(app.getHttpServer())
+      .post("/organizations")
+      .send(CREATE_INPUT)
+      .expect(HttpStatus.CREATED)
+      .expect({
+        ...CREATE_RESULT,
+        createdAt: CREATE_RESULT.createdAt.toISOString(),
+        updatedAt: CREATE_RESULT.updatedAt.toISOString(),
+      });
+  });
+
+  test("GET /organizations", async () => {
+    await request(app.getHttpServer())
+      .get("/organizations")
+      .expect(HttpStatus.OK)
+      .expect([
+        {
+          ...FIND_MANY_RESULT[0],
+          createdAt: FIND_MANY_RESULT[0].createdAt.toISOString(),
+          updatedAt: FIND_MANY_RESULT[0].updatedAt.toISOString(),
+        },
+      ]);
+  });
+
   test("GET /organizations/:id non existing", async () => {
     await request(app.getHttpServer())
       .get(`${"/organizations"}/${nonExistingId}`)
@@ -138,6 +167,28 @@ describe("Organization", () => {
         ...FIND_ONE_RESULT,
         createdAt: FIND_ONE_RESULT.createdAt.toISOString(),
         updatedAt: FIND_ONE_RESULT.updatedAt.toISOString(),
+      });
+  });
+
+  test("POST /organizations existing resource", async () => {
+    const agent = request(app.getHttpServer());
+    await agent
+      .post("/organizations")
+      .send(CREATE_INPUT)
+      .expect(HttpStatus.CREATED)
+      .expect({
+        ...CREATE_RESULT,
+        createdAt: CREATE_RESULT.createdAt.toISOString(),
+        updatedAt: CREATE_RESULT.updatedAt.toISOString(),
+      })
+      .then(function () {
+        agent
+          .post("/organizations")
+          .send(CREATE_INPUT)
+          .expect(HttpStatus.CONFLICT)
+          .expect({
+            statusCode: HttpStatus.CONFLICT,
+          });
       });
   });
 

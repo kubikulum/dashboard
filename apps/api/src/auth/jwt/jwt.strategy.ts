@@ -5,38 +5,35 @@ import { Auth0User } from "./base/User";
 import { IAuthStrategy } from "../IAuthStrategy";
 import { UserInfo } from "../UserInfo";
 import { UserService } from "src/user/user.service";
-import { UserCreateInput } from "src/user/base/UserCreateInput";
-import { AuthManagementService } from "../auth-management.service";
 
 @Injectable()
 export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
   constructor(
     protected readonly configService: ConfigService,
-    protected readonly userService: UserService,
-    protected readonly authManagementService: AuthManagementService
+    protected readonly userService: UserService
   ) {
     super(configService, userService);
   }
 
-  async validate(payload: Auth0User ): Promise<UserInfo> {
+  async validate(payload: { user: Auth0User }): Promise<UserInfo> {
     const validatedUser = await this.validateBase(payload);
     // If the entity is valid, return it
     if (validatedUser) {
       return validatedUser;
     }
 
-    // fetch user info 
-    const user = await this.authManagementService.getUser(payload.sub);
     // Otherwise, make a new entity and return it
+    const userFields = payload.user;
     const defaultData = {
+      email: userFields.email,
       roles: ["user"],
       username: "admin",
     };
 
-    const newUser = await this.userService.createUser({
+    const newUser = await this.userService.create({
       data: defaultData,
     });
 
-    return { ...newUser, roles: newUser?.roles as string[], contextOrganizationId: payload.organization_id };
+    return { ...newUser, roles: newUser?.roles as string[] };
   }
 }
