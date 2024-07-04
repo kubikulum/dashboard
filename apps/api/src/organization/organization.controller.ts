@@ -71,6 +71,7 @@ export class OrganizationController extends OrganizationControllerBase {
             role: "admin",
             roles: ["owner"]
           }
+          
         ],
 
       }

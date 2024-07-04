@@ -328,5 +328,17 @@
     "resource": "Cluster",
     "action": "read:any",
     "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
   }
 ]

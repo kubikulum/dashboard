@@ -9,11 +9,11 @@ import { CoreGardenerCloudV1beta1Service } from './api/coreGardenerCloudV1beta1.
 @Module({
   imports:      [ 
     
-    HttpModule.register({
-        httpsAgent: new Agent({
-            ca: fs.readFileSync("/Users/kevin/Projects/kukube/dashboard/ca-cert-2.cert")
+        HttpModule.register({
+            httpsAgent: new Agent({
+                ca: fs.readFileSync("/Users/kevin/Projects/kukube/dashboard/ca-cert-2.cert")
+            })
         })
-    })
  ],
   exports:      [
     CoreGardenerCloudV1beta1Service
