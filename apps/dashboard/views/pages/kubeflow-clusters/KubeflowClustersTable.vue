@@ -20,30 +20,8 @@ const headers = [
 	{ title: 'Actions', key: 'actions' },
 ]
 
-const selectedStatus = ref()
-const selectedCategory = ref()
-const selectedStock = ref<boolean | undefined>()
-const searchQuery = ref('')
 
-const status = ref([
-	{ title: 'Scheduled', value: 'Scheduled' },
-	{ title: 'Publish', value: 'Published' },
-	{ title: 'Inactive', value: 'Inactive' },
-])
 
-const categories = ref([
-	{ title: 'Accessories', value: 'Accessories' },
-	{ title: 'Home Decor', value: 'Home Decor' },
-	{ title: 'Electronics', value: 'Electronics' },
-	{ title: 'Shoes', value: 'Shoes' },
-	{ title: 'Office', value: 'Office' },
-	{ title: 'Games', value: 'Games' },
-])
-
-const stockStatus = ref([
-	{ title: 'In Stock', value: true },
-	{ title: 'Out of Stock', value: false },
-])
 
 // Data table options
 const itemsPerPage = ref(10)
@@ -57,20 +35,7 @@ const updateOptions = (options: any) => {
 	orderBy.value = options.sortBy[0]?.order
 }
 
-const resolveCategory = (category: string) => {
-	if (category === 'Accessories')
-		return { color: 'error', icon: 'tabler-device-watch' }
-	if (category === 'Home Decor')
-		return { color: 'info', icon: 'tabler-home' }
-	if (category === 'Electronics')
-		return { color: 'primary', icon: 'tabler-device-imac' }
-	if (category === 'Shoes')
-		return { color: 'success', icon: 'tabler-shoe' }
-	if (category === 'Office')
-		return { color: 'warning', icon: 'tabler-briefcase' }
-	if (category === 'Games')
-		return { color: 'primary', icon: 'tabler-device-gamepad-2' }
-}
+
 
 const resolveStatus = (statusMsg: string) => {
 	if (statusMsg === 'Scheduled')
@@ -123,7 +88,7 @@ const totalClusters = clusters.length
 				<div class="d-flex gap-4 flex-wrap align-center">
 
 					<VBtn color="primary" prepend-icon="tabler-plus"
-						@click="$router.push('/apps/ecommerce/product/add')">
+						:to="{name:'kubeflow-create'}">
 						Create Cluster
 					</VBtn>
 				</div>
@@ -137,7 +102,7 @@ const totalClusters = clusters.length
 
 				<template #item.name="{ item }">
 					<div class="d-flex align-center">
-						<VAvatar size="32" rounded="0" icon="custom-kubeflow-color">
+						<VAvatar size="32" rounded="0" color="primary" class="rounded" icon="custom-kubeflow-color">
 						</VAvatar>
 						<div class="d-flex flex-column ms-3">
 							<NuxtLink  :to="{name:'kubeflow-clusters-id-tab',params:{id:item.id,tab:'overview'}}" class="d-block font-weight-medium text-high-emphasis text-truncate">{{ item.name

@@ -24,8 +24,11 @@ declare module 'vue-router/auto-routes' {
     'flyte': RouteRecordInfo<'flyte', '/flyte', Record<never, never>, Record<never, never>>,
     'kubeflow-tab': RouteRecordInfo<'kubeflow-tab', '/kubeflow/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
     'kubeflow-clusters-id-tab': RouteRecordInfo<'kubeflow-clusters-id-tab', '/kubeflow/clusters/:id()/:tab()', { id: ParamValue<true>, tab: ParamValue<true> }, { id: ParamValue<false>, tab: ParamValue<false> }>,
+    'kubeflow-clusters-id-add-node': RouteRecordInfo<'kubeflow-clusters-id-add-node', '/kubeflow/clusters/:id()/add-node', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    'kubeflow-create': RouteRecordInfo<'kubeflow-create', '/kubeflow/create', Record<never, never>, Record<never, never>>,
     'monitoring': RouteRecordInfo<'monitoring', '/monitoring', Record<never, never>, Record<never, never>>,
-    'object-storage': RouteRecordInfo<'object-storage', '/object-storage', Record<never, never>, Record<never, never>>,
+    'object-storage-tab': RouteRecordInfo<'object-storage-tab', '/object-storage/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
+    'object-storage-add-storage': RouteRecordInfo<'object-storage-add-storage', '/object-storage/add-storage', Record<never, never>, Record<never, never>>,
     'organization-settings-tab': RouteRecordInfo<'organization-settings-tab', '/organization-settings/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
   }
 }

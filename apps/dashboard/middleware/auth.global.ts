@@ -1,10 +1,7 @@
-import { useOrganizationStore } from "@/stores/user.store";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
 	const client = useLogtoClient()
-
-	// skip middleware on server
 	const user = useLogtoUser()
 	const isLoggedIn = client ? await client.isAuthenticated() : user;
 	/*
@@ -23,13 +20,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 		return navigateTo('/sign-in',{ external: true})
 	}
 
-	const organizationStore = useOrganizationStore()
-	const currentOrganization = useCookie<any>('currentOrganization')
+	const organization = useCookie<any>('organization')
+console.log('orgCookie',organization.value.organization)
 
-	if (!currentOrganization.value) {
+	if (!organization.value.organization) {
 		const firstOrganization = user.organization_data[0]
-		await organizationStore.switchOrganization(firstOrganization.id)
-	}else{
-		await organizationStore.switchOrganization(currentOrganization.value.id)
+		return navigateTo(`/switch-organization?organizationId=${firstOrganization.id}`,{ external: true})
+	} else if( user.organization_data.map((org: any) => org.id).indexOf(organization.value.organization.id) === -1){
+		const firstOrganization = user.organization_data[0]
+		return navigateTo(`/switch-organization?organizationId=${firstOrganization.id}`,{ external: true})
 	}
 })

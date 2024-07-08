@@ -61,7 +61,13 @@ const sources: BundleScriptConfig = {
   svg: [
     {
       dir: 'assets/images/iconify-svg',
-      monotone: true,
+      monotone: false,
+      prefix: 'custom',
+    },
+
+    {
+      dir: 'assets/images/svg/storage-providers',
+      monotone: false,
       prefix: 'custom',
     },
 
@@ -95,6 +101,7 @@ const sources: BundleScriptConfig = {
         'language-typescript',
       ],
     },
+
     {
       filename: require.resolve('@iconify-json/fa/icons.json'),
       icons: [

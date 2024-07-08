@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import svgLoader from 'vite-svg-loader'
 import vuetify from 'vite-plugin-vuetify'
 import { UserScope } from '@logto/nuxt';
-
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -18,6 +18,7 @@ export default defineNuxtConfig({
       }],
     },
   },
+
   logto: {
     resources: ['https://api.kubikulum.com'],
     fetchUserInfo: true,
@@ -30,11 +31,11 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-
   css: [
     '@core/scss/template/index.scss',
     '@styles/styles.scss',
     '@/plugins/iconify/icons.css',
+    '@/plugins/i18n/index.ts',
   ],
 
   components: {
@@ -130,7 +131,14 @@ export default defineNuxtConfig({
           configFile: 'assets/styles/variables/_vuetify.scss',
         },
       }),
-      null,
+      VueI18nPlugin({
+        runtimeOnly: true,
+        compositionOnly: true,
+        ssr: true,
+        include: [
+          fileURLToPath(new URL('./plugins/i18n/locales/**', import.meta.url)),
+        ],
+      }),
     ],
   },
 
@@ -143,7 +151,8 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@pinia/nuxt',
     '@logto/nuxt',
-    "dayjs-nuxt"
+    "dayjs-nuxt",
   ],
 
+  compatibilityDate: '2024-07-06',
 })

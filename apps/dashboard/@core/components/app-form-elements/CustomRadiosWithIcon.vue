@@ -40,9 +40,9 @@ const updateSelectedOption = (value: string | null) => {
         >
           <slot :item="item">
             <div class="d-flex flex-column align-center text-center gap-2">
-              <VIcon
+              <VIcon color="inherite"
                 v-bind="item.icon"
-                class="text-high-emphasis"
+                class=""
               />
               <h6 class="text-h6">
                 {{ item.title }}

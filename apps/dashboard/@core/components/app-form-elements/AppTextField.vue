@@ -10,7 +10,7 @@ const elementId = computed(() => {
 
   return _elementIdToken ? `app-text-field-${_elementIdToken}-${Math.random().toString(36).slice(2, 7)}` : undefined
 })
-
+console.log('label',useAttrs().label)
 const label = computed(() => useAttrs().label as string | undefined)
 </script>
 

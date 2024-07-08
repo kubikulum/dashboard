@@ -3,6 +3,7 @@ export default [
     title: 'Home',
     to: { name: 'index' },
     icon: { icon: 'tabler-smart-home' },
+    
   },
   {
     title: 'Kubeflow Clusters',
@@ -12,15 +13,23 @@ export default [
   {
     title: 'Flyte Clusters',
     to: { name: 'flyte' },
+    disable: true,
+    badgeContent:'Soon',
+    badgeClass:'bg-secondary',
     icon: { icon: 'custom-flyte-black' },
   },
   {
     title: 'Object Storage',
-    to: { name: 'object-storage' },
-    icon: { icon: 'tabler-box' },
+    to: { name: 'object-storage-tab', params: { tab: 'storages' } },
+
+    badgeClass:'bg-secondary',
+    icon: { icon: 'tabler-packages' },
   },
   {
     title: 'Monitoring',
+    disable: true,
+    badgeContent:'Soon',
+    badgeClass:'bg-secondary',
     to: { name: 'monitoring' },
     icon: { icon: 'tabler-device-heart-monitor' },
   },
