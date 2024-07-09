@@ -12,10 +12,11 @@ import { UserWhereUniqueInput } from "./base/UserWhereUniqueInput";
 import { User } from "./base/User";
 import { UsersService } from "src/logto-auth-management";
 import { firstValueFrom,catchError } from "rxjs";
+import { Public } from "src/decorators/public.decorator";
 
 @swagger.ApiTags("users")
 @common.Controller("users")
-@common.UseInterceptors(OrganizationRequestInterceptor)
+
 export class UserController extends UserControllerBase {
   constructor(
     protected readonly service: UserService,
@@ -26,14 +27,15 @@ export class UserController extends UserControllerBase {
     super(service, rolesBuilder);
   }
 
-  @common.UseInterceptors(AclValidateRequestInterceptor)
+
+  @common.UseInterceptors(AclValidateRequestInterceptor)  
   @common.Patch("/:id")
   @swagger.ApiOkResponse({ type: User })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @nestAccessControl.UseRoles({
     resource: "User",
     action: "update",
-    possession: "any",
+    possession: "own",
   })
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,

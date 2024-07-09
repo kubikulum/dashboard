@@ -7,6 +7,7 @@ import { hexToRgb } from '@layouts/utils'
 
 const { global } = useTheme()
 
+
 // ℹ️ Sync current theme with initial loader theme
 initCore()
 initConfigStore()

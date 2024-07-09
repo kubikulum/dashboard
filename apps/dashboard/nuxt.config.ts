@@ -27,6 +27,22 @@ export default defineNuxtConfig({
     UserScope.Organizations]
   },
 
+  openFetch: {
+    clients: {
+      kbk: {
+        baseURL : 'http://localhost:4000',
+        schema:'http://localhost:4000/api-json',
+      }
+    }
+  },
+
+  runtimeConfig: {
+    openFetch: {
+      kbk: {
+      },
+    },
+  },
+
   devtools: {
     enabled: true,
   },
@@ -78,7 +94,7 @@ export default defineNuxtConfig({
           '@styles/*': ['../assets/styles/*'],
           '@validators': ['../@core/utils/validators'],
           '@db/*': ['../server/fake-db/*'],
-          '@api-utils/*': ['../server/utils/*'],
+          '@api-utils/*': ['../server/utils/*']
         },
       },
     },
@@ -110,6 +126,7 @@ export default defineNuxtConfig({
         '@configured-variables': fileURLToPath(new URL('./assets/styles/variables/_template.scss', import.meta.url)),
         '@db': fileURLToPath(new URL('./server/fake-db/', import.meta.url)),
         '@api-utils': fileURLToPath(new URL('./server/utils/', import.meta.url)),
+       
       },
     },
 
@@ -152,6 +169,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@logto/nuxt',
     "dayjs-nuxt",
+    'nuxt-open-fetch'
   ],
 
   compatibilityDate: '2024-07-06',

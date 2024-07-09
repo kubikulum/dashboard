@@ -7,7 +7,7 @@ declare module 'nitropack' {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/switch-organization.get').default>>>>
     }
     '/__nuxt_error': {
-      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/.pnpm/nuxt@3.12.3_@types+node@20.11.24_eslint@8.57.0_rollup@4.18.0_sass@1.71.1_stylelint@16.2.1_typescript@5.3.3_vite@5.1.4/node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/.pnpm/nuxt@3.12.3_@parcel+watcher@2.4.1_@types+node@20.11.24_eslint@8.57.0_ioredis@5.4.1_magicast@0_aj6hnfu3ma3itqu5gxv2hxw67m/node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
     }
   }
 }

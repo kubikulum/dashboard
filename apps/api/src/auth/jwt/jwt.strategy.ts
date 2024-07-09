@@ -22,6 +22,7 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
 
 
     const validatedUser = await this.validateBase(payload);
+    console.log("validatedUser", validatedUser);
     // If the entity is valid, return it
     if (validatedUser) {
       return validatedUser;

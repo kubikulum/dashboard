@@ -1,9 +1,11 @@
 <script setup lang="ts">
+
+
 interface UserData {
-  id: number | null
-  given_name: string
-  family_name: string
-  email: string
+  id: string | null
+  firstName: string
+  lastName: string
+  email?: string
 }
 
 interface Props {
@@ -18,18 +20,18 @@ interface Emit {
 
 const props = withDefaults(defineProps<Props>(), {
   userData: () => ({
-    id: 0,
-    given_name: '',
-    family_name: '',
+    id: null,
+    firstName: '',
+    lastName: '',
     email: '',
-
   }),
 })
+
+console.log(props.userData)
 
 const emit = defineEmits<Emit>()
 
 const userData = ref<UserData>(structuredClone(toRaw(props.userData)))
-const isUseAsBillingAddress = ref(false)
 
 watch(props, () => {
   userData.value = structuredClone(toRaw(props.userData))
@@ -47,11 +49,8 @@ const dialogModelValueUpdate = (val: boolean) => {
 </script>
 
 <template>
-  <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 500"
-    :model-value="props.isDialogVisible"
-    @update:model-value="dialogModelValueUpdate"
-  >
+  <VDialog :width="$vuetify.display.smAndDown ? 'auto' : 500" :model-value="props.isDialogVisible"
+    @update:model-value="dialogModelValueUpdate">
     <!-- Dialog close btn -->
     <DialogCloseBtn @click="dialogModelValueUpdate(false)" />
 
@@ -61,48 +60,30 @@ const dialogModelValueUpdate = (val: boolean) => {
         <h4 class="text-h4 text-center mb-2">
           Edit your account profile
         </h4>
-  
+
         <!-- 👉 Form -->
-        <VForm
-          class="mt-6"
-          @submit.prevent="onFormSubmit"
-        >
+        <VForm class="mt-6" @submit.prevent="onFormSubmit">
           <VRow>
 
             <VCol cols="12">
-              <AppTextField
-                v-model="userData.given_name"
-                label="First Name"
-                 :rules="[requiredValidator]"
-              />
+              <AppTextField v-model="userData.firstName" label="First Name" :rules="[requiredValidator]" />
             </VCol>
             <VCol cols="12">
-              <AppTextField
-                v-model="userData.family_name"
-                label="Last Name"
-                 :rules="[requiredValidator]"
-              />
+              <AppTextField v-model="userData.lastName" label="Last Name" :rules="[requiredValidator]" />
             </VCol>
             <VCol cols="12">
-              <AppTextField
-              aria-required="true"
-                v-model="userData.email"
-                label="Email address"
-                 :rules="[requiredValidator]"
-              />
+              <AppTextField aria-required="true" v-model="userData.email" label="Email address"
+                :rules="[requiredValidator]" />
             </VCol>
 
-      
+
             <!-- 👉 Submit and Cancel -->
-            <VCol
-              cols="12"
-              class="d-flex flex-wrap justify-center gap-4"
-            >
+            <VCol cols="12" class="d-flex flex-wrap justify-center gap-4">
               <VBtn type="submit" block>
                 Confirm Changes
               </VBtn>
 
-            
+
             </VCol>
           </VRow>
         </VForm>

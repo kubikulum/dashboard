@@ -108,7 +108,15 @@ const _inlineRuntimeConfig = {
       "enabled": true,
       "defaultUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36",
       "refreshOnResize": false
+    },
+    "openFetch": {
+      "kbk": {
+        "baseURL": "http://localhost:4000"
+      }
     }
+  },
+  "openFetch": {
+    "kbk": {}
   },
   "logto": {
     "fetchUserInfo": true,
@@ -643,7 +651,7 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _vqKqdhtgEy = (function(nitro) {
+const _ZsvTL11lGZ = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
@@ -656,7 +664,7 @@ const devReducers = {
   URL: (data) => data instanceof URL ? data.toString() : void 0
 };
 const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
-const _hmgVkvScqJ = (nitroApp) => {
+const _Y4coOIFOcL = (nitroApp) => {
   const handler = nitroApp.h3App.handler;
   nitroApp.h3App.handler = (event) => {
     return asyncContext.callAsync({ logs: [], event }, () => handler(event));
@@ -722,7 +730,7 @@ function onConsoleLog(callback) {
   consola.wrapConsole();
 }
 
-function defineNitroPlugin(def) {
+function defineNitroPlugin$1(def) {
   return def;
 }
 
@@ -794,15 +802,62 @@ function defineRenderHandler(handler) {
   });
 }
 
-const _C7EHgEmybb = defineNitroPlugin((nitroApp) => {
+function buildAssetsDir() {
+  return useRuntimeConfig().app.buildAssetsDir;
+}
+function buildAssetsURL(...path) {
+  return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
+}
+function publicAssetsURL(...path) {
+  const app = useRuntimeConfig().app;
+  const publicBase = app.cdnURL || app.baseURL;
+  return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
+}
+
+function createOpenFetch(options, localFetch) {
+  return (url, opts) => {
+    opts = typeof options === "function" ? options(opts) : {
+      ...options,
+      ...opts
+    };
+    const $fetch = getFetch(url, opts, localFetch);
+    return $fetch(fillPath(url, opts?.path), opts);
+  };
+}
+function getFetch(url, opts, localFetch) {
+  if (localFetch) {
+    const isLocalFetch = url[0] === "/" && (!opts.baseURL || opts.baseURL[0] === "/");
+    if (isLocalFetch)
+      return localFetch;
+  }
+  return globalThis.$fetch;
+}
+function fillPath(path, params = {}) {
+  for (const [k, v] of Object.entries(params))
+    path = path.replace(`{${k}}`, encodeURIComponent(String(v)));
+  return path;
+}
+
+function defineNitroPlugin(def) {
+  return def;
+}
+const _KofTpDrxju = defineNitroPlugin((nitroApp) => {
+  const clients = useRuntimeConfig().public.openFetch;
+  Object.entries(clients).forEach(([name, client]) => {
+    nitroApp[`$${name}`] = createOpenFetch(client, nitroApp.localFetch);
+  });
+});
+
+const _C7EHgEmybb = defineNitroPlugin$1((nitroApp) => {
   nitroApp.hooks.hook("render:response", (response) => {
     response.body = response.body.replaceAll("/_nuxt/\0", "/_nuxt/");
   });
 });
 
 const plugins = [
-  _vqKqdhtgEy,
-_hmgVkvScqJ,
+  _ZsvTL11lGZ,
+_Y4coOIFOcL,
+_KofTpDrxju,
 _C7EHgEmybb
 ];
 
@@ -873,19 +928,7 @@ const defaults = Object.freeze({
   cookieEncryptionKey: "<replace-with-random-string>"
 });
 
-function buildAssetsDir() {
-  return useRuntimeConfig().app.buildAssetsDir;
-}
-function buildAssetsURL(...path) {
-  return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
-}
-function publicAssetsURL(...path) {
-  const app = useRuntimeConfig().app;
-  const publicBase = app.cdnURL || app.baseURL;
-  return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
-}
-
-const _WWLz6Y = defineEventHandler(async (event) => {
+const _2YXMBp = defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);
   const logtoConfig = config.logto;
   const {
@@ -942,13 +985,13 @@ const _WWLz6Y = defineEventHandler(async (event) => {
 });
 
 const _lazy_C9EFir = () => Promise.resolve().then(function () { return switchOrganization_get$1; });
-const _lazy_FWBzEL = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_PxXWMF = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '/switch-organization', handler: _lazy_C9EFir, lazy: true, middleware: false, method: "get" },
-  { route: '/__nuxt_error', handler: _lazy_FWBzEL, lazy: true, middleware: false, method: undefined },
-  { route: '', handler: _WWLz6Y, lazy: false, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_FWBzEL, lazy: true, middleware: false, method: undefined }
+  { route: '/__nuxt_error', handler: _lazy_PxXWMF, lazy: true, middleware: false, method: undefined },
+  { route: '', handler: _2YXMBp, lazy: false, middleware: false, method: undefined },
+  { route: '/**', handler: _lazy_PxXWMF, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {

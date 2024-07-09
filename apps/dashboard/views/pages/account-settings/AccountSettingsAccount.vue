@@ -1,39 +1,31 @@
 <script lang="ts" setup>
+import type { components } from '#open-fetch-schemas/kbk';
 import avatar1 from '@images/avatars/avatar-1.png'
+import type { Component } from 'vue';
 import { VAvatar, VBtn } from 'vuetify/components';
+import * as _ from 'underscore';
 const user = useLogtoUser()
-const accountData = {
-  avatarImg: avatar1,
-  firstName: 'john',
-  lastName: 'Doe',
-  created_at: '2021-06-01',
-  email: 'johnDoe@example.com',
-  org: 'Pixinvent',
-  phone: '+1 (917) 543-9876',
-  address: '123 Main St, New York, NY 10001',
-  state: 'New York',
-  zip: '10001',
-  country: 'USA',
-  language: 'English',
-  timezone: '(GMT-11:00) International Date Line West',
-  currency: 'USD',
-}
-console.log(user)
-computed(() => {
-  console.log(user.value)
+const accessToken = useState<string | undefined>('access-token');
+
+const { data } = await useKbk('/api/users/{id}', {
+  method: 'get', path: { id: user.sub }, headers: {
+    'Authorization': `Bearer ${accessToken.value}`
+  }
 })
 
-const refInputEl = ref<HTMLElement>()
+const userData = _.pick(data.value, 'firstName','lastName')
+
+console.log(user)
+
 
 const isConfirmDialogOpen = ref(false)
 const isEditDialogOpen = ref(false)
-const accountDataLocal = ref(structuredClone(user))
 const isAccountDeactivated = ref(false)
 
 const validateAccountDeactivation = [(v: string) => !!v || 'Please confirm account deactivation']
 
-const onsubmit = (value:any) => {
-  console.log('submit', value)
+const onsubmitUpdate = async (data: any) => {
+  await useKbk('/api/users/{id}', { method: 'patch', path: { id: user.sub }, headers: { 'Authorization': `Bearer ${accessToken.value}` }, body: data })
 }
 
 
@@ -48,19 +40,19 @@ const onsubmit = (value:any) => {
         <VCardText class="pt-2">
           <div class="d-flex">
             <div class="pr-8">
-              <VAvatar size="100" :image="accountDataLocal.avatarImg" />
+              <!-- <VAvatar size="100" :image="accountDataLocal." /> -->
             </div>
             <div>
-              <h4 class="mb-4">{{  }} {{ user.name }}</h4>
+              <h4 class="mb-4">{{ }} {{ user.name }}</h4>
               <div class="d-flex flex-column f gap-2">
-                <div><b>Member since</b> {{ $dayjs(accountDataLocal.created_at).format('MMM D, YYYY') }}
-                  ({{ $dayjs(accountDataLocal.created_at).fromNow() }})</div>
-                <div><b>Email</b> {{ accountDataLocal.email }}</div>
-                <div><b>Phone</b> {{ accountDataLocal.phone }}</div>
+                <div><b>Member since</b> {{ $dayjs(data?.createdAt).format('MMM D, YYYY') }}
+                  ({{ $dayjs(data?.createdAt).fromNow() }})</div>
+                <div><b>Email</b> {{ data?.email }}</div>
+                <!-- <div><b>Phone</b> {{ accountDataLocal }}</div> -->
               </div>
             </div>
             <div class="ml-auto  align-self-start">
-              <VBtn  @click="isEditDialogOpen = true" color="primary" variant="outlined">
+              <VBtn @click="isEditDialogOpen = true" color="primary" variant="outlined">
                 <VIcon start icon="tabler-edit" />
                 Edit Profile
               </VBtn>
@@ -96,5 +88,6 @@ const onsubmit = (value:any) => {
     confirm-msg="Your account has been deactivated successfully." cancel-title="Cancelled"
     cancel-msg="Account Deactivation Cancelled!" />
 
-    <UserInfoEditDialog v-model:isDialogVisible="isEditDialogOpen" @submit.="onsubmit($event)" :userData="accountDataLocal" />
+  <UserInfoEditDialog v-model:isDialogVisible="isEditDialogOpen" @submit.="onsubmitUpdate($event)"
+    :userData="userData" />
 </template>
