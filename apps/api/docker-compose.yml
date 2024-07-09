@@ -9,9 +9,11 @@ services:
       - ${PORT}:3000
     environment:
       BCRYPT_SALT: ${BCRYPT_SALT}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
       DB_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
     depends_on:
-      - redis
+      - migrate
     restart: on-failure
   migrate:
     build:
@@ -43,14 +45,5 @@ services:
       timeout: 45s
       interval: 10s
       retries: 10
-  redis:
-    container_name: ${REDIS_HOST}
-    image: redis:7
-    ports:
-      - ${REDIS_PORT}:6379
-    volumes:
-      - redis:/data
 volumes:
   postgres: ~
-  redis:
-    driver: local
