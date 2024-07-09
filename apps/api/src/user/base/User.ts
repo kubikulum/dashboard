@@ -82,18 +82,6 @@ class User {
     type: String,
   })
   @IsString()
-  @MaxLength(256)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
   @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
@@ -112,12 +100,12 @@ class User {
 
   @ApiProperty({
     required: false,
-    type: () => Organization,
+    type: () => [Organization],
   })
   @ValidateNested()
   @Type(() => Organization)
   @IsOptional()
-  ownerOrganizations?: Organization | null;
+  ownerOrganizations?: Array<Organization>;
 
   @ApiProperty({
     required: true,

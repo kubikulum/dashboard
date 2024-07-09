@@ -13,10 +13,9 @@ model User {
   firstName          String?
   id                 String         @id @default(cuid())
   lastName           String?
-  oidcId             String?        @unique
   organization       String?
   organizations      Organization[] @relation(name: "members")
-  ownerOrganizations Organization?  @relation(name: "owner")
+  ownerOrganizations Organization[] @relation(name: "owner")
   password           String?
   roles              Json
   updatedAt          DateTime       @updatedAt
@@ -28,10 +27,9 @@ model Organization {
   createdAt DateTime  @default(now())
   id        String    @id @default(cuid())
   members   User[]    @relation(name: "members")
-  name      String?
-  oidcId    String?   @unique
+  name      String
   owner     User?     @relation(name: "owner", fields: [ownerId], references: [id])
-  ownerId   String?   @unique
+  ownerId   String?
   updatedAt DateTime  @updatedAt
 }
 

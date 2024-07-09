@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 export class AuthManagementService {
 	private client!: Client;
 	private baseUrl: string;
+	private tokenSet!: TokenSet;
 
 	constructor(private readonly httpService: HttpService, protected readonly configService: ConfigService,) {
 		this.baseUrl = this.configService.get('LOGTO_MANAGEMENT_AUDIENCE') || '';
@@ -18,14 +19,15 @@ export class AuthManagementService {
 	}
 
 	private async initializeClient() {
-		const issuer = await Issuer.discover( this.configService.get('LOGTO_MANAGEMENT_ISSUER_URL') || '');
+		const issuer = await Issuer.discover(this.configService.get('LOGTO_MANAGEMENT_ISSUER_URL') || '');
 		this.client = new issuer.Client({
 			client_id: this.configService.get('LOGTO_MANAGEMENT_CLIENT_ID') || '',
 			client_secret: this.configService.get('LOGTO_MANAGEMENT_CLIENT_SECRET')
 		});
+		this.tokenSet = await this.getOAuthToken();
 	}
 
-	public async getOAuthToken(): Promise<TokenSet> {
+	private async getOAuthToken(): Promise<TokenSet> {
 		const tokenSet = await this.client.grant({
 			grant_type: 'client_credentials',
 			resource: this.baseUrl,
@@ -34,9 +36,93 @@ export class AuthManagementService {
 		return tokenSet;
 	}
 
-	public async getUser(id:string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+	private async ensureAccessToken() {
+		if (this.tokenSet.expired()) {
+			this.tokenSet = await this.getOAuthToken();
+		}
+		return this.tokenSet.access_token;
+	}
+
+	public async addRoleToUserInOrganization(userId: string, organizationId: string, roleName: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
+		const roleId = "i57wuo72wlk7kdhih4mnu"//admin
+		const { data } = await firstValueFrom(
+			this.httpService.post(`${this.baseUrl}/organizations/${organizationId}/users/roles`, {
+
+				userIds: [userId],
+				organizationRoleIds: [roleId]
+
+			}, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+	}
+
+	public async createOrganization(name: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
+		const { data } = await firstValueFrom(
+			this.httpService.post(`${this.baseUrl}/organizations`, {
+
+				name
+
+			}, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+	}
+
+	public async deleteOrganization(id: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
+		const { data } = await firstValueFrom(
+			this.httpService.delete(`${this.baseUrl}/organizations/${id}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+	}
+
+
+	public async addUserToOrganization(userId: string, organizationId: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
+		const { data } = await firstValueFrom(
+			this.httpService.post(`${this.baseUrl}/organizations/${organizationId}/users`, {
+				userIds: [userId]
+			}, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				}
+			}).pipe(
+				catchError((error) => {
+					console.log(error.response.data);
+					throw error
+				}),
+			))
+		return data;
+
+	}
+
+	public async getUser(id: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
 
 		const { data } = await firstValueFrom(
 			this.httpService.get(`${this.baseUrl}/users/${id}`, {
@@ -45,17 +131,16 @@ export class AuthManagementService {
 				},
 			}).pipe(
 				catchError((error) => {
-				  console.log(error.response.data);
-				  throw 'An error happened!';
+					console.log(error.response.data);
+					throw 'An error happened!';
 				}),
-			  ))
+			))
 
 		return data
 	}
 
-	public async getOrganizationsForUser(userId:string): Promise<any> {
-		const tokenSet = await this.getOAuthToken();
-		const accessToken = tokenSet.access_token;
+	public async getOrganizationsForUser(userId: string): Promise<any> {
+		const accessToken = await this.ensureAccessToken();
 
 		const { data } = await firstValueFrom(
 			this.httpService.get(`${this.baseUrl}/users/${userId}/organizations`, {
@@ -64,10 +149,10 @@ export class AuthManagementService {
 				},
 			}).pipe(
 				catchError((error) => {
-				  console.log(error.response.data);
-				  throw 'An error happened!';
+					console.log(error.response.data);
+					throw 'An error happened!';
 				}),
-			  ))
+			))
 
 		return data
 	}

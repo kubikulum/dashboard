@@ -58,19 +58,7 @@ class OrganizationUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  name?: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId?: string | null;
+  name?: string;
 
   @ApiProperty({
     required: false,

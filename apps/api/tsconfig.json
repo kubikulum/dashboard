@@ -17,5 +17,9 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "paths": {
+    "@kubikulum/garderner-client": ["libs/gardener-client/src/index.ts"],
+  }
+
 }
