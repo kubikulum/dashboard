@@ -27,7 +27,8 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
     const defaultData = {
       email: userFields.email,
       roles: ["user"],
-      username: "admin",
+      username: userFields.email,
+      id: userFields.sub
     };
 
     const newUser = await this.userService.createUser({
