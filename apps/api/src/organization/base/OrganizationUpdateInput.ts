@@ -58,7 +58,6 @@ class OrganizationUpdateInput {
   @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-
   owner?: UserWhereUniqueInput | null;
 
   @ApiProperty({
