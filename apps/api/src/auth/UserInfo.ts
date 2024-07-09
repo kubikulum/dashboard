@@ -11,4 +11,7 @@ export class UserInfo implements Partial<User> {
   roles!: string[];
   @Field(() => String, { nullable: true })
   accessToken?: string;
+  @Field(() => String)
+  contextOrganizationId?: string;
+
 }

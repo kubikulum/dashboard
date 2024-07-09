@@ -97,6 +97,7 @@ class User {
     type: String,
   })
   @IsString()
+
   @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {

@@ -9,6 +9,10 @@ type Cluster {
   updatedAt: DateTime!
 }
 
+input ClusterCreateNestedManyWithoutOrganizationsInput {
+  connect: [ClusterWhereUniqueInput!]
+}
+
 input ClusterListRelationFilter {
   every: ClusterWhereInput
   none: ClusterWhereInput
@@ -59,6 +63,7 @@ type MetaQueryPayload {
 }
 
 type Mutation {
+  createOrganization(data: OrganizationCreateInput!): Organization!
   deleteUser(where: UserWhereUniqueInput!): User!
   updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
@@ -69,10 +74,16 @@ type Organization {
   createdAt: DateTime!
   id: String!
   members(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
-  name: String
-  oidcId: String
+  name: String!
   owner: User
   updatedAt: DateTime!
+}
+
+input OrganizationCreateInput {
+  clusters: ClusterCreateNestedManyWithoutOrganizationsInput
+  members: UserCreateNestedManyWithoutOrganizationsInput
+  name: String!
+  owner: UserWhereUniqueInput
 }
 
 input OrganizationListRelationFilter {
@@ -85,7 +96,6 @@ input OrganizationOrderByInput {
   createdAt: SortOrder
   id: SortOrder
   name: SortOrder
-  oidcId: SortOrder
   ownerId: SortOrder
   updatedAt: SortOrder
 }
@@ -94,7 +104,6 @@ input OrganizationUpdateInput {
   clusters: ClusterUpdateManyWithoutOrganizationsInput
   members: UserUpdateManyWithoutOrganizationsInput
   name: String
-  oidcId: String
   owner: UserWhereUniqueInput
 }
 
@@ -108,9 +117,7 @@ input OrganizationWhereInput {
   clusters: ClusterListRelationFilter
   id: StringFilter
   members: UserListRelationFilter
-  name: StringNullableFilter
-  oidcId: StringNullableFilter
-  owner: UserWhereUniqueInput
+  name: StringFilter
 }
 
 input OrganizationWhereUniqueInput {
@@ -122,7 +129,9 @@ type Query {
   _usersMeta(where: UserWhereInput): MetaQueryPayload!
   cluster(where: ClusterWhereUniqueInput!): Cluster
   organization(where: OrganizationWhereUniqueInput!): Organization
+  organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
   user(where: UserWhereUniqueInput!): User
+  users(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
 }
 
 enum QueryMode {
@@ -171,13 +180,16 @@ type User {
   firstName: String
   id: String!
   lastName: String
-  oidcId: String
   organization: String
   organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
-  ownerOrganizations: Organization
+  ownerOrganizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
   roles: JSON!
   updatedAt: DateTime!
   username: String!
+}
+
+input UserCreateNestedManyWithoutOrganizationsInput {
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserListRelationFilter {
@@ -192,9 +204,7 @@ input UserOrderByInput {
   firstName: SortOrder
   id: SortOrder
   lastName: SortOrder
-  oidcId: SortOrder
   organization: SortOrder
-  ownerOrganizationsId: SortOrder
   password: SortOrder
   roles: SortOrder
   updatedAt: SortOrder
@@ -205,10 +215,9 @@ input UserUpdateInput {
   email: String
   firstName: String
   lastName: String
-  oidcId: String
   organization: String
   organizations: OrganizationUpdateManyWithoutUsersInput
-  ownerOrganizations: OrganizationWhereUniqueInput
+  ownerOrganizations: OrganizationUpdateManyWithoutUsersInput
   password: String
   roles: JSON
   username: String
@@ -225,10 +234,9 @@ input UserWhereInput {
   firstName: StringNullableFilter
   id: StringFilter
   lastName: StringNullableFilter
-  oidcId: StringNullableFilter
   organization: StringNullableFilter
   organizations: OrganizationListRelationFilter
-  ownerOrganizations: OrganizationWhereUniqueInput
+  ownerOrganizations: OrganizationListRelationFilter
   username: StringFilter
 }
 

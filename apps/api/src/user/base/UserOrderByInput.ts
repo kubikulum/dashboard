@@ -83,6 +83,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+
   roles?: SortOrder;
 
   @ApiProperty({
@@ -94,6 +95,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+
   organization?: SortOrder;
 
   @ApiProperty({

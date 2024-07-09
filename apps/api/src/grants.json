@@ -36,6 +36,7 @@
     "attributes": "*"
   },
   {
+
     "role": "admin",
     "resource": "User",
     "action": "update:any",
@@ -45,6 +46,7 @@
     "role": "owner",
     "resource": "User",
     "action": "update:any",
+
     "attributes": "*"
   },
   {
@@ -61,12 +63,15 @@
   },
   {
     "role": "user",
+
     "resource": "User",
     "action": "update:any",
     "attributes": "*"
   },
   {
+
     "role": "viewer",
+
     "resource": "User",
     "action": "update:any",
     "attributes": "*"
@@ -327,6 +332,18 @@
     "role": "viewer",
     "resource": "Cluster",
     "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Cluster",
+    "action": "create:any",
     "attributes": "*"
   }
 ]

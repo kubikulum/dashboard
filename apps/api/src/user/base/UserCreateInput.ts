@@ -102,7 +102,6 @@ class UserCreateInput {
     nullable: true,
   })
   ownerOrganizations?: OrganizationCreateNestedManyWithoutUsersInput;
-
   @ApiProperty({
     required: true,
     type: String,
@@ -110,6 +109,7 @@ class UserCreateInput {
   @IsString()
   @Field(() => String)
   username!: string;
+
 
   @ApiProperty({
     required: false,
