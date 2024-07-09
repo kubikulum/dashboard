@@ -1,4 +1,4 @@
-export interface LogtoUser {
+export interface Auth0User {
   sub: string,
   email: string,
   organization_id: string,

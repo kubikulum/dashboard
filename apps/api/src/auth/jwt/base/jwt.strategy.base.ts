@@ -13,7 +13,7 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { passportJwtSecret } from "jwks-rsa";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { LogtoUser } from "./User";
+import { Auth0User } from "./User";
 import { UserInfo } from "../../UserInfo";
 import { UserService } from "src/user/user.service";
 
@@ -39,21 +39,14 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
     });
   }
 
-
-
   // Validate the received JWT and construct the user object out of the decoded token.
-
-  async validateBase(payload: LogtoUser): Promise<UserInfo | null> {
-
+  async validateBase(payload: { user: Auth0User }): Promise<UserInfo | null> {
     const user = await this.userService.user({
       where: {
-        username: payload.email,
+        email: payload.user.email,
       },
     });
-    const roles = payload.organizationRoles.filter((role) => role.organizationId === payload.organization_id).map((role) => role.roleName);
-    //add default user role
-    roles.push("user");           
-    return user ? { ...user, roles: roles, contextOrganizationId: payload.organization_id } : null;
 
+    return user ? { ...user, roles: user?.roles as string[] } : null;
   }
 }
