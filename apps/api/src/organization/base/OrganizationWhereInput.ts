@@ -18,7 +18,6 @@ import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 
-
 @InputType()
 class OrganizationWhereInput {
   @ApiProperty({
@@ -77,7 +76,6 @@ class OrganizationWhereInput {
     nullable: true,
   })
   gardenerProjectNamespace?: StringNullableFilter;
-
 }
 
 export { OrganizationWhereInput as OrganizationWhereInput };
