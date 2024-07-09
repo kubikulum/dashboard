@@ -25,10 +25,10 @@ import { OrganizationFindManyArgs } from "./OrganizationFindManyArgs";
 import { OrganizationFindUniqueArgs } from "./OrganizationFindUniqueArgs";
 import { CreateOrganizationArgs } from "./CreateOrganizationArgs";
 import { UpdateOrganizationArgs } from "./UpdateOrganizationArgs";
-import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
-import { Cluster } from "../../cluster/base/Cluster";
 import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
+import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
+import { Cluster } from "../../cluster/base/Cluster";
 import { OrganizationService } from "../organization.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Organization)
@@ -141,26 +141,6 @@ export class OrganizationResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [Cluster], { name: "clusters" })
-  @nestAccessControl.UseRoles({
-    resource: "Cluster",
-    action: "read",
-    possession: "any",
-  })
-  async findClusters(
-    @graphql.Parent() parent: Organization,
-    @graphql.Args() args: ClusterFindManyArgs
-  ): Promise<Cluster[]> {
-    const results = await this.service.findClusters(parent.id, args);
-
-    if (!results) {
-      return [];
-    }
-
-    return results;
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [User], { name: "members" })
   @nestAccessControl.UseRoles({
     resource: "User",
@@ -172,6 +152,26 @@ export class OrganizationResolverBase {
     @graphql.Args() args: UserFindManyArgs
   ): Promise<User[]> {
     const results = await this.service.findMembers(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Cluster], { name: "clusters" })
+  @nestAccessControl.UseRoles({
+    resource: "Cluster",
+    action: "read",
+    possession: "any",
+  })
+  async findClusters(
+    @graphql.Parent() parent: Organization,
+    @graphql.Args() args: ClusterFindManyArgs
+  ): Promise<Cluster[]> {
+    const results = await this.service.findClusters(parent.id, args);
 
     if (!results) {
       return [];

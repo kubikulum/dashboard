@@ -36,15 +36,17 @@
     "attributes": "*"
   },
   {
-    "role": "serviceaccountmanager",
+
+    "role": "admin",
     "resource": "User",
-    "action": "create:any",
+    "action": "update:any",
     "attributes": "*"
   },
   {
-    "role": "admin",
+    "role": "owner",
     "resource": "User",
-    "action": "create:any",
+    "action": "update:any",
+
     "attributes": "*"
   },
   {
@@ -54,21 +56,24 @@
     "attributes": "*"
   },
   {
-    "role": "admin",
+    "role": "uam",
     "resource": "User",
     "action": "update:any",
     "attributes": "*"
   },
   {
-    "role": "serviceaccountmanager",
+    "role": "user",
+
     "resource": "User",
-    "action": "delete:any",
+    "action": "update:any",
     "attributes": "*"
   },
   {
-    "role": "admin",
+
+    "role": "viewer",
+
     "resource": "User",
-    "action": "delete:any",
+    "action": "update:any",
     "attributes": "*"
   },
   {

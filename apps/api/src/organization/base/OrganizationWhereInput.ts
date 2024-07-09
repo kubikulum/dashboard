@@ -11,26 +11,16 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
-import { ValidateNested, IsOptional } from "class-validator";
-import { Type } from "class-transformer";
 import { StringFilter } from "../../util/StringFilter";
+import { Type } from "class-transformer";
+import { IsOptional, ValidateNested } from "class-validator";
 import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
+import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+
 
 @InputType()
 class OrganizationWhereInput {
-  @ApiProperty({
-    required: false,
-    type: () => ClusterListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => ClusterListRelationFilter)
-  @IsOptional()
-  @Field(() => ClusterListRelationFilter, {
-    nullable: true,
-  })
-  clusters?: ClusterListRelationFilter;
-
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -41,6 +31,17 @@ class OrganizationWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringFilter,
+  })
+  @Type(() => StringFilter)
+  @IsOptional()
+  @Field(() => StringFilter, {
+    nullable: true,
+  })
+  name?: StringFilter;
 
   @ApiProperty({
     required: false,
@@ -56,14 +57,27 @@ class OrganizationWhereInput {
 
   @ApiProperty({
     required: false,
-    type: StringFilter,
+    type: () => ClusterListRelationFilter,
   })
-  @Type(() => StringFilter)
+  @ValidateNested()
+  @Type(() => ClusterListRelationFilter)
   @IsOptional()
-  @Field(() => StringFilter, {
+  @Field(() => ClusterListRelationFilter, {
     nullable: true,
   })
-  name?: StringFilter;
+  clusters?: ClusterListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  gardenerProjectNamespace?: StringNullableFilter;
+
 }
 
 export { OrganizationWhereInput as OrganizationWhereInput };

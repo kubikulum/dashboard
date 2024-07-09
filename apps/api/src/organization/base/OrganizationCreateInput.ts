@@ -11,30 +11,27 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
 import {
-  ValidateNested,
-  IsOptional,
   IsString,
   MaxLength,
+  ValidateNested,
+  IsOptional,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { UserCreateNestedManyWithoutOrganizationsInput } from "./UserCreateNestedManyWithoutOrganizationsInput";
+import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationCreateInput {
   @ApiProperty({
-    required: false,
-    type: () => ClusterCreateNestedManyWithoutOrganizationsInput,
+    required: true,
+    type: String,
   })
-  @ValidateNested()
-  @Type(() => ClusterCreateNestedManyWithoutOrganizationsInput)
-  @IsOptional()
-  @Field(() => ClusterCreateNestedManyWithoutOrganizationsInput, {
-    nullable: true,
-  })
-  clusters?: ClusterCreateNestedManyWithoutOrganizationsInput;
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
 
   @ApiProperty({
     required: false,
@@ -49,15 +46,6 @@ class OrganizationCreateInput {
   members?: UserCreateNestedManyWithoutOrganizationsInput;
 
   @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @Field(() => String)
-  name!: string;
-
-  @ApiProperty({
     required: false,
     type: () => UserWhereUniqueInput,
   })
@@ -68,6 +56,30 @@ class OrganizationCreateInput {
     nullable: true,
   })
   owner?: UserWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ClusterCreateNestedManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => ClusterCreateNestedManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => ClusterCreateNestedManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  clusters?: ClusterCreateNestedManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerProjectNamespace?: string | null;
 }
 
 export { OrganizationCreateInput as OrganizationCreateInput };

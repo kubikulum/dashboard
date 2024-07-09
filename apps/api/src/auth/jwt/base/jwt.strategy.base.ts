@@ -26,7 +26,7 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extract JWT from the Authorization header
       audience: configService.get("AUTH0_AUDIENCE"), // The resource server where the JWT is processed
       issuer: `${configService.get("AUTH0_ISSUER_URL")}`, // The issuing Auth0 server
-      algorithms: ["ES384"], // Asymmetric signing algorithm
+      algorithms: ["RS256"], // Asymmetric signing algorithm
 
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -34,7 +34,7 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
         jwksRequestsPerMinute: 5,
         jwksUri: `${configService.get(
           "AUTH0_ISSUER_URL"
-        )}/jwks`,
+        )}.well-known/jwks.json`,
       }),
     });
   }
@@ -42,6 +42,7 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
 
 
   // Validate the received JWT and construct the user object out of the decoded token.
+
   async validateBase(payload: LogtoUser): Promise<UserInfo | null> {
 
     const user = await this.userService.user({
@@ -53,5 +54,6 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
     //add default user role
     roles.push("user");           
     return user ? { ...user, roles: roles, contextOrganizationId: payload.organization_id } : null;
+
   }
 }

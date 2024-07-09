@@ -49,17 +49,16 @@ export class ClusterControllerBase {
     const result = await this.service.cluster({
       where: params,
       select: {
-        clusterType: true,
-        createdAt: true,
         id: true,
+        createdAt: true,
+        updatedAt: true,
+        clusterType: true,
 
         organization: {
           select: {
             id: true,
           },
         },
-
-        updatedAt: true,
       },
     });
     if (result === null) {

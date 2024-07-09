@@ -13,4 +13,5 @@ export class UserInfo implements Partial<User> {
   accessToken?: string;
   @Field(() => String)
   contextOrganizationId?: string;
+
 }

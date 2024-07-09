@@ -11,25 +11,14 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { EnumClusterClusterType } from "./EnumClusterClusterType";
-import { IsEnum, IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
+import { IsOptional, IsEnum, ValidateNested } from "class-validator";
+import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 
 @InputType()
 class ClusterWhereInput {
-  @ApiProperty({
-    required: false,
-    enum: EnumClusterClusterType,
-  })
-  @IsEnum(EnumClusterClusterType)
-  @IsOptional()
-  @Field(() => EnumClusterClusterType, {
-    nullable: true,
-  })
-  clusterType?: "kubeflow" | "flyte";
-
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -40,6 +29,17 @@ class ClusterWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterClusterType,
+  })
+  @IsEnum(EnumClusterClusterType)
+  @IsOptional()
+  @Field(() => EnumClusterClusterType, {
+    nullable: true,
+  })
+  clusterType?: "kubeflow" | "flyte";
 
   @ApiProperty({
     required: false,

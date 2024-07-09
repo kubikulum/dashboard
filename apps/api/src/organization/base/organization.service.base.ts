@@ -14,8 +14,8 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   Organization as PrismaOrganization,
-  Cluster as PrismaCluster,
   User as PrismaUser,
+  Cluster as PrismaCluster,
 } from "@prisma/client";
 
 export class OrganizationServiceBase {
@@ -53,17 +53,6 @@ export class OrganizationServiceBase {
     return this.prisma.organization.delete(args);
   }
 
-  async findClusters(
-    parentId: string,
-    args: Prisma.ClusterFindManyArgs
-  ): Promise<PrismaCluster[]> {
-    return this.prisma.organization
-      .findUniqueOrThrow({
-        where: { id: parentId },
-      })
-      .clusters(args);
-  }
-
   async findMembers(
     parentId: string,
     args: Prisma.UserFindManyArgs
@@ -73,6 +62,17 @@ export class OrganizationServiceBase {
         where: { id: parentId },
       })
       .members(args);
+  }
+
+  async findClusters(
+    parentId: string,
+    args: Prisma.ClusterFindManyArgs
+  ): Promise<PrismaCluster[]> {
+    return this.prisma.organization
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .clusters(args);
   }
 
   async getOwner(parentId: string): Promise<PrismaUser | null> {

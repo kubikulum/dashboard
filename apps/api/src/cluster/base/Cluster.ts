@@ -11,28 +11,26 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import {
-  IsEnum,
-  IsDate,
   IsString,
+  IsDate,
+  IsEnum,
   ValidateNested,
   IsOptional,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { Organization } from "../../organization/base/Organization";
 
 @ObjectType()
 class Cluster {
   @ApiProperty({
     required: true,
-    enum: EnumClusterClusterType,
+    type: String,
   })
-  @IsEnum(EnumClusterClusterType)
-  @Field(() => EnumClusterClusterType, {
-    nullable: true,
-  })
-  clusterType?: "kubeflow" | "flyte";
+  @IsString()
+  @Field(() => String)
+  id!: string;
 
   @ApiProperty({
     required: true,
@@ -44,11 +42,21 @@ class Cluster {
 
   @ApiProperty({
     required: true,
-    type: String,
   })
-  @IsString()
-  @Field(() => String)
-  id!: string;
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  updatedAt!: Date;
+
+  @ApiProperty({
+    required: true,
+    enum: EnumClusterClusterType,
+  })
+  @IsEnum(EnumClusterClusterType)
+  @Field(() => EnumClusterClusterType, {
+    nullable: true,
+  })
+  clusterType?: "kubeflow" | "flyte";
 
   @ApiProperty({
     required: false,
@@ -58,14 +66,6 @@ class Cluster {
   @Type(() => Organization)
   @IsOptional()
   organization?: Organization | null;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsDate()
-  @Type(() => Date)
-  @Field(() => Date)
-  updatedAt!: Date;
 }
 
 export { Cluster as Cluster };
