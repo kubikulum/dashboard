@@ -30,7 +30,7 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
       username: "admin",
     };
 
-    const newUser = await this.userService.create({
+    const newUser = await this.userService.createUser({
       data: defaultData,
     });
 
