@@ -91,7 +91,7 @@ export class OrganizationController extends OrganizationControllerBase {
       // if the project creation fails, delete the organization
       await this.service.deleteOrganization({ where: { id: org.id } });
       await this.authManagementService.deleteOrganization(org.id);
-      throw new errors.InternalServerErrorException("Failed to create project in gardener");
+      throw new errors.NotFoundException("Failed to create project in gardener");
     }
     return organization;
   }
