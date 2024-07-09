@@ -43,7 +43,6 @@ const FIND_MANY_RESULT = [
 const FIND_ONE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
-
   updatedAt: new Date(),
   name: "exampleName",
   gardenerProjectNamespace: "exampleGardenerProjectNamespace",

@@ -86,7 +86,6 @@ class Organization {
 
   @ApiProperty({
     required: false,
-
     type: String,
   })
   @IsString()
@@ -96,7 +95,6 @@ class Organization {
     nullable: true,
   })
   gardenerProjectNamespace!: string | null;
-
 }
 
 export { Organization as Organization };
