@@ -25,7 +25,7 @@ import { AuthModule } from "./auth/auth.module";
     HealthModule,
     PrismaModule,
     SecretsManagerModule,
-    ConfigModule.forRoot({ isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRootAsync({
       useClass: ServeStaticOptionsService,
     }),

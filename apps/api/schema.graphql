@@ -6,6 +6,7 @@ type Cluster {
   clusterType: EnumClusterClusterType
   createdAt: DateTime!
   id: String!
+  plan: EnumClusterPlan
   updatedAt: DateTime!
 }
 
@@ -24,6 +25,7 @@ input ClusterOrderByInput {
   createdAt: SortOrder
   id: SortOrder
   organizationId: SortOrder
+  plan: SortOrder
   updatedAt: SortOrder
 }
 
@@ -37,6 +39,7 @@ input ClusterWhereInput {
   clusterType: EnumClusterClusterType
   id: StringFilter
   organization: OrganizationWhereUniqueInput
+  plan: EnumClusterPlan
 }
 
 input ClusterWhereUniqueInput {
@@ -49,8 +52,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 enum EnumClusterClusterType {
-  Flyte
+  Flytes
   Kubeflow
+}
+
+enum EnumClusterPlan {
+  Free
 }
 
 """

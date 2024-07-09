@@ -16,6 +16,7 @@ import { Type } from "class-transformer";
 import { IsOptional, IsEnum, ValidateNested } from "class-validator";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
+import { EnumClusterPlan } from "./EnumClusterPlan";
 
 @InputType()
 class ClusterWhereInput {
@@ -39,7 +40,7 @@ class ClusterWhereInput {
   @Field(() => EnumClusterClusterType, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "flyte";
+  clusterType?: "kubeflow" | "Flytes";
 
   @ApiProperty({
     required: false,
@@ -52,6 +53,17 @@ class ClusterWhereInput {
     nullable: true,
   })
   organization?: OrganizationWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterPlan,
+  })
+  @IsEnum(EnumClusterPlan)
+  @IsOptional()
+  @Field(() => EnumClusterPlan, {
+    nullable: true,
+  })
+  plan?: "Free";
 }
 
 export { ClusterWhereInput as ClusterWhereInput };

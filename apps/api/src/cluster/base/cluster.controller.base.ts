@@ -59,6 +59,8 @@ export class ClusterControllerBase {
             id: true,
           },
         },
+
+        plan: true,
       },
     });
     if (result === null) {
