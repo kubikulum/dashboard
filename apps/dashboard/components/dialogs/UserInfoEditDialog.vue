@@ -1,22 +1,9 @@
 <script setup lang="ts">
 interface UserData {
   id: number | null
-  fullName: string
-  firstName: string
-  lastName: string
-  company: string
-  username: string
-  role: string
-  country: string
-  contact: string
+  given_name: string
+  family_name: string
   email: string
-  currentPlan: string
-  status: string
-  avatar: string
-  taskDone: number | null
-  projectDone: number | null
-  taxId: string
-  language: string
 }
 
 interface Props {
@@ -32,22 +19,10 @@ interface Emit {
 const props = withDefaults(defineProps<Props>(), {
   userData: () => ({
     id: 0,
-    fullName: '',
-    firstName: '',
-    lastName: '',
-    company: '',
-    role: '',
-    username: '',
-    country: '',
-    contact: '',
+    given_name: '',
+    family_name: '',
     email: '',
-    currentPlan: '',
-    status: '',
-    avatar: '',
-    taskDone: null,
-    projectDone: null,
-    taxId: '',
-    language: '',
+
   }),
 })
 
@@ -65,11 +40,6 @@ const onFormSubmit = () => {
   emit('submit', userData.value)
 }
 
-const onFormReset = () => {
-  userData.value = structuredClone(toRaw(props.userData))
-
-  emit('update:isDialogVisible', false)
-}
 
 const dialogModelValueUpdate = (val: boolean) => {
   emit('update:isDialogVisible', val)
@@ -78,165 +48,61 @@ const dialogModelValueUpdate = (val: boolean) => {
 
 <template>
   <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 900"
+    :width="$vuetify.display.smAndDown ? 'auto' : 500"
     :model-value="props.isDialogVisible"
     @update:model-value="dialogModelValueUpdate"
   >
     <!-- Dialog close btn -->
     <DialogCloseBtn @click="dialogModelValueUpdate(false)" />
 
-    <VCard class="pa-sm-10 pa-2">
+    <VCard class="pa-sm-2 pa-2">
       <VCardText>
         <!-- 👉 Title -->
         <h4 class="text-h4 text-center mb-2">
-          Edit User Information
+          Edit your account profile
         </h4>
-        <p class="text-body-1 text-center mb-6">
-          Updating user details will receive a privacy audit.
-        </p>
-
+  
         <!-- 👉 Form -->
         <VForm
           class="mt-6"
           @submit.prevent="onFormSubmit"
         >
           <VRow>
-            <!-- 👉 First Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+
+            <VCol cols="12">
               <AppTextField
-                v-model="userData.firstName"
+                v-model="userData.given_name"
                 label="First Name"
-                placeholder="John"
+                 :rules="[requiredValidator]"
               />
             </VCol>
-
-            <!-- 👉 Last Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12">
               <AppTextField
-                v-model="userData.lastName"
+                v-model="userData.family_name"
                 label="Last Name"
-                placeholder="Doe"
+                 :rules="[requiredValidator]"
               />
             </VCol>
-
-            <!-- 👉 Username -->
             <VCol cols="12">
               <AppTextField
-                v-model="userData.username"
-                label="Username"
-                placeholder="john.doe.007"
-              />
-            </VCol>
-
-            <!-- 👉 Billing Email -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
+              aria-required="true"
                 v-model="userData.email"
-                label="Email"
-                placeholder="johndoe@email.com"
+                label="Email address"
+                 :rules="[requiredValidator]"
               />
             </VCol>
 
-            <!-- 👉 Status -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppSelect
-                v-model="userData.status"
-                label="Status"
-                placeholder="Active"
-                :items="['Active', 'Inactive', 'Pending']"
-              />
-            </VCol>
-
-            <!-- 👉 Tax Id -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
-                v-model="userData.taxId"
-                label="Tax ID"
-                placeholder="123456789"
-              />
-            </VCol>
-
-            <!-- 👉 Contact -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
-                v-model="userData.contact"
-                label="Phone Number"
-                placeholder="+1 9876543210"
-              />
-            </VCol>
-
-            <!-- 👉 Language -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppSelect
-                v-model="userData.language"
-                closable-chips
-                chips
-                multiple
-                label="Language"
-                placeholder="English"
-                :items="['English', 'Spanish', 'French']"
-              />
-            </VCol>
-
-            <!-- 👉 Country -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppSelect
-                v-model="userData.country"
-                label="Country"
-                placeholder="United States"
-                :items="['United States', 'United Kingdom', 'France']"
-              />
-            </VCol>
-
-            <!-- 👉 Switch -->
-            <VCol cols="12">
-              <VSwitch
-                v-model="isUseAsBillingAddress"
-                density="compact"
-                label="Use as a billing address?"
-              />
-            </VCol>
-
+      
             <!-- 👉 Submit and Cancel -->
             <VCol
               cols="12"
               class="d-flex flex-wrap justify-center gap-4"
             >
-              <VBtn type="submit">
-                Submit
+              <VBtn type="submit" block>
+                Confirm Changes
               </VBtn>
 
-              <VBtn
-                color="secondary"
-                variant="tonal"
-                @click="onFormReset"
-              >
-                Cancel
-              </VBtn>
+            
             </VCol>
           </VRow>
         </VForm>

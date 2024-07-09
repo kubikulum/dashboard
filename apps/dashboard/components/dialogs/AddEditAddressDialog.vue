@@ -74,7 +74,7 @@ const addressTypes = [
 
 <template>
   <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 900 "
+    :width="$vuetify.display.smAndDown ? 'auto' : 400 "
     :model-value="props.isDialogVisible"
     @update:model-value="val => $emit('update:isDialogVisible', val)"
   >
