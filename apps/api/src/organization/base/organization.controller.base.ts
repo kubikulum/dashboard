@@ -68,7 +68,6 @@ export class OrganizationControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
-
         name: true,
 
         owner: {
@@ -78,7 +77,6 @@ export class OrganizationControllerBase {
         },
 
         gardenerProjectNamespace: true,
-
       },
     });
   }
