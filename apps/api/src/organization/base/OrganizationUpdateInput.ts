@@ -11,30 +11,30 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { ClusterUpdateManyWithoutOrganizationsInput } from "./ClusterUpdateManyWithoutOrganizationsInput";
 import {
-  ValidateNested,
-  IsOptional,
   IsString,
   MaxLength,
+  IsOptional,
+  ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { UserUpdateManyWithoutOrganizationsInput } from "./UserUpdateManyWithoutOrganizationsInput";
+import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { ClusterUpdateManyWithoutOrganizationsInput } from "./ClusterUpdateManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationUpdateInput {
   @ApiProperty({
     required: false,
-    type: () => ClusterUpdateManyWithoutOrganizationsInput,
+    type: String,
   })
-  @ValidateNested()
-  @Type(() => ClusterUpdateManyWithoutOrganizationsInput)
+  @IsString()
+  @MaxLength(1000)
   @IsOptional()
-  @Field(() => ClusterUpdateManyWithoutOrganizationsInput, {
+  @Field(() => String, {
     nullable: true,
   })
-  clusters?: ClusterUpdateManyWithoutOrganizationsInput;
+  name?: string;
 
   @ApiProperty({
     required: false,
@@ -50,30 +50,6 @@ class OrganizationUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  name?: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId?: string | null;
-
-  @ApiProperty({
-    required: false,
     type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
@@ -83,6 +59,30 @@ class OrganizationUpdateInput {
     nullable: true,
   })
   owner?: UserWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ClusterUpdateManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => ClusterUpdateManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => ClusterUpdateManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  clusters?: ClusterUpdateManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerProjectNamespace?: string | null;
 }
 
 export { OrganizationUpdateInput as OrganizationUpdateInput };

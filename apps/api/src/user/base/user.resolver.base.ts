@@ -21,6 +21,7 @@ import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterRespon
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { User } from "./User";
 import { UserCountArgs } from "./UserCountArgs";
+import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
@@ -51,6 +52,17 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.Query(() => [User])
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  async users(@graphql.Args() args: UserFindManyArgs): Promise<User[]> {
+    return this.service.users(args);
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => User, { nullable: true })
   @nestAccessControl.UseRoles({
     resource: "User",
@@ -76,15 +88,7 @@ export class UserResolverBase {
     try {
       return await this.service.updateUser({
         ...args,
-        data: {
-          ...args.data,
-
-          ownerOrganizations: args.data.ownerOrganizations
-            ? {
-                connect: args.data.ownerOrganizations,
-              }
-            : undefined,
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -136,23 +140,22 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => Organization, {
-    nullable: true,
-    name: "ownerOrganizations",
-  })
+  @graphql.ResolveField(() => [Organization], { name: "ownerOrganizations" })
   @nestAccessControl.UseRoles({
     resource: "Organization",
     action: "read",
     possession: "any",
   })
-  async getOwnerOrganizations(
-    @graphql.Parent() parent: User
-  ): Promise<Organization | null> {
-    const result = await this.service.getOwnerOrganizations(parent.id);
+  async findOwnerOrganizations(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: OrganizationFindManyArgs
+  ): Promise<Organization[]> {
+    const results = await this.service.findOwnerOrganizations(parent.id, args);
 
-    if (!result) {
-      return null;
+    if (!results) {
+      return [];
     }
-    return result;
+
+    return results;
   }
 }

@@ -13,30 +13,18 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
-  IsOptional,
   MaxLength,
+  IsOptional,
   ValidateNested,
 } from "class-validator";
-import { OrganizationCreateNestedManyWithoutUsersInput } from "./OrganizationCreateNestedManyWithoutUsersInput";
-import { Type } from "class-transformer";
-import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
+import { OrganizationCreateNestedManyWithoutUsersInput } from "./OrganizationCreateNestedManyWithoutUsersInput";
+import { Type } from "class-transformer";
 
 @InputType()
 class UserCreateInput {
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  email?: string | null;
-
   @ApiProperty({
     required: false,
     type: String,
@@ -54,24 +42,18 @@ class UserCreateInput {
     type: String,
   })
   @IsString()
-  @MaxLength(1000)
   @IsOptional()
   @Field(() => String, {
     nullable: true,
   })
-  lastName?: string | null;
+  email?: string | null;
 
   @ApiProperty({
-    required: false,
-    type: String,
+    required: true,
   })
-  @IsString()
-  @MaxLength(256)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId?: string | null;
+  @IsJSONValue()
+  @Field(() => GraphQLJSON)
+  roles!: InputJsonValue;
 
   @ApiProperty({
     required: false,
@@ -87,6 +69,18 @@ class UserCreateInput {
 
   @ApiProperty({
     required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  lastName?: string | null;
+
+  @ApiProperty({
+    required: false,
     type: () => OrganizationCreateNestedManyWithoutUsersInput,
   })
   @ValidateNested()
@@ -99,15 +93,23 @@ class UserCreateInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationWhereUniqueInput,
+    type: () => OrganizationCreateNestedManyWithoutUsersInput,
   })
   @ValidateNested()
-  @Type(() => OrganizationWhereUniqueInput)
+  @Type(() => OrganizationCreateNestedManyWithoutUsersInput)
   @IsOptional()
-  @Field(() => OrganizationWhereUniqueInput, {
+  @Field(() => OrganizationCreateNestedManyWithoutUsersInput, {
     nullable: true,
   })
-  ownerOrganizations?: OrganizationWhereUniqueInput | null;
+  ownerOrganizations?: OrganizationCreateNestedManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @Field(() => String)
+  username!: string;
 
   @ApiProperty({
     required: false,
@@ -119,21 +121,6 @@ class UserCreateInput {
     nullable: true,
   })
   password?: string | null;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsJSONValue()
-  @Field(() => GraphQLJSON)
-  roles!: InputJsonValue;
-
-  @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @Field(() => String)
-  username!: string;
 }
 
 export { UserCreateInput as UserCreateInput };

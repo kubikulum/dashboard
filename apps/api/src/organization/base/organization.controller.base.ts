@@ -19,17 +19,19 @@ import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import * as nestAccessControl from "nest-access-control";
 import * as defaultAuthGuard from "../../auth/defaultAuth.guard";
 import { OrganizationService } from "../organization.service";
-import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { OrganizationWhereUniqueInput } from "./OrganizationWhereUniqueInput";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
+import { OrganizationCreateInput } from "./OrganizationCreateInput";
 import { Organization } from "./Organization";
+import { OrganizationFindManyArgs } from "./OrganizationFindManyArgs";
+import { OrganizationWhereUniqueInput } from "./OrganizationWhereUniqueInput";
 import { OrganizationUpdateInput } from "./OrganizationUpdateInput";
-import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
-import { Cluster } from "../../cluster/base/Cluster";
-import { ClusterWhereUniqueInput } from "../../cluster/base/ClusterWhereUniqueInput";
 import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
+import { Cluster } from "../../cluster/base/Cluster";
+import { ClusterWhereUniqueInput } from "../../cluster/base/ClusterWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -38,6 +40,79 @@ export class OrganizationControllerBase {
     protected readonly service: OrganizationService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
+  @common.UseInterceptors(AclValidateRequestInterceptor)
+  @common.Post()
+  @swagger.ApiCreatedResponse({ type: Organization })
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "create",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async createOrganization(
+    @common.Body() data: OrganizationCreateInput
+  ): Promise<Organization> {
+    return await this.service.createOrganization({
+      data: {
+        ...data,
+
+        owner: data.owner
+          ? {
+              connect: data.owner,
+            }
+          : undefined,
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        name: true,
+
+        owner: {
+          select: {
+            id: true,
+          },
+        },
+
+        gardenerProjectNamespace: true,
+      },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get()
+  @swagger.ApiOkResponse({ type: [Organization] })
+  @ApiNestedQuery(OrganizationFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "read",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async organizations(@common.Req() request: Request): Promise<Organization[]> {
+    const args = plainToClass(OrganizationFindManyArgs, request.query);
+    return this.service.organizations({
+      ...args,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        name: true,
+
+        owner: {
+          select: {
+            id: true,
+          },
+        },
+
+        gardenerProjectNamespace: true,
+      },
+    });
+  }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id")
@@ -57,10 +132,10 @@ export class OrganizationControllerBase {
     const result = await this.service.organization({
       where: params,
       select: {
-        createdAt: true,
         id: true,
+        createdAt: true,
+        updatedAt: true,
         name: true,
-        oidcId: true,
 
         owner: {
           select: {
@@ -68,7 +143,7 @@ export class OrganizationControllerBase {
           },
         },
 
-        updatedAt: true,
+        gardenerProjectNamespace: true,
       },
     });
     if (result === null) {
@@ -108,10 +183,10 @@ export class OrganizationControllerBase {
             : undefined,
         },
         select: {
-          createdAt: true,
           id: true,
+          createdAt: true,
+          updatedAt: true,
           name: true,
-          oidcId: true,
 
           owner: {
             select: {
@@ -119,7 +194,7 @@ export class OrganizationControllerBase {
             },
           },
 
-          updatedAt: true,
+          gardenerProjectNamespace: true,
         },
       });
     } catch (error) {
@@ -130,109 +205,6 @@ export class OrganizationControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/clusters")
-  @ApiNestedQuery(ClusterFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Cluster",
-    action: "read",
-    possession: "any",
-  })
-  async findClusters(
-    @common.Req() request: Request,
-    @common.Param() params: OrganizationWhereUniqueInput
-  ): Promise<Cluster[]> {
-    const query = plainToClass(ClusterFindManyArgs, request.query);
-    const results = await this.service.findClusters(params.id, {
-      ...query,
-      select: {
-        clusterType: true,
-        createdAt: true,
-        id: true,
-
-        organization: {
-          select: {
-            id: true,
-          },
-        },
-
-        updatedAt: true,
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
-  @common.Post("/:id/clusters")
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
-    possession: "any",
-  })
-  async connectClusters(
-    @common.Param() params: OrganizationWhereUniqueInput,
-    @common.Body() body: ClusterWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      clusters: {
-        connect: body,
-      },
-    };
-    await this.service.updateOrganization({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Patch("/:id/clusters")
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
-    possession: "any",
-  })
-  async updateClusters(
-    @common.Param() params: OrganizationWhereUniqueInput,
-    @common.Body() body: ClusterWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      clusters: {
-        set: body,
-      },
-    };
-    await this.service.updateOrganization({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Delete("/:id/clusters")
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectClusters(
-    @common.Param() params: OrganizationWhereUniqueInput,
-    @common.Body() body: ClusterWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      clusters: {
-        disconnect: body,
-      },
-    };
-    await this.service.updateOrganization({
-      where: params,
-      data,
-      select: { id: true },
-    });
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
@@ -251,22 +223,14 @@ export class OrganizationControllerBase {
     const results = await this.service.findMembers(params.id, {
       ...query,
       select: {
-        createdAt: true,
-        email: true,
-        firstName: true,
         id: true,
-        lastName: true,
-        oidcId: true,
-        organization: true,
-
-        ownerOrganizations: {
-          select: {
-            id: true,
-          },
-        },
-
-        roles: true,
+        createdAt: true,
         updatedAt: true,
+        firstName: true,
+        email: true,
+        roles: true,
+        organization: true,
+        lastName: true,
         username: true,
       },
     });
@@ -334,6 +298,108 @@ export class OrganizationControllerBase {
   ): Promise<void> {
     const data = {
       members: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/clusters")
+  @ApiNestedQuery(ClusterFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Cluster",
+    action: "read",
+    possession: "any",
+  })
+  async findClusters(
+    @common.Req() request: Request,
+    @common.Param() params: OrganizationWhereUniqueInput
+  ): Promise<Cluster[]> {
+    const query = plainToClass(ClusterFindManyArgs, request.query);
+    const results = await this.service.findClusters(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        clusterType: true,
+
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/clusters")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async connectClusters(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: ClusterWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      clusters: {
+        connect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/clusters")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async updateClusters(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: ClusterWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      clusters: {
+        set: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/clusters")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectClusters(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: ClusterWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      clusters: {
         disconnect: body,
       },
     };

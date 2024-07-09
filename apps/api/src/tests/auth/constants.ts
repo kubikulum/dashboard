@@ -7,7 +7,6 @@ export const TEST_USER: UserInfo = {
   id: "cl7qmjh4h0000tothyjqapgj5",
   roles: ["User"],
   username: "ofek",
-  contextOrganizationId: "org_1"
 };
 export const SIGN_TOKEN = "SIGN_TOKEN";
 export const VALID_CREDENTIALS: Credentials = {

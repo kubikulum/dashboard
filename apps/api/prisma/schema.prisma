@@ -8,40 +8,39 @@ generator client {
 }
 
 model User {
-  createdAt          DateTime       @default(now())
-  email              String?        @unique
-  firstName          String?
   id                 String         @id @default(cuid())
-  lastName           String?
-  oidcId             String?        @unique
-  organization       String?
-  organizations      Organization[] @relation(name: "members")
-  ownerOrganizations Organization?  @relation(name: "owner")
-  password           String?
-  roles              Json
+  createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
+  firstName          String?
+  email              String?        @unique
+  roles              Json
+  organization       String?
+  lastName           String?
+  organizations      Organization[] @relation(name: "members")
+  ownerOrganizations Organization[] @relation(name: "owner")
   username           String         @unique
+  password           String?
 }
 
 model Organization {
-  clusters  Cluster[]
-  createdAt DateTime  @default(now())
-  id        String    @id @default(cuid())
-  members   User[]    @relation(name: "members")
-  name      String?
-  oidcId    String?   @unique
-  owner     User?     @relation(name: "owner", fields: [ownerId], references: [id])
-  ownerId   String?   @unique
-  updatedAt DateTime  @updatedAt
+  id                       String    @id @default(cuid())
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  name                     String
+  members                  User[]    @relation(name: "members")
+  owner                    User?     @relation(name: "owner", fields: [ownerId], references: [id])
+  ownerId                  String?
+  clusters                 Cluster[]
+  gardenerProjectNamespace String?   @unique
 }
 
 model Cluster {
-  clusterType    EnumClusterClusterType
-  createdAt      DateTime               @default(now())
   id             String                 @id @default(cuid())
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  clusterType    EnumClusterClusterType
   organization   Organization?          @relation(fields: [organizationId], references: [id])
   organizationId String?
-  updatedAt      DateTime               @updatedAt
 }
 
 enum EnumClusterClusterType {

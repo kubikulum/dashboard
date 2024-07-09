@@ -18,25 +18,25 @@ import { ClusterService } from "../cluster.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
-  createdAt: new Date(),
   id: "exampleId",
+  createdAt: new Date(),
   updatedAt: new Date(),
 };
 const CREATE_RESULT = {
-  createdAt: new Date(),
   id: "exampleId",
+  createdAt: new Date(),
   updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
-    createdAt: new Date(),
     id: "exampleId",
+    createdAt: new Date(),
     updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
-  createdAt: new Date(),
   id: "exampleId",
+  createdAt: new Date(),
   updatedAt: new Date(),
 };
 

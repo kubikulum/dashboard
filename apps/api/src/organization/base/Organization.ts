@@ -11,27 +11,26 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { Cluster } from "../../cluster/base/Cluster";
 import {
+  IsString,
+  IsDate,
+  MaxLength,
   ValidateNested,
   IsOptional,
-  IsDate,
-  IsString,
-  MaxLength,
 } from "class-validator";
 import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
+import { Cluster } from "../../cluster/base/Cluster";
 
 @ObjectType()
 class Organization {
   @ApiProperty({
-    required: false,
-    type: () => [Cluster],
+    required: true,
+    type: String,
   })
-  @ValidateNested()
-  @Type(() => Cluster)
-  @IsOptional()
-  clusters?: Array<Cluster>;
+  @IsString()
+  @Field(() => String)
+  id!: string;
 
   @ApiProperty({
     required: true,
@@ -43,11 +42,20 @@ class Organization {
 
   @ApiProperty({
     required: true,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  updatedAt!: Date;
+
+  @ApiProperty({
+    required: true,
     type: String,
   })
   @IsString()
+  @MaxLength(1000)
   @Field(() => String)
-  id!: string;
+  name!: string;
 
   @ApiProperty({
     required: false,
@@ -60,30 +68,6 @@ class Organization {
 
   @ApiProperty({
     required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  name!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  oidcId!: string | null;
-
-  @ApiProperty({
-    required: false,
     type: () => User,
   })
   @ValidateNested()
@@ -92,12 +76,25 @@ class Organization {
   owner?: User | null;
 
   @ApiProperty({
-    required: true,
+    required: false,
+    type: () => [Cluster],
   })
-  @IsDate()
-  @Type(() => Date)
-  @Field(() => Date)
-  updatedAt!: Date;
+  @ValidateNested()
+  @Type(() => Cluster)
+  @IsOptional()
+  clusters?: Array<Cluster>;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerProjectNamespace!: string | null;
 }
 
 export { Organization as Organization };

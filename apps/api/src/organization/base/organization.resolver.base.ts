@@ -21,12 +21,14 @@ import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterRespon
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { Organization } from "./Organization";
 import { OrganizationCountArgs } from "./OrganizationCountArgs";
+import { OrganizationFindManyArgs } from "./OrganizationFindManyArgs";
 import { OrganizationFindUniqueArgs } from "./OrganizationFindUniqueArgs";
+import { CreateOrganizationArgs } from "./CreateOrganizationArgs";
 import { UpdateOrganizationArgs } from "./UpdateOrganizationArgs";
-import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
-import { Cluster } from "../../cluster/base/Cluster";
 import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
+import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
+import { Cluster } from "../../cluster/base/Cluster";
 import { OrganizationService } from "../organization.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Organization)
@@ -52,6 +54,19 @@ export class OrganizationResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.Query(() => [Organization])
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "read",
+    possession: "any",
+  })
+  async organizations(
+    @graphql.Args() args: OrganizationFindManyArgs
+  ): Promise<Organization[]> {
+    return this.service.organizations(args);
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => Organization, { nullable: true })
   @nestAccessControl.UseRoles({
     resource: "Organization",
@@ -66,6 +81,30 @@ export class OrganizationResolverBase {
       return null;
     }
     return result;
+  }
+
+  @common.UseInterceptors(AclValidateRequestInterceptor)
+  @graphql.Mutation(() => Organization)
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "create",
+    possession: "any",
+  })
+  async createOrganization(
+    @graphql.Args() args: CreateOrganizationArgs
+  ): Promise<Organization> {
+    return await this.service.createOrganization({
+      ...args,
+      data: {
+        ...args.data,
+
+        owner: args.data.owner
+          ? {
+              connect: args.data.owner,
+            }
+          : undefined,
+      },
+    });
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
@@ -102,26 +141,6 @@ export class OrganizationResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [Cluster], { name: "clusters" })
-  @nestAccessControl.UseRoles({
-    resource: "Cluster",
-    action: "read",
-    possession: "any",
-  })
-  async findClusters(
-    @graphql.Parent() parent: Organization,
-    @graphql.Args() args: ClusterFindManyArgs
-  ): Promise<Cluster[]> {
-    const results = await this.service.findClusters(parent.id, args);
-
-    if (!results) {
-      return [];
-    }
-
-    return results;
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [User], { name: "members" })
   @nestAccessControl.UseRoles({
     resource: "User",
@@ -133,6 +152,26 @@ export class OrganizationResolverBase {
     @graphql.Args() args: UserFindManyArgs
   ): Promise<User[]> {
     const results = await this.service.findMembers(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Cluster], { name: "clusters" })
+  @nestAccessControl.UseRoles({
+    resource: "Cluster",
+    action: "read",
+    possession: "any",
+  })
+  async findClusters(
+    @graphql.Parent() parent: Organization,
+    @graphql.Args() args: ClusterFindManyArgs
+  ): Promise<Cluster[]> {
+    const results = await this.service.findClusters(parent.id, args);
 
     if (!results) {
       return [];

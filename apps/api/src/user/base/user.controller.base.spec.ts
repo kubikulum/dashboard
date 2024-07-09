@@ -18,57 +18,55 @@ import { UserService } from "../user.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
-  createdAt: new Date(),
-  email: "exampleEmail",
-  firstName: "exampleFirstName",
   id: "exampleId",
-  lastName: "exampleLastName",
-  oidcId: "exampleOidcId",
-  organization: "exampleOrganization",
-  password: "examplePassword",
+  createdAt: new Date(),
   updatedAt: new Date(),
+  firstName: "exampleFirstName",
+  email: "exampleEmail",
+  organization: "exampleOrganization",
+  lastName: "exampleLastName",
   username: "exampleUsername",
+  password: "examplePassword",
 };
 const CREATE_RESULT = {
-  createdAt: new Date(),
-  email: "exampleEmail",
-  firstName: "exampleFirstName",
   id: "exampleId",
-  lastName: "exampleLastName",
-  oidcId: "exampleOidcId",
-  organization: "exampleOrganization",
-  password: "examplePassword",
+  createdAt: new Date(),
   updatedAt: new Date(),
+  firstName: "exampleFirstName",
+  email: "exampleEmail",
+  organization: "exampleOrganization",
+  lastName: "exampleLastName",
   username: "exampleUsername",
+  password: "examplePassword",
 };
 const FIND_MANY_RESULT = [
   {
-    createdAt: new Date(),
-    email: "exampleEmail",
-    firstName: "exampleFirstName",
     id: "exampleId",
-    lastName: "exampleLastName",
-    oidcId: "exampleOidcId",
-    organization: "exampleOrganization",
-    password: "examplePassword",
+    createdAt: new Date(),
     updatedAt: new Date(),
+    firstName: "exampleFirstName",
+    email: "exampleEmail",
+    organization: "exampleOrganization",
+    lastName: "exampleLastName",
     username: "exampleUsername",
+    password: "examplePassword",
   },
 ];
 const FIND_ONE_RESULT = {
-  createdAt: new Date(),
-  email: "exampleEmail",
-  firstName: "exampleFirstName",
   id: "exampleId",
-  lastName: "exampleLastName",
-  oidcId: "exampleOidcId",
-  organization: "exampleOrganization",
-  password: "examplePassword",
+  createdAt: new Date(),
   updatedAt: new Date(),
+  firstName: "exampleFirstName",
+  email: "exampleEmail",
+  organization: "exampleOrganization",
+  lastName: "exampleLastName",
   username: "exampleUsername",
+  password: "examplePassword",
 };
 
 const service = {
+  users: () => FIND_MANY_RESULT,
+
   user: ({ where }: { where: { id: string } }) => {
     switch (where.id) {
       case existingId:
@@ -137,6 +135,19 @@ describe("User", () => {
 
     app = moduleRef.createNestApplication();
     await app.init();
+  });
+
+  test("GET /users", async () => {
+    await request(app.getHttpServer())
+      .get("/users")
+      .expect(HttpStatus.OK)
+      .expect([
+        {
+          ...FIND_MANY_RESULT[0],
+          createdAt: FIND_MANY_RESULT[0].createdAt.toISOString(),
+          updatedAt: FIND_MANY_RESULT[0].updatedAt.toISOString(),
+        },
+      ]);
   });
 
   test("GET /users/:id non existing", async () => {

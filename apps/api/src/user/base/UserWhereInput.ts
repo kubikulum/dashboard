@@ -11,37 +11,14 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
-import { StringFilter } from "../../util/StringFilter";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { OrganizationListRelationFilter } from "../../organization/base/OrganizationListRelationFilter";
-import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 
 @InputType()
 class UserWhereInput {
-  @ApiProperty({
-    required: false,
-    type: StringNullableFilter,
-  })
-  @Type(() => StringNullableFilter)
-  @IsOptional()
-  @Field(() => StringNullableFilter, {
-    nullable: true,
-  })
-  email?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: StringNullableFilter,
-  })
-  @Type(() => StringNullableFilter)
-  @IsOptional()
-  @Field(() => StringNullableFilter, {
-    nullable: true,
-  })
-  firstName?: StringNullableFilter;
-
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -62,7 +39,7 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  lastName?: StringNullableFilter;
+  firstName?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -73,7 +50,7 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  oidcId?: StringNullableFilter;
+  email?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -85,6 +62,17 @@ class UserWhereInput {
     nullable: true,
   })
   organization?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  lastName?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -100,15 +88,15 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationWhereUniqueInput,
+    type: () => OrganizationListRelationFilter,
   })
   @ValidateNested()
-  @Type(() => OrganizationWhereUniqueInput)
+  @Type(() => OrganizationListRelationFilter)
   @IsOptional()
-  @Field(() => OrganizationWhereUniqueInput, {
+  @Field(() => OrganizationListRelationFilter, {
     nullable: true,
   })
-  ownerOrganizations?: OrganizationWhereUniqueInput;
+  ownerOrganizations?: OrganizationListRelationFilter;
 
   @ApiProperty({
     required: false,
