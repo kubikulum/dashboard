@@ -72,6 +72,7 @@ type Mutation {
 type Organization {
   clusters(orderBy: [ClusterOrderByInput!], skip: Float, take: Float, where: ClusterWhereInput): [Cluster!]!
   createdAt: DateTime!
+  gardenerProjectNamespace: String
   id: String!
   members(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
   name: String!
@@ -81,6 +82,7 @@ type Organization {
 
 input OrganizationCreateInput {
   clusters: ClusterCreateNestedManyWithoutOrganizationsInput
+  gardenerProjectNamespace: String
   members: UserCreateNestedManyWithoutOrganizationsInput
   name: String!
   owner: UserWhereUniqueInput
@@ -94,6 +96,7 @@ input OrganizationListRelationFilter {
 
 input OrganizationOrderByInput {
   createdAt: SortOrder
+  gardenerProjectNamespace: SortOrder
   id: SortOrder
   name: SortOrder
   ownerId: SortOrder
@@ -102,6 +105,7 @@ input OrganizationOrderByInput {
 
 input OrganizationUpdateInput {
   clusters: ClusterUpdateManyWithoutOrganizationsInput
+  gardenerProjectNamespace: String
   members: UserUpdateManyWithoutOrganizationsInput
   name: String
   owner: UserWhereUniqueInput
@@ -115,6 +119,7 @@ input OrganizationUpdateManyWithoutUsersInput {
 
 input OrganizationWhereInput {
   clusters: ClusterListRelationFilter
+  gardenerProjectNamespace: StringNullableFilter
   id: StringFilter
   members: UserListRelationFilter
   name: StringFilter
