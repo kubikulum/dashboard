@@ -169,9 +169,6 @@ export class UserControllerBase {
           updatedAt: true,
           firstName: true,
           email: true,
-          id: true,
-          lastName: true,
-          organization: true,
           roles: true,
           organization: true,
           lastName: true,
@@ -318,6 +315,7 @@ export class UserControllerBase {
             id: true,
           },
         },
+
         gardenerProjectNamespace: true,
       },
     });

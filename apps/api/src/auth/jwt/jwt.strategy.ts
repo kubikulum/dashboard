@@ -1,48 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { JWT_SECRET_KEY_PROVIDER_NAME } from "../../constants";
 import { JwtStrategyBase } from "./base/jwt.strategy.base";
-import { ConfigService } from "@nestjs/config";
-import { LogtoUser } from "./base/User";
-import { IAuthStrategy } from "../IAuthStrategy";
-import { UserInfo } from "../UserInfo";
-import { UserService } from "src/user/user.service";
+import { UserService } from "../../user/user.service";
 
 @Injectable()
-export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
+export class JwtStrategy extends JwtStrategyBase {
   constructor(
-    protected readonly configService: ConfigService,
+    @Inject(JWT_SECRET_KEY_PROVIDER_NAME) secretOrKey: string,
     protected readonly userService: UserService
   ) {
-    super(configService, userService);
-  }
-
-
-  async validate(payload: LogtoUser): Promise<UserInfo> {
-    const validatedUser = await this.validateBase(payload);
-    console.log("validatedUser", validatedUser);
-    // If the entity is valid, return it
-    if (validatedUser) {
-      return validatedUser;
-    }
-
-    // Otherwise, make a new entity and return it
-    const userFields = payload.user;
-    const defaultData = {
-
-      id: payload.sub,
-      username: user.email,
-      roles: []
-
-    };
-
-    const newUser = await this.userService.create({
-      data: defaultData,
-    });
-    const roles = payload.organizationRoles.filter((role) => role.organizationId === payload.organization_id).map((role) => role.roleName);
-    //add default user role
-    roles.push("user");
-
-
-    return { ...newUser, roles: roles, contextOrganizationId: payload.organization_id };
-
+    super(secretOrKey, userService);
   }
 }
