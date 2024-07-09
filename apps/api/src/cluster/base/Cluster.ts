@@ -21,6 +21,7 @@ import {
 import { Type } from "class-transformer";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { Organization } from "../../organization/base/Organization";
+import { EnumClusterPlan } from "./EnumClusterPlan";
 
 @ObjectType()
 class Cluster {
@@ -56,7 +57,7 @@ class Cluster {
   @Field(() => EnumClusterClusterType, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "flyte";
+  clusterType?: "kubeflow" | "Flytes";
 
   @ApiProperty({
     required: false,
@@ -66,6 +67,17 @@ class Cluster {
   @Type(() => Organization)
   @IsOptional()
   organization?: Organization | null;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterPlan,
+  })
+  @IsEnum(EnumClusterPlan)
+  @IsOptional()
+  @Field(() => EnumClusterPlan, {
+    nullable: true,
+  })
+  plan?: "Free" | null;
 }
 
 export { Cluster as Cluster };

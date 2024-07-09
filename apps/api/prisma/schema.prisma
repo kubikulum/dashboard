@@ -41,9 +41,14 @@ model Cluster {
   clusterType    EnumClusterClusterType
   organization   Organization?          @relation(fields: [organizationId], references: [id])
   organizationId String?
+  plan           EnumClusterPlan?
 }
 
 enum EnumClusterClusterType {
   kubeflow
-  flyte
+  Flytes
+}
+
+enum EnumClusterPlan {
+  Free
 }

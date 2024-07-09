@@ -334,6 +334,8 @@ export class OrganizationControllerBase {
             id: true,
           },
         },
+
+        plan: true,
       },
     });
     if (results === null) {
