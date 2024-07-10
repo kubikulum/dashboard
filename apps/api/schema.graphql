@@ -51,6 +51,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: DateTime
+  notIn: [DateTime!]
+}
+
 enum EnumClusterClusterType {
   Flytes
   Kubeflow
@@ -58,6 +69,89 @@ enum EnumClusterClusterType {
 
 enum EnumClusterPlan {
   Free
+  Reserved_1
+}
+
+enum EnumInvitationStatus {
+  Option_1
+}
+
+type Invitation {
+  code: String
+  createdAt: DateTime!
+  email: String
+  expirationDate: DateTime
+  id: String!
+  inviter: User
+  organization: Organization
+  status: EnumInvitationStatus
+  updatedAt: DateTime!
+}
+
+input InvitationCreateInput {
+  code: String
+  email: String
+  expirationDate: DateTime
+  inviter: UserWhereUniqueInput
+  organization: OrganizationWhereUniqueInput
+  status: EnumInvitationStatus
+}
+
+input InvitationCreateNestedManyWithoutOrganizationsInput {
+  connect: [InvitationWhereUniqueInput!]
+}
+
+input InvitationListRelationFilter {
+  every: InvitationWhereInput
+  none: InvitationWhereInput
+  some: InvitationWhereInput
+}
+
+input InvitationOrderByInput {
+  code: SortOrder
+  createdAt: SortOrder
+  email: SortOrder
+  expirationDate: SortOrder
+  id: SortOrder
+  inviterId: SortOrder
+  organizationId: SortOrder
+  status: SortOrder
+  updatedAt: SortOrder
+}
+
+input InvitationUpdateInput {
+  code: String
+  email: String
+  expirationDate: DateTime
+  inviter: UserWhereUniqueInput
+  organization: OrganizationWhereUniqueInput
+  status: EnumInvitationStatus
+}
+
+input InvitationUpdateManyWithoutOrganizationsInput {
+  connect: [InvitationWhereUniqueInput!]
+  disconnect: [InvitationWhereUniqueInput!]
+  set: [InvitationWhereUniqueInput!]
+}
+
+input InvitationUpdateManyWithoutUsersInput {
+  connect: [InvitationWhereUniqueInput!]
+  disconnect: [InvitationWhereUniqueInput!]
+  set: [InvitationWhereUniqueInput!]
+}
+
+input InvitationWhereInput {
+  code: StringNullableFilter
+  email: StringNullableFilter
+  expirationDate: DateTimeNullableFilter
+  id: StringFilter
+  inviter: UserWhereUniqueInput
+  organization: OrganizationWhereUniqueInput
+  status: EnumInvitationStatus
+}
+
+input InvitationWhereUniqueInput {
+  id: String!
 }
 
 """
@@ -70,8 +164,11 @@ type MetaQueryPayload {
 }
 
 type Mutation {
+  createInvitation(data: InvitationCreateInput!): Invitation!
   createOrganization(data: OrganizationCreateInput!): Organization!
+  deleteInvitation(where: InvitationWhereUniqueInput!): Invitation!
   deleteUser(where: UserWhereUniqueInput!): User!
+  updateInvitation(data: InvitationUpdateInput!, where: InvitationWhereUniqueInput!): Invitation!
   updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
 }
@@ -81,6 +178,7 @@ type Organization {
   createdAt: DateTime!
   gardenerProjectNamespace: String
   id: String!
+  invitations(orderBy: [InvitationOrderByInput!], skip: Float, take: Float, where: InvitationWhereInput): [Invitation!]!
   members(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
   name: String!
   owner: User
@@ -90,6 +188,7 @@ type Organization {
 input OrganizationCreateInput {
   clusters: ClusterCreateNestedManyWithoutOrganizationsInput
   gardenerProjectNamespace: String
+  invitations: InvitationCreateNestedManyWithoutOrganizationsInput
   members: UserCreateNestedManyWithoutOrganizationsInput
   name: String!
   owner: UserWhereUniqueInput
@@ -113,6 +212,7 @@ input OrganizationOrderByInput {
 input OrganizationUpdateInput {
   clusters: ClusterUpdateManyWithoutOrganizationsInput
   gardenerProjectNamespace: String
+  invitations: InvitationUpdateManyWithoutOrganizationsInput
   members: UserUpdateManyWithoutOrganizationsInput
   name: String
   owner: UserWhereUniqueInput
@@ -128,6 +228,7 @@ input OrganizationWhereInput {
   clusters: ClusterListRelationFilter
   gardenerProjectNamespace: StringNullableFilter
   id: StringFilter
+  invitations: InvitationListRelationFilter
   members: UserListRelationFilter
   name: StringFilter
 }
@@ -137,9 +238,12 @@ input OrganizationWhereUniqueInput {
 }
 
 type Query {
+  _invitationsMeta(where: InvitationWhereInput): MetaQueryPayload!
   _organizationsMeta(where: OrganizationWhereInput): MetaQueryPayload!
   _usersMeta(where: UserWhereInput): MetaQueryPayload!
   cluster(where: ClusterWhereUniqueInput!): Cluster
+  invitation(where: InvitationWhereUniqueInput!): Invitation
+  invitations(orderBy: [InvitationOrderByInput!], skip: Float, take: Float, where: InvitationWhereInput): [Invitation!]!
   organization(where: OrganizationWhereUniqueInput!): Organization
   organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
   user(where: UserWhereUniqueInput!): User
@@ -191,6 +295,7 @@ type User {
   email: String
   firstName: String
   id: String!
+  invitations(orderBy: [InvitationOrderByInput!], skip: Float, take: Float, where: InvitationWhereInput): [Invitation!]!
   lastName: String
   organization: String
   organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
@@ -226,6 +331,7 @@ input UserOrderByInput {
 input UserUpdateInput {
   email: String
   firstName: String
+  invitations: InvitationUpdateManyWithoutUsersInput
   lastName: String
   organization: String
   organizations: OrganizationUpdateManyWithoutUsersInput
@@ -245,6 +351,7 @@ input UserWhereInput {
   email: StringNullableFilter
   firstName: StringNullableFilter
   id: StringFilter
+  invitations: InvitationListRelationFilter
   lastName: StringNullableFilter
   organization: StringNullableFilter
   organizations: OrganizationListRelationFilter

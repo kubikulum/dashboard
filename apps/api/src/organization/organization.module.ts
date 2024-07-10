@@ -4,17 +4,17 @@ import { OrganizationModuleBase } from "./base/organization.module.base";
 import { OrganizationService } from "./organization.service";
 import { OrganizationController } from "./organization.controller";
 import { OrganizationResolver } from "./organization.resolver";
-import { AuthManagementService } from "../auth/auth-management.service";
 import { HttpModule } from "@nestjs/axios";
 import { ApiModule } from "src/gardener-client/api.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Configuration, ConfigurationParameters } from "src/gardener-client/configuration";
 import { LogtoApiManagementModule } from "src/logto-auth-management";
 import { OAuthService } from "src/oauth-client/oauth.service";
+import { InvitationModule } from "src/invitation/invitation.module";
 
 @Module({
   imports: [OrganizationModuleBase,
-
+    InvitationModule,
     LogtoApiManagementModule.forRootAsync({
       imports: [],
       inject: [OAuthService, ConfigService],

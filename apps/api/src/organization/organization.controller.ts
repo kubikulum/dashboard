@@ -1,16 +1,19 @@
 import * as common from "@nestjs/common";
 import * as swagger from "@nestjs/swagger";
 import * as nestAccessControl from "nest-access-control";
-import { OrganizationService } from "./organization.service";
+import * as errors from "../errors";
 import { OrganizationControllerBase } from "./base/organization.controller.base";
 import { InvitationCreateInput } from "./inivitationCreateInput";
 import { OrganizationWhereUniqueInput } from "./base/OrganizationWhereUniqueInput";
-import { errors } from "openid-client";
+
 import { AllowNoOrganization } from "src/auth/organization.guard";
 import { AclValidateRequestInterceptor } from "src/interceptors/aclValidateRequest.interceptor";
 import { Organization } from "./base/Organization";
 import { OrganizationCreateInput } from "./base/OrganizationCreateInput";
-import { OrganizationInvitationsService, UsersService } from "src/logto-auth-management";
+import { OrganizationInvitationsService, UsersService, OrganizationsService } from "src/logto-auth-management";
+import { firstValueFrom } from "rxjs";
+import { OrganizationService } from "./organization.service";
+import { InvitationService } from "src/invitation/invitation.service";
 
 
 @swagger.ApiTags("organizations")
@@ -20,7 +23,9 @@ export class OrganizationController extends OrganizationControllerBase {
     protected readonly service: OrganizationService,
     @nestAccessControl.InjectRolesBuilder()
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder,
-    protected readonly organizationInvitationService: OrganizationInvitationsService,
+    protected readonly invitationServie: InvitationService,
+    protected readonly authOrganizationsService: OrganizationsService,
+    protected readonly organizationInvitationService: OrganizationInvitationsService
   ) {
     super(service, rolesBuilder);
   }
@@ -43,9 +48,11 @@ export class OrganizationController extends OrganizationControllerBase {
     type: errors.ForbiddenException,
   })
   async createOrganizationOverride(@common.Req() req: any, @common.Body() body: OrganizationCreateInput) {
-    const org = await this.authManagementService.createOrganization(body.name);
-    await this.authManagementService.addUserToOrganization(req.user.id, org.id);
-    await this.authManagementService.addRoleToUserInOrganization(req.user.id, org.id, "owner");
+    const { data: org } = await firstValueFrom(this.authOrganizationsService.createOrganization({
+      tenantId: req.user.id,
+      name: body.name,
+    }));
+    await this.authOrganizationsService.addOrganizationUsers(org.id, { userIds: [req.user.id] });
     const organization = await this.service.createOrganization({ data: { name: body.name, id: org.id, ownerId: req.user.id, members: { connect: [{ id: req.user.id }] } } });
 
     // // the project name should have maximum 10 characters
@@ -67,7 +74,7 @@ export class OrganizationController extends OrganizationControllerBase {
     //         role: "admin",
     //         roles: ["owner"]
     //       }
-          
+
     //     ],
 
     //   }
@@ -92,30 +99,42 @@ export class OrganizationController extends OrganizationControllerBase {
     return organization;
   }
 
-  @common.Post("/:id/members")
+  @common.Post("/:id/invite")
   @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
+    resource: "Invitation",
+    action: "create",
     possession: "any",
   })
   async sendInvitations(
+    @common.Req() req: any,
     @common.Param() params: OrganizationWhereUniqueInput,
     @common.Body() body: InvitationCreateInput[]
   ): Promise<void> {
     //The epoch time in milliseconds when the invitation expires.
-    // expire after 24h
+    // expire after 48h
     const expireTime = new Date().getTime() + 24 * 60 * 60 * 1000;
-    
-    await this.organizationInvitationService.createOrganizationInvitation({
+    let now = new Date();
+    now.setDate(now.getDate() + 2)
+
+    const invitation = await this.invitationServie.createInvitation({
+      data: {
+        organizationId: params.id,
+        inviterId: req.user.id,
+        email: body[0].email,
+        expirationDate: now
+      }
+    });
+    await firstValueFrom(this.organizationInvitationService.createOrganizationInvitation({
       organizationId: params.id,
-    inviterId: 'aaa',
-    invitee: body[0].email,
-    expiresAt: expireTime,
-    messagePayload:{
-      
-    }
-      
-    })
+      inviterId: invitation.inviterId,
+      invitee: invitation.email || "",
+      expiresAt: expireTime,
+      messagePayload: {
+        code: invitation.code || '',
+        link: `${req.get('Host')}/invitation/${invitation.code}`
+      }
+
+    }))
   }
 
 }
