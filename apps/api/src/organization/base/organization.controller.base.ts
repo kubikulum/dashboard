@@ -32,6 +32,9 @@ import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
 import { Cluster } from "../../cluster/base/Cluster";
 import { ClusterWhereUniqueInput } from "../../cluster/base/ClusterWhereUniqueInput";
+import { InvitationFindManyArgs } from "../../invitation/base/InvitationFindManyArgs";
+import { Invitation } from "../../invitation/base/Invitation";
+import { InvitationWhereUniqueInput } from "../../invitation/base/InvitationWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -402,6 +405,118 @@ export class OrganizationControllerBase {
   ): Promise<void> {
     const data = {
       clusters: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/invitations")
+  @ApiNestedQuery(InvitationFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Invitation",
+    action: "read",
+    possession: "any",
+  })
+  async findInvitations(
+    @common.Req() request: Request,
+    @common.Param() params: OrganizationWhereUniqueInput
+  ): Promise<Invitation[]> {
+    const query = plainToClass(InvitationFindManyArgs, request.query);
+    const results = await this.service.findInvitations(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        email: true,
+        status: true,
+        expirationDate: true,
+
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+
+        inviter: {
+          select: {
+            id: true,
+          },
+        },
+
+        code: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/invitations")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async connectInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invitations: {
+        connect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/invitations")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async updateInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invitations: {
+        set: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/invitations")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invitations: {
         disconnect: body,
       },
     };

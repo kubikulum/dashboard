@@ -77,7 +77,7 @@ class Cluster {
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free" | null;
+  plan?: "Free" | "Reserved_1" | null;
 }
 
 export { Cluster as Cluster };

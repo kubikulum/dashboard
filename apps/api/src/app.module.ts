@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { UserModule } from "./user/user.module";
 import { OrganizationModule } from "./organization/organization.module";
 import { ClusterModule } from "./cluster/cluster.module";
+import { InvitationModule } from "./invitation/invitation.module";
 import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
@@ -22,6 +23,7 @@ import { AuthModule } from "./auth/auth.module";
     UserModule,
     OrganizationModule,
     ClusterModule,
+    InvitationModule,
     HealthModule,
     PrismaModule,
     SecretsManagerModule,
