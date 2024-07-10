@@ -21,6 +21,7 @@ import { UserCreateNestedManyWithoutOrganizationsInput } from "./UserCreateNeste
 import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
+import { InvitationCreateNestedManyWithoutOrganizationsInput } from "./InvitationCreateNestedManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationCreateInput {
@@ -80,6 +81,18 @@ class OrganizationCreateInput {
     nullable: true,
   })
   gardenerProjectNamespace?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InvitationCreateNestedManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => InvitationCreateNestedManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => InvitationCreateNestedManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  invitations?: InvitationCreateNestedManyWithoutOrganizationsInput;
 }
 
 export { OrganizationCreateInput as OrganizationCreateInput };

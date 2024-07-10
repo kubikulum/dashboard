@@ -21,6 +21,7 @@ import { UserUpdateManyWithoutOrganizationsInput } from "./UserUpdateManyWithout
 import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ClusterUpdateManyWithoutOrganizationsInput } from "./ClusterUpdateManyWithoutOrganizationsInput";
+import { InvitationUpdateManyWithoutOrganizationsInput } from "./InvitationUpdateManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationUpdateInput {
@@ -83,6 +84,18 @@ class OrganizationUpdateInput {
     nullable: true,
   })
   gardenerProjectNamespace?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InvitationUpdateManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => InvitationUpdateManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => InvitationUpdateManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  invitations?: InvitationUpdateManyWithoutOrganizationsInput;
 }
 
 export { OrganizationUpdateInput as OrganizationUpdateInput };

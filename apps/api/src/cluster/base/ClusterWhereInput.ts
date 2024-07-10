@@ -63,7 +63,7 @@ class ClusterWhereInput {
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free";
+  plan?: "Free" | "Reserved_1";
 }
 
 export { ClusterWhereInput as ClusterWhereInput };

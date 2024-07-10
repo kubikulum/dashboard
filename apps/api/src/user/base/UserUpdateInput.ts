@@ -22,6 +22,7 @@ import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
 import { OrganizationUpdateManyWithoutUsersInput } from "./OrganizationUpdateManyWithoutUsersInput";
 import { Type } from "class-transformer";
+import { InvitationUpdateManyWithoutUsersInput } from "./InvitationUpdateManyWithoutUsersInput";
 
 @InputType()
 class UserUpdateInput {
@@ -127,6 +128,18 @@ class UserUpdateInput {
     nullable: true,
   })
   password?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InvitationUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => InvitationUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => InvitationUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  invitations?: InvitationUpdateManyWithoutUsersInput;
 }
 
 export { UserUpdateInput as UserUpdateInput };

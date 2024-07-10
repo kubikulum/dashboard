@@ -22,6 +22,7 @@ import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
 import { OrganizationCreateNestedManyWithoutUsersInput } from "./OrganizationCreateNestedManyWithoutUsersInput";
 import { Type } from "class-transformer";
+import { InvitationCreateNestedManyWithoutUsersInput } from "./InvitationCreateNestedManyWithoutUsersInput";
 
 @InputType()
 class UserCreateInput {
@@ -121,6 +122,18 @@ class UserCreateInput {
     nullable: true,
   })
   password?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InvitationCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => InvitationCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => InvitationCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  invitations?: InvitationCreateNestedManyWithoutUsersInput;
 }
 
 export { UserCreateInput as UserCreateInput };

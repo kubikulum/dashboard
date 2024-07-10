@@ -17,6 +17,7 @@ import { IsOptional, ValidateNested } from "class-validator";
 import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { InvitationListRelationFilter } from "../../invitation/base/InvitationListRelationFilter";
 
 @InputType()
 class OrganizationWhereInput {
@@ -76,6 +77,18 @@ class OrganizationWhereInput {
     nullable: true,
   })
   gardenerProjectNamespace?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => InvitationListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => InvitationListRelationFilter)
+  @IsOptional()
+  @Field(() => InvitationListRelationFilter, {
+    nullable: true,
+  })
+  invitations?: InvitationListRelationFilter;
 }
 
 export { OrganizationWhereInput as OrganizationWhereInput };
