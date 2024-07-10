@@ -21,6 +21,7 @@ import {
 import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
 import { Cluster } from "../../cluster/base/Cluster";
+import { Invitation } from "../../invitation/base/Invitation";
 
 @ObjectType()
 class Organization {
@@ -95,6 +96,15 @@ class Organization {
     nullable: true,
   })
   gardenerProjectNamespace!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Invitation],
+  })
+  @ValidateNested()
+  @Type(() => Invitation)
+  @IsOptional()
+  invitations?: Array<Invitation>;
 }
 
 export { Organization as Organization };

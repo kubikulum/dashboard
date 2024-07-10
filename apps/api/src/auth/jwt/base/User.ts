@@ -1,13 +1,8 @@
 export interface Auth0User {
-  sub: string,
-  email: string,
-  organization_id: string,
-  given_name: string,
-  family_name: string,
-  created_at: number,
-  organizationRoles: {
-    organizationId: string;
-    roleId: string;
-    roleName: string;
-}[];
+  nickname: string;
+  username: string;
+  name: string;
+  email: string;
+  email_verified: boolean;
+  picture: string;
 }

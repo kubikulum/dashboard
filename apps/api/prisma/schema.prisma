@@ -20,18 +20,20 @@ model User {
   ownerOrganizations Organization[] @relation(name: "owner")
   username           String         @unique
   password           String?
+  invitations        Invitation[]
 }
 
 model Organization {
-  id                       String    @id @default(cuid())
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
+  id                       String       @id @default(cuid())
+  createdAt                DateTime     @default(now())
+  updatedAt                DateTime     @updatedAt
   name                     String
-  members                  User[]    @relation(name: "members")
-  owner                    User?     @relation(name: "owner", fields: [ownerId], references: [id])
+  members                  User[]       @relation(name: "members")
+  owner                    User?        @relation(name: "owner", fields: [ownerId], references: [id])
   ownerId                  String?
   clusters                 Cluster[]
-  gardenerProjectNamespace String?   @unique
+  gardenerProjectNamespace String?      @unique
+  invitations              Invitation[]
 }
 
 model Cluster {
@@ -44,6 +46,20 @@ model Cluster {
   plan           EnumClusterPlan?
 }
 
+model Invitation {
+  id             String                @id @default(cuid())
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  email          String
+  status         EnumInvitationStatus?
+  expirationDate DateTime?
+  organization   Organization          @relation(fields: [organizationId], references: [id])
+  organizationId String
+  inviter        User                  @relation(fields: [inviterId], references: [id])
+  inviterId      String
+  code           String                @unique
+}
+
 enum EnumClusterClusterType {
   kubeflow
   Flytes
@@ -51,4 +67,11 @@ enum EnumClusterClusterType {
 
 enum EnumClusterPlan {
   Free
+  Reserved_1
+}
+
+enum EnumInvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
 }

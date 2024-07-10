@@ -10,10 +10,12 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
+
 import {
   Prisma,
   User as PrismaUser,
   Organization as PrismaOrganization,
+  Invitation as PrismaInvitation,
 } from "@prisma/client";
 
 export class UserServiceBase {
@@ -59,5 +61,16 @@ export class UserServiceBase {
         where: { id: parentId },
       })
       .ownerOrganizations(args);
+  }
+
+  async findInvitations(
+    parentId: string,
+    args: Prisma.InvitationFindManyArgs
+  ): Promise<PrismaInvitation[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .invitations(args);
   }
 }

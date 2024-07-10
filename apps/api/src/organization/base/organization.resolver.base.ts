@@ -29,6 +29,8 @@ import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
 import { Cluster } from "../../cluster/base/Cluster";
+import { InvitationFindManyArgs } from "../../invitation/base/InvitationFindManyArgs";
+import { Invitation } from "../../invitation/base/Invitation";
 import { OrganizationService } from "../organization.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Organization)
@@ -172,6 +174,26 @@ export class OrganizationResolverBase {
     @graphql.Args() args: ClusterFindManyArgs
   ): Promise<Cluster[]> {
     const results = await this.service.findClusters(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Invitation], { name: "invitations" })
+  @nestAccessControl.UseRoles({
+    resource: "Invitation",
+    action: "read",
+    possession: "any",
+  })
+  async findInvitations(
+    @graphql.Parent() parent: Organization,
+    @graphql.Args() args: InvitationFindManyArgs
+  ): Promise<Invitation[]> {
+    const results = await this.service.findInvitations(parent.id, args);
 
     if (!results) {
       return [];
