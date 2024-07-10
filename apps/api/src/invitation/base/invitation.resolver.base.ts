@@ -97,17 +97,13 @@ export class InvitationResolverBase {
       data: {
         ...args.data,
 
-        organization: args.data.organization
-          ? {
-              connect: args.data.organization,
-            }
-          : undefined,
+        organization: {
+          connect: args.data.organization,
+        },
 
-        inviter: args.data.inviter
-          ? {
-              connect: args.data.inviter,
-            }
-          : undefined,
+        inviter: {
+          connect: args.data.inviter,
+        },
       },
     });
   }
@@ -128,17 +124,13 @@ export class InvitationResolverBase {
         data: {
           ...args.data,
 
-          organization: args.data.organization
-            ? {
-                connect: args.data.organization,
-              }
-            : undefined,
+          organization: {
+            connect: args.data.organization,
+          },
 
-          inviter: args.data.inviter
-            ? {
-                connect: args.data.inviter,
-              }
-            : undefined,
+          inviter: {
+            connect: args.data.inviter,
+          },
         },
       });
     } catch (error) {

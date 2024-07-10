@@ -52,17 +52,13 @@ export class InvitationControllerBase {
       data: {
         ...data,
 
-        organization: data.organization
-          ? {
-              connect: data.organization,
-            }
-          : undefined,
+        organization: {
+          connect: data.organization,
+        },
 
-        inviter: data.inviter
-          ? {
-              connect: data.inviter,
-            }
-          : undefined,
+        inviter: {
+          connect: data.inviter,
+        },
       },
       select: {
         id: true,
@@ -200,17 +196,13 @@ export class InvitationControllerBase {
         data: {
           ...data,
 
-          organization: data.organization
-            ? {
-                connect: data.organization,
-              }
-            : undefined,
+          organization: {
+            connect: data.organization,
+          },
 
-          inviter: data.inviter
-            ? {
-                connect: data.inviter,
-              }
-            : undefined,
+          inviter: {
+            connect: data.inviter,
+          },
         },
         select: {
           id: true,

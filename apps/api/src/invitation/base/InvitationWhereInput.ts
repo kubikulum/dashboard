@@ -14,7 +14,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
 import { IsOptional, IsEnum, ValidateNested } from "class-validator";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
@@ -35,14 +34,14 @@ class InvitationWhereInput {
 
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
+    type: StringFilter,
   })
-  @Type(() => StringNullableFilter)
+  @Type(() => StringFilter)
   @IsOptional()
-  @Field(() => StringNullableFilter, {
+  @Field(() => StringFilter, {
     nullable: true,
   })
-  email?: StringNullableFilter;
+  email?: StringFilter;
 
   @ApiProperty({
     required: false,
@@ -53,7 +52,7 @@ class InvitationWhereInput {
   @Field(() => EnumInvitationStatus, {
     nullable: true,
   })
-  status?: "Option1";
+  status?: "PENDING" | "ACCEPTED" | "REVOKED";
 
   @ApiProperty({
     required: false,
@@ -92,14 +91,14 @@ class InvitationWhereInput {
 
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
+    type: StringFilter,
   })
-  @Type(() => StringNullableFilter)
+  @Type(() => StringFilter)
   @IsOptional()
-  @Field(() => StringNullableFilter, {
+  @Field(() => StringFilter, {
     nullable: true,
   })
-  code?: StringNullableFilter;
+  code?: StringFilter;
 }
 
 export { InvitationWhereInput as InvitationWhereInput };

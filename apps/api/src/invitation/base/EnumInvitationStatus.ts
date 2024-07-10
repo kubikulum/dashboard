@@ -12,7 +12,9 @@ https://docs.amplication.com/how-to/custom-code
 import { registerEnumType } from "@nestjs/graphql";
 
 export enum EnumInvitationStatus {
-  Option_1 = "Option1",
+  Pending = "PENDING",
+  Accepted = "ACCEPTED",
+  Revoked = "REVOKED",
 }
 
 registerEnumType(EnumInvitationStatus, {

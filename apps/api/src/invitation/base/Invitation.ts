@@ -14,8 +14,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
   IsDate,
-  IsOptional,
   IsEnum,
+  IsOptional,
   ValidateNested,
   MaxLength,
 } from "class-validator";
@@ -51,15 +51,12 @@ class Invitation {
   updatedAt!: Date;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  email!: string | null;
+  @Field(() => String)
+  email!: string;
 
   @ApiProperty({
     required: false,
@@ -70,7 +67,7 @@ class Invitation {
   @Field(() => EnumInvitationStatus, {
     nullable: true,
   })
-  status?: "Option1" | null;
+  status?: "PENDING" | "ACCEPTED" | "REVOKED" | null;
 
   @ApiProperty({
     required: false,
@@ -84,34 +81,29 @@ class Invitation {
   expirationDate!: Date | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: () => Organization,
   })
   @ValidateNested()
   @Type(() => Organization)
-  @IsOptional()
-  organization?: Organization | null;
+  organization?: Organization;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: () => User,
   })
   @ValidateNested()
   @Type(() => User)
-  @IsOptional()
-  inviter?: User | null;
+  inviter?: User;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
   @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  code!: string | null;
+  @Field(() => String)
+  code!: string;
 }
 
 export { Invitation as Invitation };

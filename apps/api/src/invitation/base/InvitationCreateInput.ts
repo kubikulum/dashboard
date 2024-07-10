@@ -13,8 +13,8 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
-  IsOptional,
   IsEnum,
+  IsOptional,
   IsDate,
   ValidateNested,
   MaxLength,
@@ -27,15 +27,12 @@ import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 @InputType()
 class InvitationCreateInput {
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  email?: string | null;
+  @Field(() => String)
+  email!: string;
 
   @ApiProperty({
     required: false,
@@ -46,7 +43,7 @@ class InvitationCreateInput {
   @Field(() => EnumInvitationStatus, {
     nullable: true,
   })
-  status?: "Option1" | null;
+  status?: "PENDING" | "ACCEPTED" | "REVOKED" | null;
 
   @ApiProperty({
     required: false,
@@ -60,40 +57,31 @@ class InvitationCreateInput {
   expirationDate?: Date | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: () => OrganizationWhereUniqueInput,
   })
   @ValidateNested()
   @Type(() => OrganizationWhereUniqueInput)
-  @IsOptional()
-  @Field(() => OrganizationWhereUniqueInput, {
-    nullable: true,
-  })
-  organization?: OrganizationWhereUniqueInput | null;
+  @Field(() => OrganizationWhereUniqueInput)
+  organization!: OrganizationWhereUniqueInput;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
   @Type(() => UserWhereUniqueInput)
-  @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
-    nullable: true,
-  })
-  inviter?: UserWhereUniqueInput | null;
+  @Field(() => UserWhereUniqueInput)
+  inviter!: UserWhereUniqueInput;
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
   @IsString()
   @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  code?: string | null;
+  @Field(() => String)
+  code!: string;
 }
 
 export { InvitationCreateInput as InvitationCreateInput };

@@ -35,7 +35,7 @@ class InvitationUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  email?: string | null;
+  email?: string;
 
   @ApiProperty({
     required: false,
@@ -46,7 +46,7 @@ class InvitationUpdateInput {
   @Field(() => EnumInvitationStatus, {
     nullable: true,
   })
-  status?: "Option1" | null;
+  status?: "PENDING" | "ACCEPTED" | "REVOKED" | null;
 
   @ApiProperty({
     required: false,
@@ -69,7 +69,7 @@ class InvitationUpdateInput {
   @Field(() => OrganizationWhereUniqueInput, {
     nullable: true,
   })
-  organization?: OrganizationWhereUniqueInput | null;
+  organization?: OrganizationWhereUniqueInput;
 
   @ApiProperty({
     required: false,
@@ -81,7 +81,7 @@ class InvitationUpdateInput {
   @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  inviter?: UserWhereUniqueInput | null;
+  inviter?: UserWhereUniqueInput;
 
   @ApiProperty({
     required: false,
@@ -93,7 +93,7 @@ class InvitationUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  code?: string | null;
+  code?: string;
 }
 
 export { InvitationUpdateInput as InvitationUpdateInput };
