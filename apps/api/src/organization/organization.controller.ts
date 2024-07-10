@@ -52,47 +52,47 @@ export class OrganizationController extends OrganizationControllerBase {
     await this.authManagementService.addRoleToUserInOrganization(req.user.id, org.id, "owner");
     const organization = await this.service.createOrganization({ data: { name: body.name, id: org.id, ownerId: req.user.id, members: { connect: [{ id: req.user.id }] } } });
 
-    // the project name should have maximum 10 characters
-    const name = org.id.length > 10 ? org.id.substring(0, 10) : org.id;
-    // Create a new project gardener for the organization
-    const createReq = this.gardenerClientService.createCoreGardenerCloudV1beta1Project({
-      metadata: { name: name, labels: { organization: org.name, organizationId:org.id } },
-      spec: {
-        createdBy: {
-          apiGroup: "rbac.authorization.k8s.io",
-          kind: "User",
-          name: `oidc:${req.user.username}`
-        },
-        members: [
-          {
-            apiGroup: "rbac.authorization.k8s.io",
-            kind: "User",
-            name: `oidc:${req.user.username}`,
-            role: "admin",
-            roles: ["owner"]
-          }
+    // // the project name should have maximum 10 characters
+    // const name = org.id.length > 10 ? org.id.substring(0, 10) : org.id;
+    // // Create a new project gardener for the organization
+    // const createReq = this.gardenerClientService.createCoreGardenerCloudV1beta1Project({
+    //   metadata: { name: name, labels: { organization: org.name, organizationId:org.id } },
+    //   spec: {
+    //     createdBy: {
+    //       apiGroup: "rbac.authorization.k8s.io",
+    //       kind: "User",
+    //       name: `oidc:${req.user.username}`
+    //     },
+    //     members: [
+    //       {
+    //         apiGroup: "rbac.authorization.k8s.io",
+    //         kind: "User",
+    //         name: `oidc:${req.user.username}`,
+    //         role: "admin",
+    //         roles: ["owner"]
+    //       }
           
-        ],
+    //     ],
 
-      }
-    })
-    const token = this.config.get("GARDENER_SA_TOKEN");
-    createReq.source = of(token);
-    try {
-      const { data } = await firstValueFrom(
-        createReq.pipe(
-          catchError((error: AxiosError) => {
-            console.error(error);
-            throw error
-          })
-        )
-      )
-    } catch (error) {
-      // if the project creation fails, delete the organization
-      await this.service.deleteOrganization({ where: { id: org.id } });
-      await this.authManagementService.deleteOrganization(org.id);
-      throw new errors.NotFoundException("Failed to create project in gardener");
-    }
+    //   }
+    // })
+    // const token = this.config.get("GARDENER_SA_TOKEN");
+    // createReq.source = of(token);
+    // try {
+    //   const { data } = await firstValueFrom(
+    //     createReq.pipe(
+    //       catchError((error: AxiosError) => {
+    //         console.error(error);
+    //         throw error
+    //       })
+    //     )
+    //   )
+    // } catch (error) {
+    //   // if the project creation fails, delete the organization
+    //   await this.service.deleteOrganization({ where: { id: org.id } });
+    //   await this.authManagementService.deleteOrganization(org.id);
+    //   throw new errors.NotFoundException("Failed to create project in gardener");
+    // }
     return organization;
   }
 }

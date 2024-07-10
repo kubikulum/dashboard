@@ -3,20 +3,13 @@ import type { components } from '#open-fetch-schemas/kbk';
 import avatar1 from '@images/avatars/avatar-1.png'
 import type { Component } from 'vue';
 import { VAvatar, VBtn } from 'vuetify/components';
-import * as _ from 'underscore';
-const user = useLogtoUser()
-const accessToken = useState<string | undefined>('access-token');
+import { useAccountStore } from './useAccountStore';
 
-const { data } = await useKbk('/api/users/{id}', {
-  method: 'get', path: { id: user.sub }, headers: {
-    'Authorization': `Bearer ${accessToken.value}`
-  }
-})
-
-const userData = _.pick(data.value, 'firstName','lastName')
-
-console.log(user)
-
+const store = useAccountStore()
+store.fetchProfile()
+store.fetchOrganizations()
+const userData = computed(() => store.profileUser)
+const organizations = computed(() => store.organizations)
 
 const isConfirmDialogOpen = ref(false)
 const isEditDialogOpen = ref(false)
@@ -25,7 +18,7 @@ const isAccountDeactivated = ref(false)
 const validateAccountDeactivation = [(v: string) => !!v || 'Please confirm account deactivation']
 
 const onsubmitUpdate = async (data: any) => {
-  await useKbk('/api/users/{id}', { method: 'patch', path: { id: user.sub }, headers: { 'Authorization': `Bearer ${accessToken.value}` }, body: data })
+  await store.updateProfile(data)
 }
 
 
@@ -43,12 +36,12 @@ const onsubmitUpdate = async (data: any) => {
               <!-- <VAvatar size="100" :image="accountDataLocal." /> -->
             </div>
             <div>
-              <h4 class="mb-4">{{ }} {{ user.name }}</h4>
+              <h4 class="mb-4">{{ }} {{ userData?.firstName }} {{ userData?.lastName }}</h4>
               <div class="d-flex flex-column f gap-2">
-                <div><b>Member since</b> {{ $dayjs(data?.createdAt).format('MMM D, YYYY') }}
-                  ({{ $dayjs(data?.createdAt).fromNow() }})</div>
-                <div><b>Email</b> {{ data?.email }}</div>
-                <!-- <div><b>Phone</b> {{ accountDataLocal }}</div> -->
+                <div><b>Member since</b> {{ $dayjs(userData?.createdAt).format('MMM D, YYYY') }}
+                  ({{ $dayjs(userData?.createdAt).fromNow() }})</div>
+                <div><b>Email</b> {{ userData?.email }}</div>
+                <!-- <div><b>Phone</b> {{ accountuserDataLocal }}</div> -->
               </div>
             </div>
             <div class="ml-auto  align-self-start">
@@ -60,6 +53,34 @@ const onsubmitUpdate = async (data: any) => {
 
           </div>
 
+        </VCardText>
+      </VCard>
+    </VCol>
+    <VCol cols="12">
+      <VCard title="Joined Organizations">
+        <VCardText class="pt-2">
+          <p>the list of the Organizations you have joined.</p>
+          <VTable class="text-no-wrap">
+            <thead>
+              <tr>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Ownership
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="organization in organizations" :key="organization.id">
+                <td>{{ organization.name }}</td>
+                <td>{{ organization.owner?.id ===userData.id ? 'Owner' :'' }}</td>
+                <td><VBtn variant="outlined" size="sm" icon="tabler-x" rounded></VBtn></td>
+              </tr>
+            </tbody>
+          </VTable>
         </VCardText>
       </VCard>
     </VCol>

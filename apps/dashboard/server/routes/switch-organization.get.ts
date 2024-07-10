@@ -1,5 +1,10 @@
 import { CookieStorage, LogtoRuntimeConfig } from "@logto/nuxt";
 import assert from "assert";
+export type OrganizationCookie = {
+  organization: Organization;
+  organizationAccessToken: string;
+}
+type Organization = {id:string, name:string}
 
 export default defineEventHandler(async (event) => {
   const logtoClient = event.context.logtoClient;
@@ -21,8 +26,7 @@ export default defineEventHandler(async (event) => {
 
   const organizationAccessToken = await logtoClient.getOrganizationToken(organizationId);
   const cookie = JSON.stringify({ organization, organizationAccessToken });
-  console.log('cookie', cookie  )
-  setCookie(event, cookieName, cookie, );
+  setCookie(event, cookieName, cookie );
 
   sendRedirect(event, redirectUri, 302);
 
