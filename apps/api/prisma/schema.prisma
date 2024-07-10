@@ -50,14 +50,14 @@ model Invitation {
   id             String                @id @default(cuid())
   createdAt      DateTime              @default(now())
   updatedAt      DateTime              @updatedAt
-  email          String?
+  email          String
   status         EnumInvitationStatus?
   expirationDate DateTime?
-  organization   Organization?         @relation(fields: [organizationId], references: [id])
-  organizationId String?
-  inviter        User?                 @relation(fields: [inviterId], references: [id])
-  inviterId      String?
-  code           String?
+  organization   Organization          @relation(fields: [organizationId], references: [id])
+  organizationId String
+  inviter        User                  @relation(fields: [inviterId], references: [id])
+  inviterId      String
+  code           String                @unique
 }
 
 enum EnumClusterClusterType {
@@ -71,5 +71,7 @@ enum EnumClusterPlan {
 }
 
 enum EnumInvitationStatus {
-  Option1
+  PENDING
+  ACCEPTED
+  REVOKED
 }
