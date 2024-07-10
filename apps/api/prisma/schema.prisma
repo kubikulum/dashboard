@@ -51,4 +51,5 @@ enum EnumClusterClusterType {
 
 enum EnumClusterPlan {
   Free
+  Reserved_1
 }
