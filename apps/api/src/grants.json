@@ -108,81 +108,57 @@
     "attributes": "*"
   },
   {
+    "role": "admin",
+    "resource": "Organization",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "Organization",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "Organization",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "Organization",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "Organization",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "Organization",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
     "role": "user",
     "resource": "Organization",
     "action": "create:any",
     "attributes": "*,!clusters,!members,!owner"
   },
   {
-    "role": "admin",
-    "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
     "role": "owner",
     "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
-    "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "user",
-    "resource": "Organization",
-    "action": "delete:any",
-    "attributes": "*"
-  },
-  {
-    "role": "viewer",
-    "resource": "Organization",
-    "action": "delete:any",
+    "action": "update:any",
     "attributes": "*"
   },
   {
     "role": "admin",
     "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "owner",
-    "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "serviceaccountmanager",
-    "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "uam",
-    "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "user",
-    "resource": "Organization",
-    "action": "read:any",
-    "attributes": "*"
-  },
-  {
-    "role": "viewer",
-    "resource": "Organization",
-    "action": "read:any",
+    "action": "update:any",
     "attributes": "*"
   },
   {
