@@ -13,6 +13,7 @@ import { registerEnumType } from "@nestjs/graphql";
 
 export enum EnumClusterPlan {
   Free = "Free",
+  Reserved_1 = "Reserved_1",
 }
 
 registerEnumType(EnumClusterPlan, {
