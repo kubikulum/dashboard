@@ -11,36 +11,53 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsDate,
+  ValidateNested,
+  MaxLength,
+} from "class-validator";
+import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { Type } from "class-transformer";
-import { IsOptional, IsEnum, ValidateNested } from "class-validator";
-import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
-import { EnumClusterPlan } from "./EnumClusterPlan";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
-class ClusterWhereInput {
+class InvitationCreateInput {
   @ApiProperty({
     required: false,
-    type: StringFilter,
+    type: String,
   })
-  @Type(() => StringFilter)
+  @IsString()
   @IsOptional()
-  @Field(() => StringFilter, {
+  @Field(() => String, {
     nullable: true,
   })
-  id?: StringFilter;
+  email?: string | null;
 
   @ApiProperty({
     required: false,
-    enum: EnumClusterClusterType,
+    enum: EnumInvitationStatus,
   })
-  @IsEnum(EnumClusterClusterType)
+  @IsEnum(EnumInvitationStatus)
   @IsOptional()
-  @Field(() => EnumClusterClusterType, {
+  @Field(() => EnumInvitationStatus, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  status?: "Option1" | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  expirationDate?: Date | null;
 
   @ApiProperty({
     required: false,
@@ -52,18 +69,31 @@ class ClusterWhereInput {
   @Field(() => OrganizationWhereUniqueInput, {
     nullable: true,
   })
-  organization?: OrganizationWhereUniqueInput;
+  organization?: OrganizationWhereUniqueInput | null;
 
   @ApiProperty({
     required: false,
-    enum: EnumClusterPlan,
+    type: () => UserWhereUniqueInput,
   })
-  @IsEnum(EnumClusterPlan)
+  @ValidateNested()
+  @Type(() => UserWhereUniqueInput)
   @IsOptional()
-  @Field(() => EnumClusterPlan, {
+  @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1";
+  inviter?: UserWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  code?: string | null;
 }
 
-export { ClusterWhereInput as ClusterWhereInput };
+export { InvitationCreateInput as InvitationCreateInput };

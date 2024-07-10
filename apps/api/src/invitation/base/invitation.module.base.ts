@@ -9,13 +9,10 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-import { registerEnumType } from "@nestjs/graphql";
-
-export enum EnumClusterPlan {
-  Free = "Free",
-  Reserved_1 = "Reserved_1",
-}
-
-registerEnumType(EnumClusterPlan, {
-  name: "EnumClusterPlan",
-});
+import { Module } from "@nestjs/common";
+import { ACLModule } from "../../auth/acl.module";
+@Module({
+  imports: [ACLModule],
+  exports: [ACLModule],
+})
+export class InvitationModuleBase {}

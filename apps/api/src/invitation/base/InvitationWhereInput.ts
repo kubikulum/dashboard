@@ -14,12 +14,14 @@ import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
 import { IsOptional, IsEnum, ValidateNested } from "class-validator";
-import { EnumClusterClusterType } from "./EnumClusterClusterType";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { EnumInvitationStatus } from "./EnumInvitationStatus";
+import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
-import { EnumClusterPlan } from "./EnumClusterPlan";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
-class ClusterWhereInput {
+class InvitationWhereInput {
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -33,14 +35,36 @@ class ClusterWhereInput {
 
   @ApiProperty({
     required: false,
-    enum: EnumClusterClusterType,
+    type: StringNullableFilter,
   })
-  @IsEnum(EnumClusterClusterType)
+  @Type(() => StringNullableFilter)
   @IsOptional()
-  @Field(() => EnumClusterClusterType, {
+  @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  email?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumInvitationStatus,
+  })
+  @IsEnum(EnumInvitationStatus)
+  @IsOptional()
+  @Field(() => EnumInvitationStatus, {
+    nullable: true,
+  })
+  status?: "Option1";
+
+  @ApiProperty({
+    required: false,
+    type: DateTimeNullableFilter,
+  })
+  @Type(() => DateTimeNullableFilter)
+  @IsOptional()
+  @Field(() => DateTimeNullableFilter, {
+    nullable: true,
+  })
+  expirationDate?: DateTimeNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -56,14 +80,26 @@ class ClusterWhereInput {
 
   @ApiProperty({
     required: false,
-    enum: EnumClusterPlan,
+    type: () => UserWhereUniqueInput,
   })
-  @IsEnum(EnumClusterPlan)
+  @ValidateNested()
+  @Type(() => UserWhereUniqueInput)
   @IsOptional()
-  @Field(() => EnumClusterPlan, {
+  @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1";
+  inviter?: UserWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  code?: StringNullableFilter;
 }
 
-export { ClusterWhereInput as ClusterWhereInput };
+export { InvitationWhereInput as InvitationWhereInput };

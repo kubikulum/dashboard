@@ -51,7 +51,7 @@ class ClusterUpdateInput {
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free" | null;
+  plan?: "Free" | "Reserved_1" | null;
 }
 
 export { ClusterUpdateInput as ClusterUpdateInput };

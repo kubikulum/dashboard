@@ -14,17 +14,18 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
   IsDate,
+  IsOptional,
   IsEnum,
   ValidateNested,
-  IsOptional,
+  MaxLength,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { EnumClusterClusterType } from "./EnumClusterClusterType";
+import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { Organization } from "../../organization/base/Organization";
-import { EnumClusterPlan } from "./EnumClusterPlan";
+import { User } from "../../user/base/User";
 
 @ObjectType()
-class Cluster {
+class Invitation {
   @ApiProperty({
     required: true,
     type: String,
@@ -50,14 +51,37 @@ class Cluster {
   updatedAt!: Date;
 
   @ApiProperty({
-    required: true,
-    enum: EnumClusterClusterType,
+    required: false,
+    type: String,
   })
-  @IsEnum(EnumClusterClusterType)
-  @Field(() => EnumClusterClusterType, {
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  email!: string | null;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumInvitationStatus,
+  })
+  @IsEnum(EnumInvitationStatus)
+  @IsOptional()
+  @Field(() => EnumInvitationStatus, {
+    nullable: true,
+  })
+  status?: "Option1" | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  expirationDate!: Date | null;
 
   @ApiProperty({
     required: false,
@@ -70,14 +94,24 @@ class Cluster {
 
   @ApiProperty({
     required: false,
-    enum: EnumClusterPlan,
+    type: () => User,
   })
-  @IsEnum(EnumClusterPlan)
+  @ValidateNested()
+  @Type(() => User)
   @IsOptional()
-  @Field(() => EnumClusterPlan, {
+  inviter?: User | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1" | null;
+  code!: string | null;
 }
 
-export { Cluster as Cluster };
+export { Invitation as Invitation };

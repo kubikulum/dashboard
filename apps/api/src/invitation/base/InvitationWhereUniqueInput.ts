@@ -9,13 +9,19 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-import { registerEnumType } from "@nestjs/graphql";
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "class-validator";
 
-export enum EnumClusterPlan {
-  Free = "Free",
-  Reserved_1 = "Reserved_1",
+@InputType()
+class InvitationWhereUniqueInput {
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @Field(() => String)
+  id!: string;
 }
 
-registerEnumType(EnumClusterPlan, {
-  name: "EnumClusterPlan",
-});
+export { InvitationWhereUniqueInput as InvitationWhereUniqueInput };

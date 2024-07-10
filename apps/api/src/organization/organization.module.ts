@@ -32,7 +32,7 @@ import { OAuthService } from "src/oauth-client/oauth.service";
     }),
     HttpModule, forwardRef(() => AuthModule)],
   controllers: [OrganizationController],
-  providers: [OrganizationService, OrganizationResolver,AuthManagementService],
+  providers: [OrganizationService, OrganizationResolver],
   exports: [OrganizationService],
 })
 export class OrganizationModule {}

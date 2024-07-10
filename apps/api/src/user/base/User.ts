@@ -23,6 +23,7 @@ import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { JsonValue } from "type-fest";
 import { Organization } from "../../organization/base/Organization";
+import { Invitation } from "../../invitation/base/Invitation";
 
 @ObjectType()
 class User {
@@ -129,6 +130,15 @@ class User {
   @IsString()
   @Field(() => String)
   username!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Invitation],
+  })
+  @ValidateNested()
+  @Type(() => Invitation)
+  @IsOptional()
+  invitations?: Array<Invitation>;
 }
 
 export { User as User };

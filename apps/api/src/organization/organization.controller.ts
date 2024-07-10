@@ -3,28 +3,24 @@ import * as swagger from "@nestjs/swagger";
 import * as nestAccessControl from "nest-access-control";
 import { OrganizationService } from "./organization.service";
 import { OrganizationControllerBase } from "./base/organization.controller.base";
+import { InvitationCreateInput } from "./inivitationCreateInput";
+import { OrganizationWhereUniqueInput } from "./base/OrganizationWhereUniqueInput";
+import { errors } from "openid-client";
+import { AllowNoOrganization } from "src/auth/organization.guard";
+import { AclValidateRequestInterceptor } from "src/interceptors/aclValidateRequest.interceptor";
 import { Organization } from "./base/Organization";
 import { OrganizationCreateInput } from "./base/OrganizationCreateInput";
-import { AuthManagementService } from "../auth/auth-management.service";
-import { AclValidateRequestInterceptor } from "../interceptors/aclValidateRequest.interceptor";
-import * as errors from "../errors";
-import { RequireOrganizationGuard, AllowNoOrganization } from "../auth/organization.guard"
-import { CoreGardenerCloudV1beta1Service } from "src/gardener-client/api/coreGardenerCloudV1beta1.service";
-import { firstValueFrom, catchError, of } from "rxjs";
-import { AxiosError } from "axios";
-import { ConfigService } from "@nestjs/config";
+import { OrganizationInvitationsService, UsersService } from "src/logto-auth-management";
+
+
 @swagger.ApiTags("organizations")
 @common.Controller("organizations")
-@common.UseGuards(RequireOrganizationGuard)
 export class OrganizationController extends OrganizationControllerBase {
   constructor(
     protected readonly service: OrganizationService,
     @nestAccessControl.InjectRolesBuilder()
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder,
-    protected readonly config: ConfigService,
-    protected readonly gardenerClientService: CoreGardenerCloudV1beta1Service,
-    protected readonly authManagementService: AuthManagementService
-
+    protected readonly organizationInvitationService: OrganizationInvitationsService,
   ) {
     super(service, rolesBuilder);
   }
@@ -95,5 +91,31 @@ export class OrganizationController extends OrganizationControllerBase {
     // }
     return organization;
   }
-}
 
+  @common.Post("/:id/members")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async sendInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationCreateInput[]
+  ): Promise<void> {
+    //The epoch time in milliseconds when the invitation expires.
+    // expire after 24h
+    const expireTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+    
+    await this.organizationInvitationService.createOrganizationInvitation({
+      organizationId: params.id,
+    inviterId: 'aaa',
+    invitee: body[0].email,
+    expiresAt: expireTime,
+    messagePayload:{
+      
+    }
+      
+    })
+  }
+
+}

@@ -33,4 +33,4 @@ import { OAuthModuleOptions, OAuthService } from "src/oauth-client/oauth.service
   providers: [UserService, UserResolver],
   exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}
