@@ -36,11 +36,7 @@ definePageMeta({
         :value="item.tab"
         :to="{ name: 'account-settings-tab', params: { tab: item.tab } }"
       >
-        <VIcon v-if="item.icon"
-          size="20"
-          start
-          :icon="item.icon"
-        />
+      
         {{ item.title }}
       </VTab>
     </VTabs>

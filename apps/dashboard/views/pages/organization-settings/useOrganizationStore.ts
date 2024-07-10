@@ -1,5 +1,5 @@
 import type { components } from '#open-fetch-schemas/kbk'
-import type { OrganizationCookie } from '@/server/routes/switch-organization.get'
+
 interface State {
   members: components["schemas"]["User"][] 
   organization: components["schemas"]["Organization"] | undefined
@@ -14,20 +14,23 @@ export const useOrganizationStore = defineStore('organizationSettings', {
   actions: {
     async fetchOrganization() {
       const user = useLogtoUser()
-      const organizationCookie = useCookie<OrganizationCookie>('organization')
+      const accessToken = useState<string | undefined>('access-token');
+      const currentOrganization = useState<string>('current-organization')
       const { $kbk } = useNuxtApp()
-      let data = await $kbk('/api/organizations/{id}', { method: 'get', path: { id: organizationCookie.value.organization.id }, headers: { 'Authorization': `Bearer ${organizationCookie.value.organizationAccessToken}` } })
+      let data = await $kbk('/api/organizations/{id}', { method: 'get', path: { id: currentOrganization.value }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
       this.organization = data 
 
     },
     async fetchMembers() {
       const user = useLogtoUser()
-      const organizationCookie = useCookie<OrganizationCookie>('organization')
+      const accessToken = useState<string | undefined>('access-token');
+      const currentOrganization = useState<string>('current-organization')
       const { $kbk } = useNuxtApp()
-      let data = await $kbk('/api/organizations/{id}/members', { method: 'get', path: { id: organizationCookie.value.organization.id }, headers: { 'Authorization': `Bearer ${organizationCookie.value.organizationAccessToken}` } })
+      let data = await $kbk('/api/organizations/{id}/members', { method: 'get', path: { id:  currentOrganization.value }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
       this.members = data 
 
     },
 
   },
 })
+  

@@ -28,10 +28,9 @@ definePageMeta({
 
 <template>
   <div>
-    <VTabs v-model="activeTab" class="v-tabs-pill">
+    <VTabs v-model="activeTab" >
       <VTab v-for="item in tabs" :key="item.icon" :value="item.tab"
         :to="{ name: 'organization-settings-tab', params: { tab: item.tab } }">
-        <VIcon size="20" start :icon="item.icon" />
         {{ item.title }}
       </VTab>
     </VTabs>

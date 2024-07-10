@@ -1,3 +1,4 @@
+import type { OrganizationCookie } from "@/server/routes/switch-organization.get";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
@@ -22,6 +23,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
 	// Make the token available globally
 	const accessToken = useState<string | undefined>('access-token');
+	const currentOrganization = useState<string>('current-organization')
 
 	// Call once in the server side
 	await callOnce(async () => {
@@ -29,25 +31,25 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 			throw new Error('Logto client is not available');
 		}
 
-		if (!(await client.isAuthenticated())) {
+		if (!(await client.isAuthenticated() && (user.organization_id === currentOrganization.value))) {
 			return;
+		}
+		if(!currentOrganization.value) {
+			const defaultOrganization = user.organization_data[0];
+	
+			if (defaultOrganization) {
+				console.log('ss',defaultOrganization)
+				currentOrganization.value = defaultOrganization.id;
+			}
 		}
 
 		try {
-			accessToken.value = await client.getAccessToken('https://api.kubikulum.com');
+			accessToken.value = await client.getAccessToken('https://api.kubikulum.com', currentOrganization.value);
 		} catch (error) {
 			console.error('Failed to get access token', error);
+			navigateTo('/sign-in')
 		}
 	});
 
-	const organization = useCookie<any>('organization')
-	console.log('orgCookie', organization.value.organization)
 
-	if (!organization.value.organization) {
-		const firstOrganization = user.organization_data[0]
-		return navigateTo(`/switch-organization?organizationId=${firstOrganization.id}`, { external: true })
-	} else if (user.organization_data.map((org: any) => org.id).indexOf(organization.value.organization.id) === -1) {
-		const firstOrganization = user.organization_data[0]
-		return navigateTo(`/switch-organization?organizationId=${firstOrganization.id}`, { external: true })
-	}
 })

@@ -9,16 +9,23 @@ import { HttpModule } from "@nestjs/axios";
 import { ApiModule } from "src/gardener-client/api.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Configuration, ConfigurationParameters } from "src/gardener-client/configuration";
+import { LogtoApiManagementModule } from "src/logto-auth-management";
+import { OAuthService } from "src/oauth-client/oauth.service";
 
 @Module({
   imports: [OrganizationModuleBase,
-    ApiModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService): Configuration => {
+
+    LogtoApiManagementModule.forRootAsync({
+      imports: [],
+      inject: [OAuthService, ConfigService],
+      useFactory: (oauthService: OAuthService, config: ConfigService): Configuration => {
         const params: ConfigurationParameters = {
           // set configuration parameters here.
-          basePath: config.get('GARDNER_CLUSTER_API_SERVER_URL'),
+          basePath: config.get('LOGTO_MANAGEMENT_API_URL'),
+          accessToken: async () => {
+            const token = await oauthService.getAccessToken();
+            return token || '';
+          }
         };
         return new Configuration(params);
       },

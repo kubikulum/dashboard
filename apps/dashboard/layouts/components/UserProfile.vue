@@ -1,23 +1,28 @@
 <script setup lang="ts">
 
 const userData = useLogtoUser();
-const organizationCookie = useCookie<any>('organization', { watch: true });
+const currentOrganization = useState<any>('current-organization');
 
-const currentOrganization = computed(() => organizationCookie.value.organization)
 
 const organizations = computed(() => {
-  console.log('change organization')
-  return userData?.organization_data.filter((org) => org.id !== currentOrganization.value.id)
+  return userData?.organization_data.filter((org) => org.id !== currentOrganization.value)
+})
+
+const currentOrganizationInfo = computed(() => {
+  return userData?.organization_data.find((org) => org.id === currentOrganization.value)
 })
 
 
 const onSelectOrganization = (organizationId: string) => {
-  navigateTo(`/switch-organization?organizationId=${organizationId}`, { external: true })
+  if(!organizationId) return
+  currentOrganization.value = organizationId;
+  console.log('organizationId', organizationId)
+  refreshNuxtData()
 };
 
 const userProfileList = [
   { type: 'navItem', icon: 'tabler-settings', title: 'Settings', to: { name: 'organization-settings-tab', params: { tab: 'organization' } } },
-  { type: 'navItem', icon: 'tabler-users-group', title: 'IAM', to: { name: 'organization-settings-tab', params: { tab: 'users' } } },
+  { type: 'navItem', icon: 'tabler-users-group', title: 'members', to: { name: 'organization-settings-tab', params: { tab: 'users' } } },
   { type: 'navItem', icon: 'tabler-file-description', title: 'Billing', to: { name: 'organization-settings-tab', params: { tab: 'billing' } } },
   { type: 'navItem', icon: 'tabler-key', title: 'API Key', to: { name: 'organization-settings-tab', params: { tab: 'security' } } },
   { type: 'divider' },
@@ -35,10 +40,10 @@ const userProfileList = [
 
         <div>
           <span class="d-block font-weight-medium text-truncate">organization</span>
-          <span class="font-weight-normal">{{ currentOrganization?.name }}</span>
+          <span class="font-weight-normal">{{ currentOrganizationInfo?.name }}</span>
         </div>
         <VAvatar class="d-flex flex-column ms-3" size="32" color="primary" variant="tonal">
-          <span>{{ avatarText(currentOrganization?.name) }}</span>
+          <span>{{ avatarText(currentOrganizationInfo?.name) }}</span>
         </VAvatar>
       </div>
     </template>
@@ -46,7 +51,7 @@ const userProfileList = [
     <VList nav :lines="false" style="padding: 0;">
 
       <!-- List Organizations -->
-      <VListItem @click="onSelectOrganization(org.id)" class="padding-0" v-for="org in organizations" :key="org.id"
+      <VListItem @click.prevent="onSelectOrganization(org.id)" class="padding-0" v-for="org in organizations" :key="org.id"
         :value="org.name">
         <template #prepend>
           <VAvatar size="x-small" color="primary" variant="tonal">
@@ -69,7 +74,7 @@ const userProfileList = [
           </VAvatar>
         </template>
 
-        <VListItemTitle>{{ currentOrganization?.name }}</VListItemTitle>
+        <VListItemTitle>{{ currentOrganizationInfo?.name }}</VListItemTitle>
 
       </VListItem>
 
