@@ -14,8 +14,6 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 
 import { ACLModule } from "./auth/acl.module";
 import { AuthModule } from "./auth/auth.module";
-import { OAuthModule } from "./oauth-client/oauth.module";
-import { OAuthModuleOptions } from "./oauth-client/oauth.service";
 
 @Module({
   controllers: [],
@@ -33,21 +31,6 @@ import { OAuthModuleOptions } from "./oauth-client/oauth.service";
     ServeStaticModule.forRootAsync({
       useClass: ServeStaticOptionsService,
     }),
-    OAuthModule.forRootAsync({
-      imports: [],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService): OAuthModuleOptions => {
-        const params: OAuthModuleOptions = {
-          // set configuration parameters here.
-          clientId: config.get('LOGTO_MANAGEMENT_CLIENT_ID') || '',
-          clientSecret: config.get('LOGTO_MANAGEMENT_CLIENT_SECRET') || '',
-          issuerUrl: config.get('LOGTO_MANAGEMENT_ISSUER_URL') || '',
-          audience: config.get('LOGTO_MANAGEMENT_AUDIENCE') || '',
-        };
-        return params
-      }
-    }),
-
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useFactory: (configService: ConfigService) => {

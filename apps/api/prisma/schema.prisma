@@ -58,6 +58,7 @@ model Invitation {
   inviter        User                  @relation(fields: [inviterId], references: [id])
   inviterId      String
   code           String                @unique
+  role           Json
 }
 
 enum EnumClusterClusterType {
