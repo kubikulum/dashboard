@@ -84,7 +84,6 @@ export class InvitationControllerBase {
         },
 
         code: true,
-        role: true,
       },
     });
   }
@@ -126,7 +125,6 @@ export class InvitationControllerBase {
         },
 
         code: true,
-        role: true,
       },
     });
   }
@@ -169,7 +167,6 @@ export class InvitationControllerBase {
         },
 
         code: true,
-        role: true,
       },
     });
     if (result === null) {
@@ -231,7 +228,6 @@ export class InvitationControllerBase {
           },
 
           code: true,
-          role: true,
         },
       });
     } catch (error) {
@@ -282,7 +278,6 @@ export class InvitationControllerBase {
           },
 
           code: true,
-          role: true,
         },
       });
     } catch (error) {
@@ -332,6 +327,9 @@ export class InvitationControllerBase {
             id: true,
           },
         },
+
+        roles: true,
+        status: true,
       },
     });
     if (results === null) {
