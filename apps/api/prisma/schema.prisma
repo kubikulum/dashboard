@@ -23,6 +23,7 @@ model User {
   organizationMembers OrganizationMember[]
 }
 
+
 model Organization {
   id                       String               @id @default(cuid())
   createdAt                DateTime             @default(now())

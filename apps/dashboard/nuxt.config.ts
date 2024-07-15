@@ -2,10 +2,10 @@ import { fileURLToPath } from 'node:url'
 import svgLoader from 'vite-svg-loader'
 import vuetify from 'vite-plugin-vuetify'
 import { UserScope } from '@logto/nuxt';
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  
   app: {
     head: {
       titleTemplate: '%s - Kubernetes for AI',
@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   logto: {
     resources: ['https://api.kubikulum.com'],
     fetchUserInfo: true,
+    postCallbackRedirectUri: '/post-callback',
     scopes: [UserScope.Email,
     UserScope.CustomData,
     UserScope.Organizations]
@@ -47,11 +48,11 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
+
   css: [
     '@core/scss/template/index.scss',
     '@styles/styles.scss',
     '@/plugins/iconify/icons.css',
-    '@/plugins/i18n/index.ts',
   ],
 
   components: {
@@ -94,10 +95,11 @@ export default defineNuxtConfig({
           '@styles/*': ['../assets/styles/*'],
           '@validators': ['../@core/utils/validators'],
           '@db/*': ['../server/fake-db/*'],
-          '@api-utils/*': ['../server/utils/*']
-        },
-      },
-    },
+          '@api-utils/*': ['../server/utils/*'],
+          // "@application-test-utils": ["../tests/drivers/playwright/driver.ts"]
+        }
+      }
+    }
   },
 
   // ℹ️ Disable source maps until this is resolved: https://github.com/vuetifyjs/vuetify-loader/issues/290
@@ -132,6 +134,7 @@ export default defineNuxtConfig({
 
     build: {
       chunkSizeWarningLimit: 5000,
+
     },
 
     optimizeDeps: {
@@ -148,20 +151,30 @@ export default defineNuxtConfig({
           configFile: 'assets/styles/variables/_vuetify.scss',
         },
       }),
-      VueI18nPlugin({
-        runtimeOnly: true,
-        compositionOnly: true,
-        ssr: true,
-        include: [
-          fileURLToPath(new URL('./plugins/i18n/locales/**', import.meta.url)),
-        ],
-      }),
+      // VueI18nPlugin({
+      //   runtimeOnly: true,
+      //   compositionOnly: true,
+      //   ssr: true,
+      //   include: [
+      //     fileURLToPath(new URL('./plugins/i18n/locales/**', import.meta.url)),
+      //   ],
+      // }),
     ],
   },
-
+  testUtils: {
+    // startOnBoot: true,
+    // logToConsole: true,
+  
+  },
+  debug:true,
   build: {
     transpile: ['vuetify'],
   },
+  i18n:{
+    defaultLocale:'en',
+    vueI18n:'./i18n.config.ts'
+  },
+
 
   modules: [
     '@vueuse/nuxt',
@@ -169,7 +182,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@logto/nuxt',
     "dayjs-nuxt",
-    'nuxt-open-fetch'
+    'nuxt-open-fetch',
+    '@nuxt/test-utils/module',
+    '@nuxtjs/i18n'
   ],
 
   compatibilityDate: '2024-07-06',

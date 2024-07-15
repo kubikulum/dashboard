@@ -66,7 +66,7 @@ export class UserControllerBase {
         firstName: true,
         email: true,
         roles: true,
-        organization: true,
+        organization: {},
         lastName: true,
         username: true,
       },
@@ -197,7 +197,7 @@ export class UserControllerBase {
   @nestAccessControl.UseRoles({
     resource: "Organization",
     action: "read",
-    possession: "any",
+    possession: "own",
   })
   async findOwnerOrganizations(
     @common.Req() request: Request,

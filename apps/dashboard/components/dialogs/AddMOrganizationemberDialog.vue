@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOrganizationStore } from '@/views/pages/organization-settings/useOrganizationStore';
 import type { VForm } from 'vuetify/components';
 
 
@@ -10,6 +11,7 @@ interface Props {
 interface Emit {
   (e: 'update:isDialogVisible', val: boolean): void
 }
+const store = useOrganizationStore()
 
 const props = defineProps<Props>()
 
@@ -18,16 +20,25 @@ const emit = defineEmits<Emit>()
 const dialogVisibleUpdate = (val: boolean) => {
   emit('update:isDialogVisible', val)
 }
+
+
 const emailField = ref('')
+
 type Permission = 'Admin' | 'Editor'
 interface Member {
   email: string
-  permission: Permission
+  role: Permission
 }
 
 const formRef = ref<InstanceType<typeof VForm> | null>(null)
 const membersList = ref<Member[]>([
 ])
+
+computed(()=>{
+  if(!props.isDialogVisible){
+    membersList.value = []
+  }
+})
 
 const onClickEnterMember = async () => {
   if (!formRef.value) {
@@ -38,12 +49,17 @@ const onClickEnterMember = async () => {
   if (valid) {
     membersList.value.push({
       email: emailField.value,
-      permission: 'Editor',
+      role: 'Editor',
     })
     emailField.value = ''
     formRef.value.reset()
     formRef.value.resetValidation()
   }
+}
+
+const onClickSendInvitations = async () => {
+  const emails = membersList.value.map((member)=>member.email)
+  store.sendInvitations(membersList.value)
 }
 </script>
 
@@ -98,7 +114,7 @@ const onClickEnterMember = async () => {
         <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-3 mt-6">
  
 
-          <VBtn class="text-capitalize" prepend-icon="tabler-send">
+          <VBtn @click.prevent="onClickSendInvitations" class="text-capitalize" prepend-icon="tabler-send">
             Send Invitations
           </VBtn>
         </div>

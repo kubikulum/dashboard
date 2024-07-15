@@ -9,6 +9,7 @@ import {
   swaggerDocumentOptions,
   swaggerSetupOptions,
 } from "./swagger";
+import { QueryToJsonInterceptor } from "./interceptors/queryToJson.interceptor";
 
 const { PORT = 3000 } = process.env;
 
@@ -44,6 +45,9 @@ async function main() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
+
+  // fix for transform request query where filter to object
+  app.useGlobalInterceptors(new QueryToJsonInterceptor())
 
   void app.listen(PORT);
 
