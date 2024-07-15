@@ -22,6 +22,7 @@ import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
 import { InvitationCreateNestedManyWithoutOrganizationsInput } from "./InvitationCreateNestedManyWithoutOrganizationsInput";
+import { OrganizationMemberCreateNestedManyWithoutOrganizationsInput } from "./OrganizationMemberCreateNestedManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationCreateInput {
@@ -93,6 +94,18 @@ class OrganizationCreateInput {
     nullable: true,
   })
   invitations?: InvitationCreateNestedManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberCreateNestedManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberCreateNestedManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberCreateNestedManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberCreateNestedManyWithoutOrganizationsInput;
 }
 
 export { OrganizationCreateInput as OrganizationCreateInput };

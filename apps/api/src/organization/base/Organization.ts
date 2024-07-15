@@ -22,6 +22,7 @@ import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
 import { Cluster } from "../../cluster/base/Cluster";
 import { Invitation } from "../../invitation/base/Invitation";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 
 @ObjectType()
 class Organization {
@@ -105,6 +106,15 @@ class Organization {
   @Type(() => Invitation)
   @IsOptional()
   invitations?: Array<Invitation>;
+
+  @ApiProperty({
+    required: false,
+    type: () => [OrganizationMember],
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMember)
+  @IsOptional()
+  organizationMembers?: Array<OrganizationMember>;
 }
 
 export { Organization as Organization };

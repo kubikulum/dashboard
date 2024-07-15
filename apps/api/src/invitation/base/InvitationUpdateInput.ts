@@ -23,6 +23,9 @@ import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { Type } from "class-transformer";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { InputJsonValue } from "../../types";
 
 @InputType()
 class InvitationUpdateInput {
@@ -94,6 +97,16 @@ class InvitationUpdateInput {
     nullable: true,
   })
   code?: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsJSONValue()
+  @IsOptional()
+  @Field(() => GraphQLJSON, {
+    nullable: true,
+  })
+  role?: InputJsonValue;
 }
 
 export { InvitationUpdateInput as InvitationUpdateInput };

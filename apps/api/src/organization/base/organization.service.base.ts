@@ -17,6 +17,7 @@ import {
   User as PrismaUser,
   Cluster as PrismaCluster,
   Invitation as PrismaInvitation,
+  OrganizationMember as PrismaOrganizationMember,
 } from "@prisma/client";
 
 export class OrganizationServiceBase {
@@ -85,6 +86,17 @@ export class OrganizationServiceBase {
         where: { id: parentId },
       })
       .invitations(args);
+  }
+
+  async findOrganizationMembers(
+    parentId: string,
+    args: Prisma.OrganizationMemberFindManyArgs
+  ): Promise<PrismaOrganizationMember[]> {
+    return this.prisma.organization
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .organizationMembers(args);
   }
 
   async getOwner(parentId: string): Promise<PrismaUser | null> {

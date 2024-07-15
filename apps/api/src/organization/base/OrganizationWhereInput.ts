@@ -18,6 +18,7 @@ import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { InvitationListRelationFilter } from "../../invitation/base/InvitationListRelationFilter";
+import { OrganizationMemberListRelationFilter } from "../../organizationMember/base/OrganizationMemberListRelationFilter";
 
 @InputType()
 class OrganizationWhereInput {
@@ -89,6 +90,18 @@ class OrganizationWhereInput {
     nullable: true,
   })
   invitations?: InvitationListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberListRelationFilter)
+  @IsOptional()
+  @Field(() => OrganizationMemberListRelationFilter, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberListRelationFilter;
 }
 
 export { OrganizationWhereInput as OrganizationWhereInput };
