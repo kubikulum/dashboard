@@ -14,10 +14,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
-import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 import { ClusterListRelationFilter } from "../../cluster/base/ClusterListRelationFilter";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { InvitationListRelationFilter } from "../../invitation/base/InvitationListRelationFilter";
+import { OrganizationMemberListRelationFilter } from "../../organizationMember/base/OrganizationMemberListRelationFilter";
 
 @InputType()
 class OrganizationWhereInput {
@@ -42,18 +42,6 @@ class OrganizationWhereInput {
     nullable: true,
   })
   name?: StringFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => UserListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => UserListRelationFilter)
-  @IsOptional()
-  @Field(() => UserListRelationFilter, {
-    nullable: true,
-  })
-  members?: UserListRelationFilter;
 
   @ApiProperty({
     required: false,
@@ -89,6 +77,18 @@ class OrganizationWhereInput {
     nullable: true,
   })
   invitations?: InvitationListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberListRelationFilter)
+  @IsOptional()
+  @Field(() => OrganizationMemberListRelationFilter, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberListRelationFilter;
 }
 
 export { OrganizationWhereInput as OrganizationWhereInput };

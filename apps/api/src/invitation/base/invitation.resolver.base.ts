@@ -26,6 +26,8 @@ import { InvitationFindUniqueArgs } from "./InvitationFindUniqueArgs";
 import { CreateInvitationArgs } from "./CreateInvitationArgs";
 import { UpdateInvitationArgs } from "./UpdateInvitationArgs";
 import { DeleteInvitationArgs } from "./DeleteInvitationArgs";
+import { OrganizationMemberFindManyArgs } from "../../organizationMember/base/OrganizationMemberFindManyArgs";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 import { Organization } from "../../organization/base/Organization";
 import { User } from "../../user/base/User";
 import { InvitationService } from "../invitation.service";
@@ -162,6 +164,28 @@ export class InvitationResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [OrganizationMember], {
+    name: "organizationMembers",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "OrganizationMember",
+    action: "read",
+    possession: "any",
+  })
+  async findOrganizationMembers(
+    @graphql.Parent() parent: Invitation,
+    @graphql.Args() args: OrganizationMemberFindManyArgs
+  ): Promise<OrganizationMember[]> {
+    const results = await this.service.findOrganizationMembers(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
