@@ -5,15 +5,17 @@ import * as errors from "../errors";
 import { OrganizationControllerBase } from "./base/organization.controller.base";
 import { InvitationCreateInput } from "./inivitationCreateInput";
 import { OrganizationWhereUniqueInput } from "./base/OrganizationWhereUniqueInput";
+import { nanoid } from 'nanoid'
 
 import { AllowNoOrganization } from "src/auth/organization.guard";
 import { AclValidateRequestInterceptor } from "src/interceptors/aclValidateRequest.interceptor";
 import { Organization } from "./base/Organization";
 import { OrganizationCreateInput } from "./base/OrganizationCreateInput";
-import { OrganizationInvitationsService, UsersService, OrganizationsService } from "src/logto-auth-management";
+import { OrganizationInvitationsService, UsersService, OrganizationsService, OrganizationRolesService } from "src/logto-auth-management";
 import { firstValueFrom } from "rxjs";
 import { OrganizationService } from "./organization.service";
 import { InvitationService } from "src/invitation/invitation.service";
+import { ConfigService } from "@nestjs/config";
 
 
 @swagger.ApiTags("organizations")
@@ -21,11 +23,13 @@ import { InvitationService } from "src/invitation/invitation.service";
 export class OrganizationController extends OrganizationControllerBase {
   constructor(
     protected readonly service: OrganizationService,
+    protected readonly config: ConfigService,
     @nestAccessControl.InjectRolesBuilder()
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder,
     protected readonly invitationServie: InvitationService,
     protected readonly authOrganizationsService: OrganizationsService,
-    protected readonly organizationInvitationService: OrganizationInvitationsService
+    protected readonly organizationInvitationService: OrganizationInvitationsService,
+    protected readonly organizationRolesService: OrganizationRolesService
   ) {
     super(service, rolesBuilder);
   }
@@ -49,10 +53,12 @@ export class OrganizationController extends OrganizationControllerBase {
   })
   async createOrganizationOverride(@common.Req() req: any, @common.Body() body: OrganizationCreateInput) {
     const { data: org } = await firstValueFrom(this.authOrganizationsService.createOrganization({
-      tenantId: req.user.id,
       name: body.name,
     }));
-    await this.authOrganizationsService.addOrganizationUsers(org.id, { userIds: [req.user.id] });
+    await  firstValueFrom(this.authOrganizationsService.addOrganizationUsers(org.id, { userIds: [req.user.id] }));
+    //
+    const roleId = this.config.get('LOGTO_ORGANIZATION_ROLE_ADMIN_ID');
+    await firstValueFrom(this.authOrganizationsService.assignOrganizationRolesToUser(org.id,req.user.id,{organizationRoleIds:[roleId]}));
     const organization = await this.service.createOrganization({ data: { name: body.name, id: org.id, ownerId: req.user.id, members: { connect: [{ id: req.user.id }] } } });
 
     // // the project name should have maximum 10 characters
@@ -99,7 +105,7 @@ export class OrganizationController extends OrganizationControllerBase {
     return organization;
   }
 
-  @common.Post("/:id/invite")
+  @common.Post("/:id/invitations")
   @nestAccessControl.UseRoles({
     resource: "Invitation",
     action: "create",
@@ -109,32 +115,56 @@ export class OrganizationController extends OrganizationControllerBase {
     @common.Req() req: any,
     @common.Param() params: OrganizationWhereUniqueInput,
     @common.Body() body: InvitationCreateInput[]
-  ): Promise<void> {
+  ): Promise<any[]> {
     //The epoch time in milliseconds when the invitation expires.
     // expire after 48h
     const expireTime = new Date().getTime() + 24 * 60 * 60 * 1000;
     let now = new Date();
     now.setDate(now.getDate() + 2)
 
-    const invitation = await this.invitationServie.createInvitation({
-      data: {
+    
+    const { data: roles } = await firstValueFrom(this.organizationRolesService.listOrganizationRoles())
+
+    // Create Invatitation for logto auth management
+
+    const promises = body.map(async (invitationRequest) => {
+      const code = nanoid(10)
+      const roleId = roles.find(role => role.name === invitationRequest.role)?.id
+      if (!invitationRequest.email) {
+        throw new Error('Email is required')
+      }
+      const organizationRoleIds = roleId ? [roleId] : []
+      const { data: logToInvitation } = await firstValueFrom(this.organizationInvitationService.createOrganizationInvitation({
         organizationId: params.id,
         inviterId: req.user.id,
-        email: body[0].email,
-        expirationDate: now
-      }
-    });
-    await firstValueFrom(this.organizationInvitationService.createOrganizationInvitation({
-      organizationId: params.id,
-      inviterId: invitation.inviterId,
-      invitee: invitation.email || "",
-      expiresAt: expireTime,
-      messagePayload: {
-        code: invitation.code || '',
-        link: `${req.get('Host')}/invitation/${invitation.code}`
-      }
+        invitee: invitationRequest.email,
+        expiresAt: expireTime,
+        organizationRoleIds,
+        messagePayload: {
+          code: code,
+          link: `http://${req.get('Host')}/invitation/${code}`
+        }
+      }))
 
-    }))
+      const invitation = await this.invitationServie.createInvitation({
+        data: {
+          id: logToInvitation.id,
+          organizationId: params.id,
+          inviterId: req.user.id,
+          email: invitationRequest.email,
+          expirationDate: now,
+          code: code,
+          status: 'PENDING',
+          // role: invitationRequest.role
+        }
+      });
+      return invitation
+
+    })
+    return Promise.all(promises)
+
+
+
   }
 
 }

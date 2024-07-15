@@ -1,36 +1,65 @@
 import type { components } from '#open-fetch-schemas/kbk'
 
 interface State {
-  members: components["schemas"]["User"][] 
+  members: components["schemas"]["User"][]
   organization: components["schemas"]["Organization"] | undefined
+  currentOrganization: Ref<any>
+  invitations: components["schemas"]["Invitation"][]
 }
 
 export const useOrganizationStore = defineStore('organizationSettings', {
   // ℹ️ arrow function recommended for full type inference
   state: (): State => ({
     members: [],
-    organization: undefined
+    organization: undefined,
+    currentOrganization: useCookie<string>('current-organization'),
+    invitations: []
   }),
   actions: {
-    async fetchOrganization() {
-      const user = useLogtoUser()
+    async sendInvitations(invitations: any[]) {
       const accessToken = useState<string | undefined>('access-token');
-      const currentOrganization = useState<string>('current-organization')
       const { $kbk } = useNuxtApp()
-      let data = await $kbk('/api/organizations/{id}', { method: 'get', path: { id: currentOrganization.value }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
-      this.organization = data 
+      let data = await $kbk('/api/organizations/{id}/invitations', {
+        method: 'POST', path: { id: this.currentOrganization },
+        headers: { 'Authorization': `Bearer ${accessToken.value}` },
+        body: invitations
+      })
+    },
+    async fetchOrganization() {
+      const accessToken = useState<string | undefined>('access-token');
+
+      let { data } = await useLazyKbk('/api/organizations/{id}', { method: 'get', path: { id: this.currentOrganization }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
+      if (data.value) {
+        this.organization = data.value
+      }
 
     },
     async fetchMembers() {
-      const user = useLogtoUser()
+
       const accessToken = useState<string | undefined>('access-token');
-      const currentOrganization = useState<string>('current-organization')
-      const { $kbk } = useNuxtApp()
-      let data = await $kbk('/api/organizations/{id}/members', { method: 'get', path: { id:  currentOrganization.value }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
-      this.members = data 
+      
+      let { data } = await useLazyKbk('/api/organizations/{id}/members', { method: 'get', path: { id: this.currentOrganization }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
+      if (data.value) {
+        this.members = data.value
+      }
 
     },
+    async fetchInvitations() {
+      const accessToken = useState<string | undefined>('access-token');
+      let { data,error } = await useLazyKbk('/api/organizations/{id}/invitations', { method: 'get', path: { id: this.currentOrganization }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
+      console.log('current', this.currentOrganization)
+      console.log('data invitation',data.value)
+      console.log('error',error.value)
+      if (data.value) {
+        this.invitations = data.value
+      }
+    },
+    async resendInvitation(invitationId: string) {
+      const accessToken = useState<string | undefined>('access-token');
+      const { $kbk } = useNuxtApp()
+      let data = await $kbk('/api/invitations/{id}/resend', { method: 'post', path: { id: invitationId }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
+      await this.fetchOrganization();
+    }
 
   },
 })
-  

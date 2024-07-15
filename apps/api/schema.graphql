@@ -73,13 +73,15 @@ enum EnumClusterPlan {
 }
 
 enum EnumInvitationStatus {
-  Option_1
+  Accepted
+  Pending
+  Revoked
 }
 
 type Invitation {
-  code: String
+  code: String!
   createdAt: DateTime!
-  email: String
+  email: String!
   expirationDate: DateTime
   id: String!
   inviter: User
@@ -89,11 +91,11 @@ type Invitation {
 }
 
 input InvitationCreateInput {
-  code: String
-  email: String
+  code: String!
+  email: String!
   expirationDate: DateTime
-  inviter: UserWhereUniqueInput
-  organization: OrganizationWhereUniqueInput
+  inviter: UserWhereUniqueInput!
+  organization: OrganizationWhereUniqueInput!
   status: EnumInvitationStatus
 }
 
@@ -141,8 +143,8 @@ input InvitationUpdateManyWithoutUsersInput {
 }
 
 input InvitationWhereInput {
-  code: StringNullableFilter
-  email: StringNullableFilter
+  code: StringFilter
+  email: StringFilter
   expirationDate: DateTimeNullableFilter
   id: StringFilter
   inviter: UserWhereUniqueInput

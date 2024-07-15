@@ -22,7 +22,6 @@ import { ReplaceOrganizationInvitationStatusRequest } from '../model/replaceOrga
 import { Configuration } from '../configuration';
 import { COLLECTION_FORMATS } from '../variables';
 
-
 @Injectable()
 export class OrganizationInvitationsService {
 

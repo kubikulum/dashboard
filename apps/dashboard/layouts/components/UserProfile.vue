@@ -1,7 +1,7 @@
 <script setup lang="ts">
-
+const router = useRouter();
 const userData = useLogtoUser();
-const currentOrganization = useState<any>('current-organization');
+const currentOrganization = useCookie<any>('current-organization');
 
 
 const organizations = computed(() => {
@@ -17,7 +17,7 @@ const onSelectOrganization = (organizationId: string) => {
   if(!organizationId) return
   currentOrganization.value = organizationId;
   console.log('organizationId', organizationId)
-  refreshNuxtData()
+  location.reload(); // reload the page
 };
 
 const userProfileList = [

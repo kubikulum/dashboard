@@ -23,6 +23,7 @@ model User {
   invitations        Invitation[]
 }
 
+
 model Organization {
   id                       String       @id @default(cuid())
   createdAt                DateTime     @default(now())
@@ -57,7 +58,8 @@ model Invitation {
   organizationId String
   inviter        User                  @relation(fields: [inviterId], references: [id])
   inviterId      String
-  code           String                @unique
+  code           String                @unique @default(cuid())
+  @@unique([organizationId, email])
 }
 
 enum EnumClusterClusterType {

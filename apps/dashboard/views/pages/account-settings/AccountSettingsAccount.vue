@@ -8,6 +8,8 @@ import { useAccountStore } from './useAccountStore';
 const store = useAccountStore()
 store.fetchProfile()
 store.fetchOrganizations()
+store.fetchInvitationPendings()
+
 const userData = computed(() => store.profileUser)
 const organizations = computed(() => store.organizations)
 
@@ -16,7 +18,9 @@ const isEditDialogOpen = ref(false)
 const isAccountDeactivated = ref(false)
 
 const validateAccountDeactivation = [(v: string) => !!v || 'Please confirm account deactivation']
-
+const acceptInvitation = async (id: string) => {
+  await store.acceptInvitation(id)
+}
 const onsubmitUpdate = async (data: any) => {
   await store.updateProfile(data)
 }
@@ -84,6 +88,36 @@ const onsubmitUpdate = async (data: any) => {
         </VCardText>
       </VCard>
     </VCol>
+
+    <VCol cols="12">
+      <VCard title="Pending Invitations">
+        <VCardText class="pt-2">
+          <p>the list of the Organizations you have been invitated to join.</p>
+          <VTable class="text-no-wrap">
+            <thead>
+              <tr>
+                <th>
+                  Organization
+                </th>
+                <th>
+                  Received
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="invitation in store.invitationPendings" :key="invitation.id">
+                <td>{{ invitation.organization.name }}</td>
+                <td>{{ $dayjs(invitation.updatedAt).fromNow() }}</td>
+                <td><VBtn variant="outlined" color="success"  @click="acceptInvitation(invitation.code)" >Accept</VBtn> <VBtn variant="outlined"  color="error" >Reject</VBtn></td>
+              </tr>
+            </tbody>
+          </VTable>
+        </VCardText>
+      </VCard>
+    </VCol>
+
 
     <VCol cols="12">
       <!-- 👉 Delete Account -->
