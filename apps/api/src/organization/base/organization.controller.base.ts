@@ -350,7 +350,6 @@ export class OrganizationControllerBase {
         },
 
         code: true,
-        role: true,
       },
     });
     if (results === null) {
@@ -464,6 +463,8 @@ export class OrganizationControllerBase {
             id: true,
           },
         },
+
+        roles: true,
       },
     });
     if (results === null) {

@@ -58,7 +58,6 @@ model Invitation {
   inviter             User                  @relation(fields: [inviterId], references: [id])
   inviterId           String
   code                String                @unique
-  role                Json
   organizationMembers OrganizationMember[]
 }
 
@@ -72,6 +71,7 @@ model OrganizationMember {
   organizationId String
   invitation     Invitation?  @relation(fields: [invitationId], references: [id])
   invitationId   String?      @unique
+  roles          Json
 }
 
 enum EnumClusterClusterType {
