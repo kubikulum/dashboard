@@ -12,10 +12,17 @@ https://docs.amplication.com/how-to/custom-code
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
-import { IsEnum, IsOptional, ValidateNested } from "class-validator";
+import {
+  IsEnum,
+  IsOptional,
+  ValidateNested,
+  IsString,
+  MaxLength,
+} from "class-validator";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { Type } from "class-transformer";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
 
 @InputType()
 class ClusterUpdateInput {
@@ -28,7 +35,7 @@ class ClusterUpdateInput {
   @Field(() => EnumClusterClusterType, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  clusterType?: "Kubeflow" | "Flytes";
 
   @ApiProperty({
     required: false,
@@ -51,7 +58,54 @@ class ClusterUpdateInput {
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1" | null;
+  plan?: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterRegion,
+  })
+  @IsEnum(EnumClusterRegion)
+  @IsOptional()
+  @Field(() => EnumClusterRegion, {
+    nullable: true,
+  })
+  region?: "EuropeParis_1" | "UsOhio_1";
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(256)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerShootId?: string | null;
 }
 
 export { ClusterUpdateInput as ClusterUpdateInput };

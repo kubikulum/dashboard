@@ -13,10 +13,11 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { IsOptional, ValidateNested, IsEnum } from "class-validator";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { InvitationWhereUniqueInput } from "../../invitation/base/InvitationWhereUniqueInput";
+import { EnumOrganizationMemberStatus } from "./EnumOrganizationMemberStatus";
 
 @InputType()
 class OrganizationMemberWhereInput {
@@ -66,6 +67,21 @@ class OrganizationMemberWhereInput {
     nullable: true,
   })
   invitation?: InvitationWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumOrganizationMemberStatus,
+  })
+  @IsEnum(EnumOrganizationMemberStatus)
+  @IsOptional()
+  @Field(() => EnumOrganizationMemberStatus, {
+    nullable: true,
+  })
+  status?:
+    | "PendingInvitation"
+    | "Activated"
+    | "Suspended"
+    | "InvitationRevoked";
 }
 
 export { OrganizationMemberWhereInput as OrganizationMemberWhereInput };

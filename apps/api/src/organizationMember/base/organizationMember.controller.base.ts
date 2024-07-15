@@ -52,9 +52,11 @@ export class OrganizationMemberControllerBase {
       data: {
         ...data,
 
-        user: {
-          connect: data.user,
-        },
+        user: data.user
+          ? {
+              connect: data.user,
+            }
+          : undefined,
 
         organization: {
           connect: data.organization,
@@ -90,6 +92,7 @@ export class OrganizationMemberControllerBase {
         },
 
         roles: true,
+        status: true,
       },
     });
   }
@@ -136,6 +139,7 @@ export class OrganizationMemberControllerBase {
         },
 
         roles: true,
+        status: true,
       },
     });
   }
@@ -181,6 +185,7 @@ export class OrganizationMemberControllerBase {
         },
 
         roles: true,
+        status: true,
       },
     });
     if (result === null) {
@@ -213,9 +218,11 @@ export class OrganizationMemberControllerBase {
         data: {
           ...data,
 
-          user: {
-            connect: data.user,
-          },
+          user: data.user
+            ? {
+                connect: data.user,
+              }
+            : undefined,
 
           organization: {
             connect: data.organization,
@@ -251,6 +258,7 @@ export class OrganizationMemberControllerBase {
           },
 
           roles: true,
+          status: true,
         },
       });
     } catch (error) {
@@ -304,6 +312,7 @@ export class OrganizationMemberControllerBase {
           },
 
           roles: true,
+          status: true,
         },
       });
     } catch (error) {

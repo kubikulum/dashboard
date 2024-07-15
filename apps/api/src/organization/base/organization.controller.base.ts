@@ -238,6 +238,10 @@ export class OrganizationControllerBase {
         },
 
         plan: true,
+        region: true,
+        name: true,
+        description: true,
+        gardenerShootId: true,
       },
     });
     if (results === null) {
@@ -465,6 +469,7 @@ export class OrganizationControllerBase {
         },
 
         roles: true,
+        status: true,
       },
     });
     if (results === null) {

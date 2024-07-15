@@ -11,13 +11,11 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum EnumClusterPlan {
-  Free = "Free",
-  Reserved_1 = "Reserved_1",
-  Reserved_2 = "Reserved_2",
-  Entreprise = "Entreprise",
+export enum EnumClusterRegion {
+  EuropeParis_1 = "EuropeParis_1",
+  UsOhio_1 = "UsOhio_1",
 }
 
-registerEnumType(EnumClusterPlan, {
-  name: "EnumClusterPlan",
+registerEnumType(EnumClusterRegion, {
+  name: "EnumClusterRegion",
 });

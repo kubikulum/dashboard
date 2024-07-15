@@ -61,6 +61,10 @@ export class ClusterControllerBase {
         },
 
         plan: true,
+        region: true,
+        name: true,
+        description: true,
+        gardenerShootId: true,
       },
     });
     if (result === null) {
