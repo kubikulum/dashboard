@@ -331,7 +331,6 @@ export class UserControllerBase {
         },
 
         code: true,
-        role: true,
       },
     });
     if (results === null) {
