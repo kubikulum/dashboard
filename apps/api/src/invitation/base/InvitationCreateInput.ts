@@ -23,9 +23,6 @@ import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { Type } from "class-transformer";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
-import { IsJSONValue } from "../../validators";
-import { GraphQLJSON } from "graphql-type-json";
-import { InputJsonValue } from "../../types";
 import { OrganizationMemberCreateNestedManyWithoutInvitationsInput } from "./OrganizationMemberCreateNestedManyWithoutInvitationsInput";
 
 @InputType()
@@ -86,13 +83,6 @@ class InvitationCreateInput {
   @MaxLength(1000)
   @Field(() => String)
   code!: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsJSONValue()
-  @Field(() => GraphQLJSON)
-  role!: InputJsonValue;
 
   @ApiProperty({
     required: false,
