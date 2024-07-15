@@ -16,6 +16,9 @@ import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
 import { Organization } from "../../organization/base/Organization";
 import { Invitation } from "../../invitation/base/Invitation";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { JsonValue } from "type-fest";
 
 @ObjectType()
 class OrganizationMember {
@@ -67,6 +70,13 @@ class OrganizationMember {
   @Type(() => Invitation)
   @IsOptional()
   invitation?: Invitation | null;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsJSONValue()
+  @Field(() => GraphQLJSON)
+  roles!: JsonValue;
 }
 
 export { OrganizationMember as OrganizationMember };

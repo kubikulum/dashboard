@@ -26,7 +26,7 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extract JWT from the Authorization header
       audience: configService.get("AUTH0_AUDIENCE"), // The resource server where the JWT is processed
       issuer: `${configService.get("AUTH0_ISSUER_URL")}`, // The issuing Auth0 server
-      algorithms: ["ES384"], // Asymmetric signing algorithm
+      algorithms: ["RS256"], // Asymmetric signing algorithm
 
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -34,26 +34,19 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
         jwksRequestsPerMinute: 5,
         jwksUri: `${configService.get(
           "AUTH0_ISSUER_URL"
-        )}/jwks`,
+        )}.well-known/jwks.json`,
       }),
     });
   }
 
   // Validate the received JWT and construct the user object out of the decoded token.
-  async validateBase(userPayload: Auth0User): Promise<UserInfo | null> {
-
-    const user = await this.userService.user({
+  async validateBase(payload: { user: Auth0User }): Promise<UserInfo | null> {
+    const user = await this.userService.findOne({
       where: {
-        email: userPayload.email,
+        email: payload.user.email,
       },
     });
-    const roles = ['user']
-    if (userPayload.organization_id) {
-      const organizationRole = userPayload.organizationRoles.find((org) => org.organizationId === userPayload.organization_id);
-      if (organizationRole) {
-        roles.push(organizationRole?.roleName);
-      }
-    }
-    return user ? { ...user, roles, contextOrganizationId: userPayload.organization_id } : null;
+
+    return user ? { ...user, roles: user?.roles as string[] } : null;
   }
 }

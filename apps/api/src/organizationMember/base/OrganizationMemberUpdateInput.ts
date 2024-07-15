@@ -16,6 +16,9 @@ import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { InvitationWhereUniqueInput } from "../../invitation/base/InvitationWhereUniqueInput";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { InputJsonValue } from "../../types";
 
 @InputType()
 class OrganizationMemberUpdateInput {
@@ -54,6 +57,16 @@ class OrganizationMemberUpdateInput {
     nullable: true,
   })
   invitation?: InvitationWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsJSONValue()
+  @IsOptional()
+  @Field(() => GraphQLJSON, {
+    nullable: true,
+  })
+  roles?: InputJsonValue;
 }
 
 export { OrganizationMemberUpdateInput as OrganizationMemberUpdateInput };

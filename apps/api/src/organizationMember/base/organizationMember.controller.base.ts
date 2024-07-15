@@ -88,6 +88,8 @@ export class OrganizationMemberControllerBase {
             id: true,
           },
         },
+
+        roles: true,
       },
     });
   }
@@ -132,6 +134,8 @@ export class OrganizationMemberControllerBase {
             id: true,
           },
         },
+
+        roles: true,
       },
     });
   }
@@ -175,6 +179,8 @@ export class OrganizationMemberControllerBase {
             id: true,
           },
         },
+
+        roles: true,
       },
     });
     if (result === null) {
@@ -243,6 +249,8 @@ export class OrganizationMemberControllerBase {
               id: true,
             },
           },
+
+          roles: true,
         },
       });
     } catch (error) {
@@ -294,6 +302,8 @@ export class OrganizationMemberControllerBase {
               id: true,
             },
           },
+
+          roles: true,
         },
       });
     } catch (error) {
