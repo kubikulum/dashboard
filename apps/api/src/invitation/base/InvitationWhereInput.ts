@@ -18,6 +18,7 @@ import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { OrganizationMemberListRelationFilter } from "../../organizationMember/base/OrganizationMemberListRelationFilter";
 
 @InputType()
 class InvitationWhereInput {
@@ -99,6 +100,18 @@ class InvitationWhereInput {
     nullable: true,
   })
   code?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberListRelationFilter)
+  @IsOptional()
+  @Field(() => OrganizationMemberListRelationFilter, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberListRelationFilter;
 }
 
 export { InvitationWhereInput as InvitationWhereInput };

@@ -18,7 +18,7 @@ import { SortOrder } from "../../util/SortOrder";
   isAbstract: true,
   description: undefined,
 })
-class InvitationOrderByInput {
+class OrganizationMemberOrderByInput {
   @ApiProperty({
     required: false,
     enum: ["asc", "desc"],
@@ -61,29 +61,7 @@ class InvitationOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  email?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  status?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  expirationDate?: SortOrder;
+  userId?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -105,29 +83,7 @@ class InvitationOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  inviterId?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  code?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  role?: SortOrder;
+  invitationId?: SortOrder;
 }
 
-export { InvitationOrderByInput as InvitationOrderByInput };
+export { OrganizationMemberOrderByInput as OrganizationMemberOrderByInput };

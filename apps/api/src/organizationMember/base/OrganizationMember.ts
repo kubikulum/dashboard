@@ -11,21 +11,14 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsString,
-  IsDate,
-  MaxLength,
-  ValidateNested,
-  IsOptional,
-} from "class-validator";
+import { IsString, IsDate, ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
-import { Cluster } from "../../cluster/base/Cluster";
+import { Organization } from "../../organization/base/Organization";
 import { Invitation } from "../../invitation/base/Invitation";
-import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 
 @ObjectType()
-class Organization {
+class OrganizationMember {
   @ApiProperty({
     required: true,
     type: String,
@@ -52,60 +45,28 @@ class Organization {
 
   @ApiProperty({
     required: true,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @Field(() => String)
-  name!: string;
-
-  @ApiProperty({
-    required: false,
     type: () => User,
   })
   @ValidateNested()
   @Type(() => User)
-  @IsOptional()
-  owner?: User | null;
+  user?: User;
 
   @ApiProperty({
-    required: false,
-    type: () => [Cluster],
+    required: true,
+    type: () => Organization,
   })
   @ValidateNested()
-  @Type(() => Cluster)
-  @IsOptional()
-  clusters?: Array<Cluster>;
+  @Type(() => Organization)
+  organization?: Organization;
 
   @ApiProperty({
     required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  gardenerProjectNamespace!: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: () => [Invitation],
+    type: () => Invitation,
   })
   @ValidateNested()
   @Type(() => Invitation)
   @IsOptional()
-  invitations?: Array<Invitation>;
-
-  @ApiProperty({
-    required: false,
-    type: () => [OrganizationMember],
-  })
-  @ValidateNested()
-  @Type(() => OrganizationMember)
-  @IsOptional()
-  organizationMembers?: Array<OrganizationMember>;
+  invitation?: Invitation | null;
 }
 
-export { Organization as Organization };
+export { OrganizationMember as OrganizationMember };

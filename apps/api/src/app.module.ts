@@ -3,6 +3,7 @@ import { UserModule } from "./user/user.module";
 import { OrganizationModule } from "./organization/organization.module";
 import { ClusterModule } from "./cluster/cluster.module";
 import { InvitationModule } from "./invitation/invitation.module";
+import { OrganizationMemberModule } from "./organizationMember/organizationMember.module";
 import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
@@ -26,6 +27,7 @@ import { OAuthModuleOptions } from "./oauth-client/oauth.service";
     OrganizationModule,
     ClusterModule,
     InvitationModule,
+    OrganizationMemberModule,
     HealthModule,
     PrismaModule,
     SecretsManagerModule,

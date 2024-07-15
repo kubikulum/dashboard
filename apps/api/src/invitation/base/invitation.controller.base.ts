@@ -26,6 +26,9 @@ import { Invitation } from "./Invitation";
 import { InvitationFindManyArgs } from "./InvitationFindManyArgs";
 import { InvitationWhereUniqueInput } from "./InvitationWhereUniqueInput";
 import { InvitationUpdateInput } from "./InvitationUpdateInput";
+import { OrganizationMemberFindManyArgs } from "../../organizationMember/base/OrganizationMemberFindManyArgs";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
+import { OrganizationMemberWhereUniqueInput } from "../../organizationMember/base/OrganizationMemberWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -81,6 +84,7 @@ export class InvitationControllerBase {
         },
 
         code: true,
+        role: true,
       },
     });
   }
@@ -122,6 +126,7 @@ export class InvitationControllerBase {
         },
 
         code: true,
+        role: true,
       },
     });
   }
@@ -164,6 +169,7 @@ export class InvitationControllerBase {
         },
 
         code: true,
+        role: true,
       },
     });
     if (result === null) {
@@ -225,6 +231,7 @@ export class InvitationControllerBase {
           },
 
           code: true,
+          role: true,
         },
       });
     } catch (error) {
@@ -275,6 +282,7 @@ export class InvitationControllerBase {
           },
 
           code: true,
+          role: true,
         },
       });
     } catch (error) {
@@ -285,5 +293,118 @@ export class InvitationControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/organizationMembers")
+  @ApiNestedQuery(OrganizationMemberFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "OrganizationMember",
+    action: "read",
+    possession: "any",
+  })
+  async findOrganizationMembers(
+    @common.Req() request: Request,
+    @common.Param() params: InvitationWhereUniqueInput
+  ): Promise<OrganizationMember[]> {
+    const query = plainToClass(OrganizationMemberFindManyArgs, request.query);
+    const results = await this.service.findOrganizationMembers(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+
+        invitation: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/organizationMembers")
+  @nestAccessControl.UseRoles({
+    resource: "Invitation",
+    action: "update",
+    possession: "any",
+  })
+  async connectOrganizationMembers(
+    @common.Param() params: InvitationWhereUniqueInput,
+    @common.Body() body: OrganizationMemberWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      organizationMembers: {
+        connect: body,
+      },
+    };
+    await this.service.updateInvitation({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/organizationMembers")
+  @nestAccessControl.UseRoles({
+    resource: "Invitation",
+    action: "update",
+    possession: "any",
+  })
+  async updateOrganizationMembers(
+    @common.Param() params: InvitationWhereUniqueInput,
+    @common.Body() body: OrganizationMemberWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      organizationMembers: {
+        set: body,
+      },
+    };
+    await this.service.updateInvitation({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/organizationMembers")
+  @nestAccessControl.UseRoles({
+    resource: "Invitation",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectOrganizationMembers(
+    @common.Param() params: InvitationWhereUniqueInput,
+    @common.Body() body: OrganizationMemberWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      organizationMembers: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateInvitation({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

@@ -17,6 +17,7 @@ import { IsOptional, ValidateNested } from "class-validator";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { OrganizationListRelationFilter } from "../../organization/base/OrganizationListRelationFilter";
 import { InvitationListRelationFilter } from "../../invitation/base/InvitationListRelationFilter";
+import { OrganizationMemberListRelationFilter } from "../../organizationMember/base/OrganizationMemberListRelationFilter";
 
 @InputType()
 class UserWhereInput {
@@ -85,18 +86,6 @@ class UserWhereInput {
   @Field(() => OrganizationListRelationFilter, {
     nullable: true,
   })
-  organizations?: OrganizationListRelationFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => OrganizationListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => OrganizationListRelationFilter)
-  @IsOptional()
-  @Field(() => OrganizationListRelationFilter, {
-    nullable: true,
-  })
   ownerOrganizations?: OrganizationListRelationFilter;
 
   @ApiProperty({
@@ -121,6 +110,18 @@ class UserWhereInput {
     nullable: true,
   })
   invitations?: InvitationListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberListRelationFilter)
+  @IsOptional()
+  @Field(() => OrganizationMemberListRelationFilter, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberListRelationFilter;
 }
 
 export { UserWhereInput as UserWhereInput };

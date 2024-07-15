@@ -19,34 +19,33 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { Invitation } from "./Invitation";
-import { InvitationCountArgs } from "./InvitationCountArgs";
-import { InvitationFindManyArgs } from "./InvitationFindManyArgs";
-import { InvitationFindUniqueArgs } from "./InvitationFindUniqueArgs";
-import { CreateInvitationArgs } from "./CreateInvitationArgs";
-import { UpdateInvitationArgs } from "./UpdateInvitationArgs";
-import { DeleteInvitationArgs } from "./DeleteInvitationArgs";
-import { OrganizationMemberFindManyArgs } from "../../organizationMember/base/OrganizationMemberFindManyArgs";
-import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
-import { Organization } from "../../organization/base/Organization";
+import { OrganizationMember } from "./OrganizationMember";
+import { OrganizationMemberCountArgs } from "./OrganizationMemberCountArgs";
+import { OrganizationMemberFindManyArgs } from "./OrganizationMemberFindManyArgs";
+import { OrganizationMemberFindUniqueArgs } from "./OrganizationMemberFindUniqueArgs";
+import { CreateOrganizationMemberArgs } from "./CreateOrganizationMemberArgs";
+import { UpdateOrganizationMemberArgs } from "./UpdateOrganizationMemberArgs";
+import { DeleteOrganizationMemberArgs } from "./DeleteOrganizationMemberArgs";
 import { User } from "../../user/base/User";
-import { InvitationService } from "../invitation.service";
+import { Organization } from "../../organization/base/Organization";
+import { Invitation } from "../../invitation/base/Invitation";
+import { OrganizationMemberService } from "../organizationMember.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
-@graphql.Resolver(() => Invitation)
-export class InvitationResolverBase {
+@graphql.Resolver(() => OrganizationMember)
+export class OrganizationMemberResolverBase {
   constructor(
-    protected readonly service: InvitationService,
+    protected readonly service: OrganizationMemberService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
 
   @graphql.Query(() => MetaQueryPayload)
   @nestAccessControl.UseRoles({
-    resource: "Invitation",
+    resource: "OrganizationMember",
     action: "read",
     possession: "any",
   })
-  async _invitationsMeta(
-    @graphql.Args() args: InvitationCountArgs
+  async _organizationMembersMeta(
+    @graphql.Args() args: OrganizationMemberCountArgs
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
     return {
@@ -55,29 +54,29 @@ export class InvitationResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => [Invitation])
+  @graphql.Query(() => [OrganizationMember])
   @nestAccessControl.UseRoles({
-    resource: "Invitation",
+    resource: "OrganizationMember",
     action: "read",
     possession: "any",
   })
-  async invitations(
-    @graphql.Args() args: InvitationFindManyArgs
-  ): Promise<Invitation[]> {
-    return this.service.invitations(args);
+  async organizationMembers(
+    @graphql.Args() args: OrganizationMemberFindManyArgs
+  ): Promise<OrganizationMember[]> {
+    return this.service.organizationMembers(args);
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => Invitation, { nullable: true })
+  @graphql.Query(() => OrganizationMember, { nullable: true })
   @nestAccessControl.UseRoles({
-    resource: "Invitation",
+    resource: "OrganizationMember",
     action: "read",
     possession: "own",
   })
-  async invitation(
-    @graphql.Args() args: InvitationFindUniqueArgs
-  ): Promise<Invitation | null> {
-    const result = await this.service.invitation(args);
+  async organizationMember(
+    @graphql.Args() args: OrganizationMemberFindUniqueArgs
+  ): Promise<OrganizationMember | null> {
+    const result = await this.service.organizationMember(args);
     if (result === null) {
       return null;
     }
@@ -85,54 +84,66 @@ export class InvitationResolverBase {
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
-  @graphql.Mutation(() => Invitation)
+  @graphql.Mutation(() => OrganizationMember)
   @nestAccessControl.UseRoles({
-    resource: "Invitation",
+    resource: "OrganizationMember",
     action: "create",
     possession: "any",
   })
-  async createInvitation(
-    @graphql.Args() args: CreateInvitationArgs
-  ): Promise<Invitation> {
-    return await this.service.createInvitation({
+  async createOrganizationMember(
+    @graphql.Args() args: CreateOrganizationMemberArgs
+  ): Promise<OrganizationMember> {
+    return await this.service.createOrganizationMember({
       ...args,
       data: {
         ...args.data,
+
+        user: {
+          connect: args.data.user,
+        },
 
         organization: {
           connect: args.data.organization,
         },
 
-        inviter: {
-          connect: args.data.inviter,
-        },
+        invitation: args.data.invitation
+          ? {
+              connect: args.data.invitation,
+            }
+          : undefined,
       },
     });
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
-  @graphql.Mutation(() => Invitation)
+  @graphql.Mutation(() => OrganizationMember)
   @nestAccessControl.UseRoles({
-    resource: "Invitation",
+    resource: "OrganizationMember",
     action: "update",
     possession: "any",
   })
-  async updateInvitation(
-    @graphql.Args() args: UpdateInvitationArgs
-  ): Promise<Invitation | null> {
+  async updateOrganizationMember(
+    @graphql.Args() args: UpdateOrganizationMemberArgs
+  ): Promise<OrganizationMember | null> {
     try {
-      return await this.service.updateInvitation({
+      return await this.service.updateOrganizationMember({
         ...args,
         data: {
           ...args.data,
+
+          user: {
+            connect: args.data.user,
+          },
 
           organization: {
             connect: args.data.organization,
           },
 
-          inviter: {
-            connect: args.data.inviter,
-          },
+          invitation: args.data.invitation
+            ? {
+                connect: args.data.invitation,
+              }
+            : undefined,
         },
       });
     } catch (error) {
@@ -145,17 +156,17 @@ export class InvitationResolverBase {
     }
   }
 
-  @graphql.Mutation(() => Invitation)
+  @graphql.Mutation(() => OrganizationMember)
   @nestAccessControl.UseRoles({
-    resource: "Invitation",
+    resource: "OrganizationMember",
     action: "delete",
     possession: "any",
   })
-  async deleteInvitation(
-    @graphql.Args() args: DeleteInvitationArgs
-  ): Promise<Invitation | null> {
+  async deleteOrganizationMember(
+    @graphql.Args() args: DeleteOrganizationMemberArgs
+  ): Promise<OrganizationMember | null> {
     try {
-      return await this.service.deleteInvitation(args);
+      return await this.service.deleteOrganizationMember(args);
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new GraphQLError(
@@ -167,25 +178,24 @@ export class InvitationResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [OrganizationMember], {
-    name: "organizationMembers",
+  @graphql.ResolveField(() => User, {
+    nullable: true,
+    name: "user",
   })
   @nestAccessControl.UseRoles({
-    resource: "OrganizationMember",
+    resource: "User",
     action: "read",
     possession: "any",
   })
-  async findOrganizationMembers(
-    @graphql.Parent() parent: Invitation,
-    @graphql.Args() args: OrganizationMemberFindManyArgs
-  ): Promise<OrganizationMember[]> {
-    const results = await this.service.findOrganizationMembers(parent.id, args);
+  async getUser(
+    @graphql.Parent() parent: OrganizationMember
+  ): Promise<User | null> {
+    const result = await this.service.getUser(parent.id);
 
-    if (!results) {
-      return [];
+    if (!result) {
+      return null;
     }
-
-    return results;
+    return result;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
@@ -199,7 +209,7 @@ export class InvitationResolverBase {
     possession: "any",
   })
   async getOrganization(
-    @graphql.Parent() parent: Invitation
+    @graphql.Parent() parent: OrganizationMember
   ): Promise<Organization | null> {
     const result = await this.service.getOrganization(parent.id);
 
@@ -210,17 +220,19 @@ export class InvitationResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => User, {
+  @graphql.ResolveField(() => Invitation, {
     nullable: true,
-    name: "inviter",
+    name: "invitation",
   })
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Invitation",
     action: "read",
     possession: "any",
   })
-  async getInviter(@graphql.Parent() parent: Invitation): Promise<User | null> {
-    const result = await this.service.getInviter(parent.id);
+  async getInvitation(
+    @graphql.Parent() parent: OrganizationMember
+  ): Promise<Invitation | null> {
+    const result = await this.service.getInvitation(parent.id);
 
     if (!result) {
       return null;
