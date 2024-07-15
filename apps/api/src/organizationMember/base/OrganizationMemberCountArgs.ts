@@ -9,20 +9,20 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-import { InputType, Field } from "@nestjs/graphql";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { ArgsType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { OrganizationMemberWhereInput } from "./OrganizationMemberWhereInput";
+import { Type } from "class-transformer";
 
-@InputType()
-class UserCreateNestedManyWithoutOrganizationsInput {
-  @Field(() => [UserWhereUniqueInput], {
-    nullable: true,
-  })
+@ArgsType()
+class OrganizationMemberCountArgs {
   @ApiProperty({
     required: false,
-    type: () => [UserWhereUniqueInput],
+    type: () => OrganizationMemberWhereInput,
   })
-  connect?: Array<UserWhereUniqueInput>;
+  @Field(() => OrganizationMemberWhereInput, { nullable: true })
+  @Type(() => OrganizationMemberWhereInput)
+  where?: OrganizationMemberWhereInput;
 }
 
-export { UserCreateNestedManyWithoutOrganizationsInput as UserCreateNestedManyWithoutOrganizationsInput };
+export { OrganizationMemberCountArgs as OrganizationMemberCountArgs };

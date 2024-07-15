@@ -23,6 +23,7 @@ import { InputJsonValue } from "../../types";
 import { OrganizationUpdateManyWithoutUsersInput } from "./OrganizationUpdateManyWithoutUsersInput";
 import { Type } from "class-transformer";
 import { InvitationUpdateManyWithoutUsersInput } from "./InvitationUpdateManyWithoutUsersInput";
+import { OrganizationMemberUpdateManyWithoutUsersInput } from "./OrganizationMemberUpdateManyWithoutUsersInput";
 
 @InputType()
 class UserUpdateInput {
@@ -93,18 +94,6 @@ class UserUpdateInput {
   @Field(() => OrganizationUpdateManyWithoutUsersInput, {
     nullable: true,
   })
-  organizations?: OrganizationUpdateManyWithoutUsersInput;
-
-  @ApiProperty({
-    required: false,
-    type: () => OrganizationUpdateManyWithoutUsersInput,
-  })
-  @ValidateNested()
-  @Type(() => OrganizationUpdateManyWithoutUsersInput)
-  @IsOptional()
-  @Field(() => OrganizationUpdateManyWithoutUsersInput, {
-    nullable: true,
-  })
   ownerOrganizations?: OrganizationUpdateManyWithoutUsersInput;
 
   @ApiProperty({
@@ -140,6 +129,18 @@ class UserUpdateInput {
     nullable: true,
   })
   invitations?: InvitationUpdateManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberUpdateManyWithoutUsersInput;
 }
 
 export { UserUpdateInput as UserUpdateInput };

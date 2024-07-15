@@ -17,11 +17,11 @@ import {
   IsOptional,
   ValidateNested,
 } from "class-validator";
-import { UserUpdateManyWithoutOrganizationsInput } from "./UserUpdateManyWithoutOrganizationsInput";
-import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { Type } from "class-transformer";
 import { ClusterUpdateManyWithoutOrganizationsInput } from "./ClusterUpdateManyWithoutOrganizationsInput";
 import { InvitationUpdateManyWithoutOrganizationsInput } from "./InvitationUpdateManyWithoutOrganizationsInput";
+import { OrganizationMemberUpdateManyWithoutOrganizationsInput } from "./OrganizationMemberUpdateManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationUpdateInput {
@@ -36,18 +36,6 @@ class OrganizationUpdateInput {
     nullable: true,
   })
   name?: string;
-
-  @ApiProperty({
-    required: false,
-    type: () => UserUpdateManyWithoutOrganizationsInput,
-  })
-  @ValidateNested()
-  @Type(() => UserUpdateManyWithoutOrganizationsInput)
-  @IsOptional()
-  @Field(() => UserUpdateManyWithoutOrganizationsInput, {
-    nullable: true,
-  })
-  members?: UserUpdateManyWithoutOrganizationsInput;
 
   @ApiProperty({
     required: false,
@@ -96,6 +84,18 @@ class OrganizationUpdateInput {
     nullable: true,
   })
   invitations?: InvitationUpdateManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberUpdateManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberUpdateManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberUpdateManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberUpdateManyWithoutOrganizationsInput;
 }
 
 export { OrganizationUpdateInput as OrganizationUpdateInput };
