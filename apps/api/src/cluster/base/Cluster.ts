@@ -17,11 +17,13 @@ import {
   IsEnum,
   ValidateNested,
   IsOptional,
+  MaxLength,
 } from "class-validator";
 import { Type } from "class-transformer";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { Organization } from "../../organization/base/Organization";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
 
 @ObjectType()
 class Cluster {
@@ -57,7 +59,7 @@ class Cluster {
   @Field(() => EnumClusterClusterType, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  clusterType?: "Kubeflow" | "Flytes";
 
   @ApiProperty({
     required: false,
@@ -69,15 +71,57 @@ class Cluster {
   organization?: Organization | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     enum: EnumClusterPlan,
   })
   @IsEnum(EnumClusterPlan)
-  @IsOptional()
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1" | null;
+  plan?: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: true,
+    enum: EnumClusterRegion,
+  })
+  @IsEnum(EnumClusterRegion)
+  @Field(() => EnumClusterRegion, {
+    nullable: true,
+  })
+  region?: "EuropeParis_1" | "UsOhio_1";
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(256)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerShootId!: string | null;
 }
 
 export { Cluster as Cluster };

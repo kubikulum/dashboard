@@ -17,6 +17,8 @@ import { IsOptional, IsEnum, ValidateNested } from "class-validator";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
 
 @InputType()
 class ClusterWhereInput {
@@ -40,7 +42,7 @@ class ClusterWhereInput {
   @Field(() => EnumClusterClusterType, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  clusterType?: "Kubeflow" | "Flytes";
 
   @ApiProperty({
     required: false,
@@ -63,7 +65,51 @@ class ClusterWhereInput {
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1";
+  plan?: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterRegion,
+  })
+  @IsEnum(EnumClusterRegion)
+  @IsOptional()
+  @Field(() => EnumClusterRegion, {
+    nullable: true,
+  })
+  region?: "EuropeParis_1" | "UsOhio_1";
+
+  @ApiProperty({
+    required: false,
+    type: StringFilter,
+  })
+  @Type(() => StringFilter)
+  @IsOptional()
+  @Field(() => StringFilter, {
+    nullable: true,
+  })
+  name?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  description?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  gardenerShootId?: StringNullableFilter;
 }
 
 export { ClusterWhereInput as ClusterWhereInput };

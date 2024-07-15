@@ -21,23 +21,35 @@ const CREATE_INPUT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  name: "exampleName",
+  description: "exampleDescription",
+  gardenerShootId: "exampleGardenerShootId",
 };
 const CREATE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  name: "exampleName",
+  description: "exampleDescription",
+  gardenerShootId: "exampleGardenerShootId",
 };
 const FIND_MANY_RESULT = [
   {
     id: "exampleId",
     createdAt: new Date(),
     updatedAt: new Date(),
+    name: "exampleName",
+    description: "exampleDescription",
+    gardenerShootId: "exampleGardenerShootId",
   },
 ];
 const FIND_ONE_RESULT = {
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
+  name: "exampleName",
+  description: "exampleDescription",
+  gardenerShootId: "exampleGardenerShootId",
 };
 
 const service = {

@@ -446,6 +446,7 @@ export class UserControllerBase {
         },
 
         roles: true,
+        status: true,
       },
     });
     if (results === null) {

@@ -329,6 +329,7 @@ export class InvitationControllerBase {
         },
 
         roles: true,
+        status: true,
       },
     });
     if (results === null) {

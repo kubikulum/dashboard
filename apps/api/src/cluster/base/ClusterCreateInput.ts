@@ -12,10 +12,17 @@ https://docs.amplication.com/how-to/custom-code
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
-import { IsEnum, ValidateNested, IsOptional } from "class-validator";
+import {
+  IsEnum,
+  ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { Type } from "class-transformer";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
 
 @InputType()
 class ClusterCreateInput {
@@ -25,7 +32,7 @@ class ClusterCreateInput {
   })
   @IsEnum(EnumClusterClusterType)
   @Field(() => EnumClusterClusterType)
-  clusterType!: "kubeflow" | "Flytes";
+  clusterType!: "Kubeflow" | "Flytes";
 
   @ApiProperty({
     required: false,
@@ -40,15 +47,53 @@ class ClusterCreateInput {
   organization?: OrganizationWhereUniqueInput | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     enum: EnumClusterPlan,
   })
   @IsEnum(EnumClusterPlan)
+  @Field(() => EnumClusterPlan)
+  plan!: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: true,
+    enum: EnumClusterRegion,
+  })
+  @IsEnum(EnumClusterRegion)
+  @Field(() => EnumClusterRegion)
+  region!: "EuropeParis_1" | "UsOhio_1";
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(256)
   @IsOptional()
-  @Field(() => EnumClusterPlan, {
+  @Field(() => String, {
     nullable: true,
   })
-  plan?: "Free" | "Reserved_1" | null;
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerShootId?: string | null;
 }
 
 export { ClusterCreateInput as ClusterCreateInput };
