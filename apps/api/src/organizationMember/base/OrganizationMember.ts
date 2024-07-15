@@ -11,11 +11,21 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsDate, ValidateNested, IsOptional } from "class-validator";
+import {
+  IsString,
+  IsDate,
+  ValidateNested,
+  IsOptional,
+  IsEnum,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
 import { Organization } from "../../organization/base/Organization";
 import { Invitation } from "../../invitation/base/Invitation";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { JsonValue } from "type-fest";
+import { EnumOrganizationMemberStatus } from "./EnumOrganizationMemberStatus";
 
 @ObjectType()
 class OrganizationMember {
@@ -44,12 +54,13 @@ class OrganizationMember {
   updatedAt!: Date;
 
   @ApiProperty({
-    required: true,
+    required: false,
     type: () => User,
   })
   @ValidateNested()
   @Type(() => User)
-  user?: User;
+  @IsOptional()
+  user?: User | null;
 
   @ApiProperty({
     required: true,
@@ -67,6 +78,27 @@ class OrganizationMember {
   @Type(() => Invitation)
   @IsOptional()
   invitation?: Invitation | null;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsJSONValue()
+  @Field(() => GraphQLJSON)
+  roles!: JsonValue;
+
+  @ApiProperty({
+    required: true,
+    enum: EnumOrganizationMemberStatus,
+  })
+  @IsEnum(EnumOrganizationMemberStatus)
+  @Field(() => EnumOrganizationMemberStatus, {
+    nullable: true,
+  })
+  status?:
+    | "PendingInvitation"
+    | "Activated"
+    | "Suspended"
+    | "InvitationRevoked";
 }
 
 export { OrganizationMember as OrganizationMember };

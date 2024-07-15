@@ -331,7 +331,6 @@ export class UserControllerBase {
         },
 
         code: true,
-        role: true,
       },
     });
     if (results === null) {
@@ -445,6 +444,9 @@ export class UserControllerBase {
             id: true,
           },
         },
+
+        roles: true,
+        status: true,
       },
     });
     if (results === null) {

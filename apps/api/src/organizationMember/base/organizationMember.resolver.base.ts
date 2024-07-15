@@ -98,9 +98,11 @@ export class OrganizationMemberResolverBase {
       data: {
         ...args.data,
 
-        user: {
-          connect: args.data.user,
-        },
+        user: args.data.user
+          ? {
+              connect: args.data.user,
+            }
+          : undefined,
 
         organization: {
           connect: args.data.organization,
@@ -131,9 +133,11 @@ export class OrganizationMemberResolverBase {
         data: {
           ...args.data,
 
-          user: {
-            connect: args.data.user,
-          },
+          user: args.data.user
+            ? {
+                connect: args.data.user,
+              }
+            : undefined,
 
           organization: {
             connect: args.data.organization,

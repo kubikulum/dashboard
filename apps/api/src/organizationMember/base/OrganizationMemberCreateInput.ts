@@ -12,21 +12,28 @@ https://docs.amplication.com/how-to/custom-code
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
-import { ValidateNested, IsOptional } from "class-validator";
+import { ValidateNested, IsOptional, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { InvitationWhereUniqueInput } from "../../invitation/base/InvitationWhereUniqueInput";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { InputJsonValue } from "../../types";
+import { EnumOrganizationMemberStatus } from "./EnumOrganizationMemberStatus";
 
 @InputType()
 class OrganizationMemberCreateInput {
   @ApiProperty({
-    required: true,
+    required: false,
     type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
   @Type(() => UserWhereUniqueInput)
-  @Field(() => UserWhereUniqueInput)
-  user!: UserWhereUniqueInput;
+  @IsOptional()
+  @Field(() => UserWhereUniqueInput, {
+    nullable: true,
+  })
+  user?: UserWhereUniqueInput | null;
 
   @ApiProperty({
     required: true,
@@ -48,6 +55,25 @@ class OrganizationMemberCreateInput {
     nullable: true,
   })
   invitation?: InvitationWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsJSONValue()
+  @Field(() => GraphQLJSON)
+  roles!: InputJsonValue;
+
+  @ApiProperty({
+    required: true,
+    enum: EnumOrganizationMemberStatus,
+  })
+  @IsEnum(EnumOrganizationMemberStatus)
+  @Field(() => EnumOrganizationMemberStatus)
+  status!:
+    | "PendingInvitation"
+    | "Activated"
+    | "Suspended"
+    | "InvitationRevoked";
 }
 
 export { OrganizationMemberCreateInput as OrganizationMemberCreateInput };
