@@ -16,6 +16,7 @@ import {
   User as PrismaUser,
   Organization as PrismaOrganization,
   Invitation as PrismaInvitation,
+  OrganizationMember as PrismaOrganizationMember,
 } from "@prisma/client";
 
 export class UserServiceBase {
@@ -41,17 +42,6 @@ export class UserServiceBase {
     return this.prisma.user.delete(args);
   }
 
-  async findOrganizations(
-    parentId: string,
-    args: Prisma.OrganizationFindManyArgs
-  ): Promise<PrismaOrganization[]> {
-    return this.prisma.user
-      .findUniqueOrThrow({
-        where: { id: parentId },
-      })
-      .organizations(args);
-  }
-
   async findOwnerOrganizations(
     parentId: string,
     args: Prisma.OrganizationFindManyArgs
@@ -72,5 +62,16 @@ export class UserServiceBase {
         where: { id: parentId },
       })
       .invitations(args);
+  }
+
+  async findOrganizationMembers(
+    parentId: string,
+    args: Prisma.OrganizationMemberFindManyArgs
+  ): Promise<PrismaOrganizationMember[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .organizationMembers(args);
   }
 }

@@ -147,7 +147,7 @@
     "role": "user",
     "resource": "Organization",
     "action": "create:any",
-    "attributes": "*,!clusters,!members,!owner"
+    "attributes": "*,!clusters,!owner"
   },
   {
     "role": "owner",
@@ -483,6 +483,42 @@
     "role": "viewer",
     "resource": "Invitation",
     "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "OrganizationMember",
+    "action": "read:own",
     "attributes": "*"
   }
 ]

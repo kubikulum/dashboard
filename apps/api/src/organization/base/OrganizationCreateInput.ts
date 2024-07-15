@@ -17,11 +17,11 @@ import {
   ValidateNested,
   IsOptional,
 } from "class-validator";
-import { UserCreateNestedManyWithoutOrganizationsInput } from "./UserCreateNestedManyWithoutOrganizationsInput";
-import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { Type } from "class-transformer";
 import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
 import { InvitationCreateNestedManyWithoutOrganizationsInput } from "./InvitationCreateNestedManyWithoutOrganizationsInput";
+import { OrganizationMemberCreateNestedManyWithoutOrganizationsInput } from "./OrganizationMemberCreateNestedManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationCreateInput {
@@ -33,18 +33,6 @@ class OrganizationCreateInput {
   @MaxLength(1000)
   @Field(() => String)
   name!: string;
-
-  @ApiProperty({
-    required: false,
-    type: () => UserCreateNestedManyWithoutOrganizationsInput,
-  })
-  @ValidateNested()
-  @Type(() => UserCreateNestedManyWithoutOrganizationsInput)
-  @IsOptional()
-  @Field(() => UserCreateNestedManyWithoutOrganizationsInput, {
-    nullable: true,
-  })
-  members?: UserCreateNestedManyWithoutOrganizationsInput;
 
   @ApiProperty({
     required: false,
@@ -93,6 +81,18 @@ class OrganizationCreateInput {
     nullable: true,
   })
   invitations?: InvitationCreateNestedManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberCreateNestedManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberCreateNestedManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberCreateNestedManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberCreateNestedManyWithoutOrganizationsInput;
 }
 
 export { OrganizationCreateInput as OrganizationCreateInput };

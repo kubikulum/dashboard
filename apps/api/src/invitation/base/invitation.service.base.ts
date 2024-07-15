@@ -14,6 +14,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   Invitation as PrismaInvitation,
+  OrganizationMember as PrismaOrganizationMember,
   Organization as PrismaOrganization,
   User as PrismaUser,
 } from "@prisma/client";
@@ -51,6 +52,17 @@ export class InvitationServiceBase {
     args: Prisma.InvitationDeleteArgs
   ): Promise<PrismaInvitation> {
     return this.prisma.invitation.delete(args);
+  }
+
+  async findOrganizationMembers(
+    parentId: string,
+    args: Prisma.OrganizationMemberFindManyArgs
+  ): Promise<PrismaOrganizationMember[]> {
+    return this.prisma.invitation
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .organizationMembers(args);
   }
 
   async getOrganization(parentId: string): Promise<PrismaOrganization | null> {

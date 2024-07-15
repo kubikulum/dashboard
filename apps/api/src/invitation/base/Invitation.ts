@@ -23,6 +23,10 @@ import { Type } from "class-transformer";
 import { EnumInvitationStatus } from "./EnumInvitationStatus";
 import { Organization } from "../../organization/base/Organization";
 import { User } from "../../user/base/User";
+import { IsJSONValue } from "../../validators";
+import { GraphQLJSON } from "graphql-type-json";
+import { JsonValue } from "type-fest";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 
 @ObjectType()
 class Invitation {
@@ -104,6 +108,22 @@ class Invitation {
   @MaxLength(1000)
   @Field(() => String)
   code!: string;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsJSONValue()
+  @Field(() => GraphQLJSON)
+  role!: JsonValue;
+
+  @ApiProperty({
+    required: false,
+    type: () => [OrganizationMember],
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMember)
+  @IsOptional()
+  organizationMembers?: Array<OrganizationMember>;
 }
 
 export { Invitation as Invitation };
