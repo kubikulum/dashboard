@@ -24,6 +24,8 @@ export const useOrganizationStore = defineStore('organizationSettings', {
         headers: { 'Authorization': `Bearer ${accessToken.value}` },
         body: invitations
       })
+      await this.fetchInvitations();
+      return data;
     },
     async fetchOrganization() {
       const accessToken = useState<string | undefined>('access-token');
@@ -38,11 +40,17 @@ export const useOrganizationStore = defineStore('organizationSettings', {
 
       const accessToken = useState<string | undefined>('access-token');
       
-      let { data } = await useLazyKbk('/api/organizations/{id}/members', { method: 'get', path: { id: this.currentOrganization }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
+      let { data } = await useLazyKbk('/api/organizations/{id}/organizationMembers', { method: 'get', path: { id: this.currentOrganization }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
       if (data.value) {
         this.members = data.value
       }
 
+    },
+    async revokeInvitation(invitationId: string){
+      const accessToken = useState<string | undefined>('access-token');
+      const { $kbk } = useNuxtApp()
+      let data = await $kbk('/api/invitations/{id}', { method: 'delete', path: { id: invitationId }, headers: { 'Authorization': `Bearer ${accessToken.value}` } })
+      await this.fetchInvitations();
     },
     async fetchInvitations() {
       const accessToken = useState<string | undefined>('access-token');

@@ -16,6 +16,8 @@ import { ApiNestedQuery } from "../decorators/api-nested-query.decorator";
 import { AclFilterResponseInterceptor } from "../interceptors/aclFilterResponse.interceptor";
 import { OrganizationFindManyArgs } from "../organization/base/OrganizationFindManyArgs";
 import { Organization } from "../organization/base/Organization";
+import { OrganizationMemberFindManyArgs } from "src/organizationMember/base/OrganizationMemberFindManyArgs";
+import { OrganizationMember } from "@prisma/client";
 
 
 
@@ -73,33 +75,44 @@ export class UserController extends UserControllerBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/organizations")
-  @ApiNestedQuery(OrganizationFindManyArgs)
+  @common.Get("/:id/organizationMembers")
+  @ApiNestedQuery(OrganizationMemberFindManyArgs)
   @nestAccessControl.UseRoles({
-    resource: "Organization",
+    resource: "OrganizationMember",
     action: "read",
-    possession: "own",
+    possession: "any",
   })
-  override async findOrganizations(
+  override async findOrganizationMembers(
     @common.Req() request: Request,
     @common.Param() params: UserWhereUniqueInput
-  ): Promise<Organization[]> {
-    const query = plainToClass(OrganizationFindManyArgs, request.query);
-    const results = await this.service.findOrganizations(params.id, {
+  ): Promise<OrganizationMember[]> {
+    const query = plainToClass(OrganizationMemberFindManyArgs, request.query);
+    const results = await this.service.findOrganizationMembers(params.id, {
       ...query,
       select: {
         id: true,
         createdAt: true,
         updatedAt: true,
-        name: true,
 
-        owner: {
+        user: {
           select: {
             id: true,
           },
         },
 
-        gardenerProjectNamespace: true,
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+
+        invitation: {
+          select: {
+            id: true,
+          },
+        },
+
+        roles: true,
       },
     });
     if (results === null) {
@@ -109,7 +122,6 @@ export class UserController extends UserControllerBase {
     }
     return results;
   }
-
 
 
 }

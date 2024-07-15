@@ -512,7 +512,7 @@
   {
     "role": "user",
     "resource": "OrganizationMember",
-    "action": "read:own",
+    "action": "read:any",
     "attributes": "*"
   },
   {

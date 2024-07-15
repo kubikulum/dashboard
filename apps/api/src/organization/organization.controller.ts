@@ -6,7 +6,7 @@ import { OrganizationControllerBase } from "./base/organization.controller.base"
 import { InvitationCreateInput } from "./inivitationCreateInput";
 import { OrganizationWhereUniqueInput } from "./base/OrganizationWhereUniqueInput";
 import { nanoid } from 'nanoid'
-
+import { Request } from "express";
 import { AllowNoOrganization } from "src/auth/organization.guard";
 import { AclValidateRequestInterceptor } from "src/interceptors/aclValidateRequest.interceptor";
 import { Organization } from "./base/Organization";
@@ -14,8 +14,15 @@ import { OrganizationCreateInput } from "./base/OrganizationCreateInput";
 import { OrganizationInvitationsService, UsersService, OrganizationsService, OrganizationRolesService } from "src/logto-auth-management";
 import { firstValueFrom } from "rxjs";
 import { OrganizationService } from "./organization.service";
-import { InvitationService } from "src/invitation/invitation.service";
+import { InvitationService } from "../invitation/invitation.service";
 import { ConfigService } from "@nestjs/config";
+
+import { OrganizationMember } from "../organizationMember/base/OrganizationMember";
+import { plainToClass } from "class-transformer";
+import { ApiNestedQuery } from "../decorators/api-nested-query.decorator";
+import { AclFilterResponseInterceptor } from "../interceptors/aclFilterResponse.interceptor";
+import { OrganizationMemberFindManyArgs } from "../organizationMember/base/OrganizationMemberFindManyArgs";
+import { UserRoles } from "nest-access-control";
 
 
 @swagger.ApiTags("organizations")
@@ -35,7 +42,7 @@ export class OrganizationController extends OrganizationControllerBase {
   }
 
 
-  override async createOrganization(@common.Body() data: OrganizationCreateInput): Promise<Organization> {
+  override async createOrganization(@common.Body() data: OrganizationCreateInput,): Promise<Organization> {
     return super.createOrganization(data);
   }
 
@@ -55,11 +62,25 @@ export class OrganizationController extends OrganizationControllerBase {
     const { data: org } = await firstValueFrom(this.authOrganizationsService.createOrganization({
       name: body.name,
     }));
-    await  firstValueFrom(this.authOrganizationsService.addOrganizationUsers(org.id, { userIds: [req.user.id] }));
+    await firstValueFrom(this.authOrganizationsService.addOrganizationUsers(org.id, { userIds: [req.user.id] }));
     //
     const roleId = this.config.get('LOGTO_ORGANIZATION_ROLE_ADMIN_ID');
-    await firstValueFrom(this.authOrganizationsService.assignOrganizationRolesToUser(org.id,req.user.id,{organizationRoleIds:[roleId]}));
-    const organization = await this.service.createOrganization({ data: { name: body.name, id: org.id, ownerId: req.user.id, members: { connect: [{ id: req.user.id }] } } });
+    await firstValueFrom(this.authOrganizationsService.assignOrganizationRolesToUser(org.id, req.user.id, { organizationRoleIds: [roleId] }));
+    const organization = await this.service.createOrganization({
+      data: {
+        name: body.name, id: org.id, ownerId: req.user.id,
+        organizationMembers: {
+          create: {
+            user: {
+              connect: {
+                id: req.user.id
+              }
+            },
+            roles: ['ADMIN']
+          }
+        }
+      }
+    });
 
     // // the project name should have maximum 10 characters
     // const name = org.id.length > 10 ? org.id.substring(0, 10) : org.id;
@@ -122,7 +143,7 @@ export class OrganizationController extends OrganizationControllerBase {
     let now = new Date();
     now.setDate(now.getDate() + 2)
 
-    
+
     const { data: roles } = await firstValueFrom(this.organizationRolesService.listOrganizationRoles())
 
     // Create Invatitation for logto auth management
@@ -162,9 +183,68 @@ export class OrganizationController extends OrganizationControllerBase {
 
     })
     return Promise.all(promises)
+  }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/organizationMembers")
+  @ApiNestedQuery(OrganizationMemberFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "OrganizationMember",
+    action: "read",
+  })
+  override async findOrganizationMembers(
+    @common.Req() request: any,
+    @common.Param() params: OrganizationWhereUniqueInput
+  ): Promise<OrganizationMember[]> {
 
+    // Check if the user has the permission to read this resource
+    if (this.rolesBuilder.can(request.user?.roles).readOwn('OrganizationMember').granted) {
+      const query = await this.service.findOrganizationMembers(params.id,{where:{user:{id:request.user.id}}})
+      if (query.length === 0) {
+        throw new errors.ForbiddenException(
+          `You don't have permission to read this resource`
+        );
+      }
+    }
+    const query = plainToClass(OrganizationMemberFindManyArgs, request.query);
+    const results = await this.service.findOrganizationMembers(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+            email:true
+          },
+        },
+
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+
+        invitation: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
+
+        roles: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
 
   }
+
 
 }

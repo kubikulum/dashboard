@@ -86,6 +86,7 @@ type Invitation {
   id: String!
   inviter: User
   organization: Organization
+  organizationMembers(orderBy: [OrganizationMemberOrderByInput!], skip: Float, take: Float, where: OrganizationMemberWhereInput): [OrganizationMember!]!
   status: EnumInvitationStatus
   updatedAt: DateTime!
 }
@@ -96,6 +97,7 @@ input InvitationCreateInput {
   expirationDate: DateTime
   inviter: UserWhereUniqueInput!
   organization: OrganizationWhereUniqueInput!
+  organizationMembers: OrganizationMemberCreateNestedManyWithoutInvitationsInput
   status: EnumInvitationStatus
 }
 
@@ -127,6 +129,7 @@ input InvitationUpdateInput {
   expirationDate: DateTime
   inviter: UserWhereUniqueInput
   organization: OrganizationWhereUniqueInput
+  organizationMembers: OrganizationMemberUpdateManyWithoutInvitationsInput
   status: EnumInvitationStatus
 }
 
@@ -149,6 +152,7 @@ input InvitationWhereInput {
   id: StringFilter
   inviter: UserWhereUniqueInput
   organization: OrganizationWhereUniqueInput
+  organizationMembers: OrganizationMemberListRelationFilter
   status: EnumInvitationStatus
 }
 
@@ -168,10 +172,13 @@ type MetaQueryPayload {
 type Mutation {
   createInvitation(data: InvitationCreateInput!): Invitation!
   createOrganization(data: OrganizationCreateInput!): Organization!
+  createOrganizationMember(data: OrganizationMemberCreateInput!): OrganizationMember!
   deleteInvitation(where: InvitationWhereUniqueInput!): Invitation!
+  deleteOrganizationMember(where: OrganizationMemberWhereUniqueInput!): OrganizationMember!
   deleteUser(where: UserWhereUniqueInput!): User!
   updateInvitation(data: InvitationUpdateInput!, where: InvitationWhereUniqueInput!): Invitation!
   updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization!
+  updateOrganizationMember(data: OrganizationMemberUpdateInput!, where: OrganizationMemberWhereUniqueInput!): OrganizationMember!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
 }
 
@@ -181,8 +188,8 @@ type Organization {
   gardenerProjectNamespace: String
   id: String!
   invitations(orderBy: [InvitationOrderByInput!], skip: Float, take: Float, where: InvitationWhereInput): [Invitation!]!
-  members(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
   name: String!
+  organizationMembers(orderBy: [OrganizationMemberOrderByInput!], skip: Float, take: Float, where: OrganizationMemberWhereInput): [OrganizationMember!]!
   owner: User
   updatedAt: DateTime!
 }
@@ -191,8 +198,8 @@ input OrganizationCreateInput {
   clusters: ClusterCreateNestedManyWithoutOrganizationsInput
   gardenerProjectNamespace: String
   invitations: InvitationCreateNestedManyWithoutOrganizationsInput
-  members: UserCreateNestedManyWithoutOrganizationsInput
   name: String!
+  organizationMembers: OrganizationMemberCreateNestedManyWithoutOrganizationsInput
   owner: UserWhereUniqueInput
 }
 
@@ -200,6 +207,83 @@ input OrganizationListRelationFilter {
   every: OrganizationWhereInput
   none: OrganizationWhereInput
   some: OrganizationWhereInput
+}
+
+type OrganizationMember {
+  createdAt: DateTime!
+  id: String!
+  invitation: Invitation
+  organization: Organization
+  roles: JSON!
+  updatedAt: DateTime!
+  user: User
+}
+
+input OrganizationMemberCreateInput {
+  invitation: InvitationWhereUniqueInput
+  organization: OrganizationWhereUniqueInput!
+  roles: JSON!
+  user: UserWhereUniqueInput!
+}
+
+input OrganizationMemberCreateNestedManyWithoutInvitationsInput {
+  connect: [OrganizationMemberWhereUniqueInput!]
+}
+
+input OrganizationMemberCreateNestedManyWithoutOrganizationsInput {
+  connect: [OrganizationMemberWhereUniqueInput!]
+}
+
+input OrganizationMemberListRelationFilter {
+  every: OrganizationMemberWhereInput
+  none: OrganizationMemberWhereInput
+  some: OrganizationMemberWhereInput
+}
+
+input OrganizationMemberOrderByInput {
+  createdAt: SortOrder
+  id: SortOrder
+  invitationId: SortOrder
+  organizationId: SortOrder
+  roles: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+input OrganizationMemberUpdateInput {
+  invitation: InvitationWhereUniqueInput
+  organization: OrganizationWhereUniqueInput
+  roles: JSON
+  user: UserWhereUniqueInput
+}
+
+input OrganizationMemberUpdateManyWithoutInvitationsInput {
+  connect: [OrganizationMemberWhereUniqueInput!]
+  disconnect: [OrganizationMemberWhereUniqueInput!]
+  set: [OrganizationMemberWhereUniqueInput!]
+}
+
+input OrganizationMemberUpdateManyWithoutOrganizationsInput {
+  connect: [OrganizationMemberWhereUniqueInput!]
+  disconnect: [OrganizationMemberWhereUniqueInput!]
+  set: [OrganizationMemberWhereUniqueInput!]
+}
+
+input OrganizationMemberUpdateManyWithoutUsersInput {
+  connect: [OrganizationMemberWhereUniqueInput!]
+  disconnect: [OrganizationMemberWhereUniqueInput!]
+  set: [OrganizationMemberWhereUniqueInput!]
+}
+
+input OrganizationMemberWhereInput {
+  id: StringFilter
+  invitation: InvitationWhereUniqueInput
+  organization: OrganizationWhereUniqueInput
+  user: UserWhereUniqueInput
+}
+
+input OrganizationMemberWhereUniqueInput {
+  id: String!
 }
 
 input OrganizationOrderByInput {
@@ -215,8 +299,8 @@ input OrganizationUpdateInput {
   clusters: ClusterUpdateManyWithoutOrganizationsInput
   gardenerProjectNamespace: String
   invitations: InvitationUpdateManyWithoutOrganizationsInput
-  members: UserUpdateManyWithoutOrganizationsInput
   name: String
+  organizationMembers: OrganizationMemberUpdateManyWithoutOrganizationsInput
   owner: UserWhereUniqueInput
 }
 
@@ -231,8 +315,8 @@ input OrganizationWhereInput {
   gardenerProjectNamespace: StringNullableFilter
   id: StringFilter
   invitations: InvitationListRelationFilter
-  members: UserListRelationFilter
   name: StringFilter
+  organizationMembers: OrganizationMemberListRelationFilter
 }
 
 input OrganizationWhereUniqueInput {
@@ -241,12 +325,15 @@ input OrganizationWhereUniqueInput {
 
 type Query {
   _invitationsMeta(where: InvitationWhereInput): MetaQueryPayload!
+  _organizationMembersMeta(where: OrganizationMemberWhereInput): MetaQueryPayload!
   _organizationsMeta(where: OrganizationWhereInput): MetaQueryPayload!
   _usersMeta(where: UserWhereInput): MetaQueryPayload!
   cluster(where: ClusterWhereUniqueInput!): Cluster
   invitation(where: InvitationWhereUniqueInput!): Invitation
   invitations(orderBy: [InvitationOrderByInput!], skip: Float, take: Float, where: InvitationWhereInput): [Invitation!]!
   organization(where: OrganizationWhereUniqueInput!): Organization
+  organizationMember(where: OrganizationMemberWhereUniqueInput!): OrganizationMember
+  organizationMembers(orderBy: [OrganizationMemberOrderByInput!], skip: Float, take: Float, where: OrganizationMemberWhereInput): [OrganizationMember!]!
   organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
   user(where: UserWhereUniqueInput!): User
   users(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
@@ -300,21 +387,11 @@ type User {
   invitations(orderBy: [InvitationOrderByInput!], skip: Float, take: Float, where: InvitationWhereInput): [Invitation!]!
   lastName: String
   organization: String
-  organizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
+  organizationMembers(orderBy: [OrganizationMemberOrderByInput!], skip: Float, take: Float, where: OrganizationMemberWhereInput): [OrganizationMember!]!
   ownerOrganizations(orderBy: [OrganizationOrderByInput!], skip: Float, take: Float, where: OrganizationWhereInput): [Organization!]!
   roles: JSON!
   updatedAt: DateTime!
   username: String!
-}
-
-input UserCreateNestedManyWithoutOrganizationsInput {
-  connect: [UserWhereUniqueInput!]
-}
-
-input UserListRelationFilter {
-  every: UserWhereInput
-  none: UserWhereInput
-  some: UserWhereInput
 }
 
 input UserOrderByInput {
@@ -336,17 +413,11 @@ input UserUpdateInput {
   invitations: InvitationUpdateManyWithoutUsersInput
   lastName: String
   organization: String
-  organizations: OrganizationUpdateManyWithoutUsersInput
+  organizationMembers: OrganizationMemberUpdateManyWithoutUsersInput
   ownerOrganizations: OrganizationUpdateManyWithoutUsersInput
   password: String
   roles: JSON
   username: String
-}
-
-input UserUpdateManyWithoutOrganizationsInput {
-  connect: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
 }
 
 input UserWhereInput {
@@ -356,7 +427,7 @@ input UserWhereInput {
   invitations: InvitationListRelationFilter
   lastName: StringNullableFilter
   organization: StringNullableFilter
-  organizations: OrganizationListRelationFilter
+  organizationMembers: OrganizationMemberListRelationFilter
   ownerOrganizations: OrganizationListRelationFilter
   username: StringFilter
 }

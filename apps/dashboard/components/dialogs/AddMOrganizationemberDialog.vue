@@ -2,14 +2,13 @@
 import { useOrganizationStore } from '@/views/pages/organization-settings/useOrganizationStore';
 import type { VForm } from 'vuetify/components';
 
-
-
 interface Props {
   isDialogVisible: boolean
 }
 
 interface Emit {
   (e: 'update:isDialogVisible', val: boolean): void
+  (e: 'submit', value: any): void
 }
 const store = useOrganizationStore()
 
@@ -21,10 +20,10 @@ const dialogVisibleUpdate = (val: boolean) => {
   emit('update:isDialogVisible', val)
 }
 
-
+const roles = ['admin', 'member']
 const emailField = ref('')
 
-type Permission = 'Admin' | 'Editor'
+type Permission = 'admin' | 'member'
 interface Member {
   email: string
   role: Permission
@@ -34,22 +33,25 @@ const formRef = ref<InstanceType<typeof VForm> | null>(null)
 const membersList = ref<Member[]>([
 ])
 
-computed(()=>{
-  if(!props.isDialogVisible){
-    membersList.value = []
+// on visible reset the form
+watch(() => props.isDialogVisible, (val) => {
+  if (val) {
+    membersList.value = [];
+    formRef.value?.reset()
+    formRef.value?.resetValidation()
   }
 })
 
 const onClickEnterMember = async () => {
-  if (!formRef.value) {
+  if (!formRef.value ) {
     return
   }
   const { valid } = await formRef.value.validate()
-  console.log('valid',valid)
+
   if (valid) {
     membersList.value.push({
       email: emailField.value,
-      role: 'Editor',
+      role: 'member',
     })
     emailField.value = ''
     formRef.value.reset()
@@ -58,61 +60,51 @@ const onClickEnterMember = async () => {
 }
 
 const onClickSendInvitations = async () => {
-  const emails = membersList.value.map((member)=>member.email)
-  store.sendInvitations(membersList.value)
+  const emails = membersList.value.map((member) => member.email)
+  const invitations = await store.sendInvitations(membersList.value)
+  emit('submit', invitations)
 }
 </script>
 
 <template>
-  <VDialog :model-value="props.isDialogVisible" :width="$vuetify.display.smAndDown ? 'auto' : 900"
+  <VDialog :model-value="props.isDialogVisible" :width="$vuetify.display.smAndDown ? 'auto' : 500"
     @update:model-value="dialogVisibleUpdate">
     <!-- 👉 Dialog close btn -->
     <DialogCloseBtn @click="$emit('update:isDialogVisible', false)" />
 
-    <VCard class="share-project-dialog pa-2 pa-sm-10">
+    <VCard class="share-project-dialog pa-2 pa-sm-4">
       <VCardText>
         <h4 class="text-h4 text-center mb-2">
           Add Members
         </h4>
-        <p class="text-body-1 text-center mb-6">
+        <!-- <p class="text-body-1 text-center mb-6">
           Invite users to join your organization
-        </p>
+        </p> -->
         <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="onClickEnterMember">
-          <AppTextField v-model="emailField" label="Add Member"
-            placeholder="user@company.com" append-inner-icon="tabler-arrow-back" @click:append-inner="onClickEnterMember" :rules="[emailValidator]"
+          <AppTextField v-model="emailField" label="Add Member" placeholder="user@company.com"
+            append-inner-icon="tabler-arrow-back" @click:append-inner="onClickEnterMember" :rules="[requiredValidator,emailValidator]"
             single-line />
         </v-form>
 
-        <h5 class="text-h5 mb-4 mt-6">
-          8 Members
-        </h5>
-
-        <VList class="card-list">
-          <VListItem v-for="member in membersList" :key="member.email">
+        <VList v-if="membersList.length > 0" class="my-10">
+          <VListItem v-for="member in membersList" border :key="member.email">
 
             <VListItemSubtitle>
               {{ member.email }}
             </VListItemSubtitle>
 
             <template #append>
-              <VBtn variant="text" color="secondary" :icon="$vuetify.display.xs">
-                <span class="d-none d-sm-block me-1">{{ member.permission }}</span>
-                <VIcon icon="tabler-chevron-down" />
-
-                <VMenu activator="parent">
-                  <VList :selected="[member.permission]">
-                    <VListItem v-for="(item, index) in ['Admin', 'Editor']" :key="index" :value="item">
-                      <VListItemTitle>{{ item }}</VListItemTitle>
-                    </VListItem>
-                  </VList>
-                </VMenu>
-              </VBtn>
+              <AppSelect :items="roles" v-model="member.role" flat  />
             </template>
           </VListItem>
         </VList>
+        <div v-else class="py-10">
+          <p class="text-center">No invitations added yet</p>
+          <p class="text-center">Enter an email and click enter</p>
+        </div>
 
         <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-3 mt-6">
- 
+
 
           <VBtn @click.prevent="onClickSendInvitations" class="text-capitalize" prepend-icon="tabler-send">
             Send Invitations
