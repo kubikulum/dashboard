@@ -24,6 +24,7 @@ import { GraphQLJSON } from "graphql-type-json";
 import { JsonValue } from "type-fest";
 import { Organization } from "../../organization/base/Organization";
 import { Invitation } from "../../invitation/base/Invitation";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 
 @ObjectType()
 class User {
@@ -112,15 +113,6 @@ class User {
   @ValidateNested()
   @Type(() => Organization)
   @IsOptional()
-  organizations?: Array<Organization>;
-
-  @ApiProperty({
-    required: false,
-    type: () => [Organization],
-  })
-  @ValidateNested()
-  @Type(() => Organization)
-  @IsOptional()
   ownerOrganizations?: Array<Organization>;
 
   @ApiProperty({
@@ -139,6 +131,15 @@ class User {
   @Type(() => Invitation)
   @IsOptional()
   invitations?: Array<Invitation>;
+
+  @ApiProperty({
+    required: false,
+    type: () => [OrganizationMember],
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMember)
+  @IsOptional()
+  organizationMembers?: Array<OrganizationMember>;
 }
 
 export { User as User };
