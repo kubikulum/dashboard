@@ -484,5 +484,41 @@
     "resource": "Invitation",
     "action": "read:any",
     "attributes": "*"
+  },
+  {
+    "role": "admin",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "owner",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "serviceaccountmanager",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "uam",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "user",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "viewer",
+    "resource": "OrganizationMember",
+    "action": "read:own",
+    "attributes": "*"
   }
 ]

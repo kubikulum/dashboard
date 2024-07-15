@@ -22,6 +22,7 @@ import { Type } from "class-transformer";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ClusterUpdateManyWithoutOrganizationsInput } from "./ClusterUpdateManyWithoutOrganizationsInput";
 import { InvitationUpdateManyWithoutOrganizationsInput } from "./InvitationUpdateManyWithoutOrganizationsInput";
+import { OrganizationMemberUpdateManyWithoutOrganizationsInput } from "./OrganizationMemberUpdateManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationUpdateInput {
@@ -96,6 +97,18 @@ class OrganizationUpdateInput {
     nullable: true,
   })
   invitations?: InvitationUpdateManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberUpdateManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberUpdateManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberUpdateManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberUpdateManyWithoutOrganizationsInput;
 }
 
 export { OrganizationUpdateInput as OrganizationUpdateInput };

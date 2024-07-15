@@ -23,6 +23,7 @@ import { InputJsonValue } from "../../types";
 import { OrganizationCreateNestedManyWithoutUsersInput } from "./OrganizationCreateNestedManyWithoutUsersInput";
 import { Type } from "class-transformer";
 import { InvitationCreateNestedManyWithoutUsersInput } from "./InvitationCreateNestedManyWithoutUsersInput";
+import { OrganizationMemberCreateNestedManyWithoutUsersInput } from "./OrganizationMemberCreateNestedManyWithoutUsersInput";
 
 @InputType()
 class UserCreateInput {
@@ -134,6 +135,18 @@ class UserCreateInput {
     nullable: true,
   })
   invitations?: InvitationCreateNestedManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberCreateNestedManyWithoutUsersInput;
 }
 
 export { UserCreateInput as UserCreateInput };
