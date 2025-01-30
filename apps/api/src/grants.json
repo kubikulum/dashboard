@@ -204,6 +204,12 @@
     "attributes": "*"
   },
   {
+    "role": "user",
+    "resource": "Cluster",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
     "role": "owner",
     "resource": "Cluster",
     "action": "update:any",

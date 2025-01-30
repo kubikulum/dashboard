@@ -22,6 +22,9 @@ declare module 'vue-router/auto-routes' {
     'error': RouteRecordInfo<'error', '/:error(.*)*', { error?: ParamValueZeroOrMore<true> }, { error?: ParamValueZeroOrMore<false> }>,
     'account-settings-tab': RouteRecordInfo<'account-settings-tab', '/account-settings/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
     'flyte': RouteRecordInfo<'flyte', '/flyte', Record<never, never>, Record<never, never>>,
+    'invitation-code-accept': RouteRecordInfo<'invitation-code-accept', '/invitation/:code()/accept', { code: ParamValue<true> }, { code: ParamValue<false> }>,
+    'invitation-not-found': RouteRecordInfo<'invitation-not-found', '/invitation/not-found', Record<never, never>, Record<never, never>>,
+    'invitation-pending': RouteRecordInfo<'invitation-pending', '/invitation/pending', Record<never, never>, Record<never, never>>,
     'kubeflow-tab': RouteRecordInfo<'kubeflow-tab', '/kubeflow/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
     'kubeflow-clusters-id-tab': RouteRecordInfo<'kubeflow-clusters-id-tab', '/kubeflow/clusters/:id()/:tab()', { id: ParamValue<true>, tab: ParamValue<true> }, { id: ParamValue<false>, tab: ParamValue<false> }>,
     'kubeflow-clusters-id-add-node': RouteRecordInfo<'kubeflow-clusters-id-add-node', '/kubeflow/clusters/:id()/add-node', { id: ParamValue<true> }, { id: ParamValue<false> }>,
@@ -30,5 +33,6 @@ declare module 'vue-router/auto-routes' {
     'object-storage-tab': RouteRecordInfo<'object-storage-tab', '/object-storage/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
     'object-storage-add-storage': RouteRecordInfo<'object-storage-add-storage', '/object-storage/add-storage', Record<never, never>, Record<never, never>>,
     'organization-settings-tab': RouteRecordInfo<'organization-settings-tab', '/organization-settings/:tab()', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
+    'register': RouteRecordInfo<'register', '/register', Record<never, never>, Record<never, never>>,
   }
 }

@@ -45,7 +45,7 @@ async function main() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
 
-  void app.listen(PORT);
+  app.listen(PORT);
 
   return app;
 }

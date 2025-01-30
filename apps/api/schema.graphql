@@ -78,6 +78,13 @@ enum EnumInvitationStatus {
   Revoked
 }
 
+enum EnumOrganizationMemberStatus {
+  Activated
+  InvitationRevoked
+  PendingInvitation
+  Suspended
+}
+
 type Invitation {
   code: String!
   createdAt: DateTime!
@@ -215,6 +222,7 @@ type OrganizationMember {
   invitation: Invitation
   organization: Organization
   roles: JSON!
+  status: EnumOrganizationMemberStatus
   updatedAt: DateTime!
   user: User
 }
@@ -223,7 +231,8 @@ input OrganizationMemberCreateInput {
   invitation: InvitationWhereUniqueInput
   organization: OrganizationWhereUniqueInput!
   roles: JSON!
-  user: UserWhereUniqueInput!
+  status: EnumOrganizationMemberStatus!
+  user: UserWhereUniqueInput
 }
 
 input OrganizationMemberCreateNestedManyWithoutInvitationsInput {
@@ -246,6 +255,7 @@ input OrganizationMemberOrderByInput {
   invitationId: SortOrder
   organizationId: SortOrder
   roles: SortOrder
+  status: SortOrder
   updatedAt: SortOrder
   userId: SortOrder
 }
@@ -254,6 +264,7 @@ input OrganizationMemberUpdateInput {
   invitation: InvitationWhereUniqueInput
   organization: OrganizationWhereUniqueInput
   roles: JSON
+  status: EnumOrganizationMemberStatus
   user: UserWhereUniqueInput
 }
 
@@ -279,6 +290,7 @@ input OrganizationMemberWhereInput {
   id: StringFilter
   invitation: InvitationWhereUniqueInput
   organization: OrganizationWhereUniqueInput
+  status: EnumOrganizationMemberStatus
   user: UserWhereUniqueInput
 }
 

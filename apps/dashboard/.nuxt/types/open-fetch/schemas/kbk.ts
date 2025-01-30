@@ -15,6 +15,22 @@ export interface paths {
         patch: operations["UserController_updateUser"];
         trace?: never;
     };
+    "/api/users/{id}/organizationMembers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UserController_findOrganizationMembers"];
+        put?: never;
+        post: operations["UserController_connectOrganizationMembers"];
+        delete: operations["UserController_disconnectOrganizationMembers"];
+        options?: never;
+        head?: never;
+        patch: operations["UserController_updateOrganizationMembers"];
+        trace?: never;
+    };
     "/api/users": {
         parameters: {
             query?: never;
@@ -29,22 +45,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/users/{id}/organizations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UserController_findOrganizations"];
-        put?: never;
-        post: operations["UserController_connectOrganizations"];
-        delete: operations["UserController_disconnectOrganizations"];
-        options?: never;
-        head?: never;
-        patch: operations["UserController_updateOrganizations"];
         trace?: never;
     };
     "/api/users/{id}/ownerOrganizations": {
@@ -63,6 +63,22 @@ export interface paths {
         patch: operations["UserController_updateOwnerOrganizations"];
         trace?: never;
     };
+    "/api/users/{id}/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UserController_findInvitations"];
+        put?: never;
+        post: operations["UserController_connectInvitations"];
+        delete: operations["UserController_disconnectInvitations"];
+        options?: never;
+        head?: never;
+        patch: operations["UserController_updateInvitations"];
+        trace?: never;
+    };
     "/api/organizations": {
         parameters: {
             query?: never;
@@ -77,6 +93,38 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/organizations/{id}/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationController_findInvitations"];
+        put?: never;
+        post: operations["OrganizationController_connectInvitations"];
+        delete: operations["OrganizationController_disconnectInvitations"];
+        options?: never;
+        head?: never;
+        patch: operations["OrganizationController_updateInvitations"];
+        trace?: never;
+    };
+    "/api/organizations/{id}/organizationMembers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationController_findOrganizationMembers"];
+        put?: never;
+        post: operations["OrganizationController_connectOrganizationMembers"];
+        delete: operations["OrganizationController_disconnectOrganizationMembers"];
+        options?: never;
+        head?: never;
+        patch: operations["OrganizationController_updateOrganizationMembers"];
         trace?: never;
     };
     "/api/organizations/{id}": {
@@ -111,20 +159,100 @@ export interface paths {
         patch: operations["OrganizationController_updateClusters"];
         trace?: never;
     };
-    "/api/organizations/{id}/members": {
+    "/api/invitations/pending": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["OrganizationController_findMembers"];
+        get: operations["InvitationController_pending"];
         put?: never;
-        post: operations["OrganizationController_connectMembers"];
-        delete: operations["OrganizationController_disconnectMembers"];
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
-        patch: operations["OrganizationController_updateMembers"];
+        patch?: never;
+        trace?: never;
+    };
+    "/api/invitations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InvitationController_invitation"];
+        put?: never;
+        post?: never;
+        delete: operations["InvitationController_deleteInvitation"];
+        options?: never;
+        head?: never;
+        patch: operations["InvitationController_updateInvitation"];
+        trace?: never;
+    };
+    "/api/invitations/{id}/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["InvitationController_resendInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/invitations/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["InvitationController_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InvitationController_invitations"];
+        put?: never;
+        post: operations["InvitationController_createInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/invitations/{id}/organizationMembers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InvitationController_findOrganizationMembers"];
+        put?: never;
+        post: operations["InvitationController_connectOrganizationMembers"];
+        delete: operations["InvitationController_disconnectOrganizationMembers"];
+        options?: never;
+        head?: never;
+        patch: operations["InvitationController_updateOrganizationMembers"];
         trace?: never;
     };
     "/api/clusters": {
@@ -157,6 +285,54 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/organizationMembers/{id}/updateStatus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["OrganizationMemberController_updateOrganizationMemberStatus"];
+        trace?: never;
+    };
+    "/api/organizationMembers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationMemberController_organizationMembers"];
+        put?: never;
+        post: operations["OrganizationMemberController_createOrganizationMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/organizationMembers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationMemberController_organizationMember"];
+        put?: never;
+        post?: never;
+        delete: operations["OrganizationMemberController_deleteOrganizationMember"];
+        options?: never;
+        head?: never;
+        patch: operations["OrganizationMemberController_updateOrganizationMember"];
         trace?: never;
     };
     "/api/_health/live": {
@@ -203,52 +379,102 @@ export interface components {
             disconnect?: components["schemas"]["OrganizationWhereUniqueInput"][];
             set?: components["schemas"]["OrganizationWhereUniqueInput"][];
         };
-        UserUpdateInput: {
-            email?: string;
-            firstName?: string;
-            lastName?: string;
-            organization?: string;
-            organizations?: components["schemas"]["OrganizationUpdateManyWithoutUsersInput"];
-            ownerOrganizations?: components["schemas"]["OrganizationUpdateManyWithoutUsersInput"];
-            password?: string;
-            roles?: Record<string, never>;
-            username?: string;
+        InvitationWhereUniqueInput: {
+            id: string;
         };
-        Cluster: {
-            /** @enum {string} */
-            clusterType: "kubeflow" | "flyte";
+        InvitationUpdateManyWithoutUsersInput: {
+            connect?: components["schemas"]["InvitationWhereUniqueInput"][];
+            disconnect?: components["schemas"]["InvitationWhereUniqueInput"][];
+            set?: components["schemas"]["InvitationWhereUniqueInput"][];
+        };
+        OrganizationMemberWhereUniqueInput: {
+            id: string;
+        };
+        OrganizationMemberUpdateManyWithoutUsersInput: {
+            connect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+            disconnect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+            set?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+        };
+        UserUpdateInput: {
+            firstName?: string;
+            email?: string;
+            roles?: Record<string, never>;
+            organization?: string;
+            lastName?: string;
+            ownerOrganizations?: components["schemas"]["OrganizationUpdateManyWithoutUsersInput"];
+            username?: string;
+            password?: string;
+            invitations?: components["schemas"]["InvitationUpdateManyWithoutUsersInput"];
+            organizationMembers?: components["schemas"]["OrganizationMemberUpdateManyWithoutUsersInput"];
+        };
+        OrganizationMember: {
+            id: string;
             /** Format: date-time */
             createdAt: string;
-            id: string;
-            organization?: components["schemas"]["Organization"];
             /** Format: date-time */
             updatedAt: string;
+            user?: components["schemas"]["User"];
+            organization: components["schemas"]["Organization"];
+            invitation?: components["schemas"]["Invitation"];
+            roles: Record<string, never>;
+            /** @enum {string} */
+            status: "PendingInvitation" | "Activated" | "Suspended" | "InvitationRevoked";
+        };
+        Invitation: {
+            id: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            email: string;
+            /** @enum {string} */
+            status?: "PENDING" | "ACCEPTED" | "REVOKED";
+            expirationDate?: Record<string, never>;
+            organization: components["schemas"]["Organization"];
+            inviter: components["schemas"]["User"];
+            code: string;
+            organizationMembers?: components["schemas"]["OrganizationMember"][];
         };
         User: {
+            id: string;
             /** Format: date-time */
             createdAt: string;
-            email?: string;
-            firstName?: string;
-            id: string;
-            lastName?: string;
-            organization?: string;
-            organizations?: components["schemas"]["Organization"][];
-            ownerOrganizations?: components["schemas"]["Organization"][];
-            roles: Record<string, never>;
             /** Format: date-time */
             updatedAt: string;
+            firstName?: string;
+            email?: string;
+            roles: Record<string, never>;
+            organization?: string;
+            lastName?: string;
+            ownerOrganizations?: components["schemas"]["Organization"][];
             username: string;
+            invitations?: components["schemas"]["Invitation"][];
+            organizationMembers?: components["schemas"]["OrganizationMember"][];
+        };
+        Cluster: {
+            id: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** @enum {string} */
+            clusterType: "kubeflow" | "Flytes";
+            organization?: components["schemas"]["Organization"];
+            /** @enum {string} */
+            plan?: "Free" | "Reserved_1";
         };
         Organization: {
-            clusters?: components["schemas"]["Cluster"][];
+            id: string;
             /** Format: date-time */
             createdAt: string;
-            id: string;
-            members?: components["schemas"]["User"][];
-            name: string;
-            owner?: components["schemas"]["User"];
             /** Format: date-time */
             updatedAt: string;
+            name: string;
+            owner?: components["schemas"]["User"];
+            clusters?: components["schemas"]["Cluster"][];
+            gardenerProjectNamespace?: string;
+            invitations?: components["schemas"]["Invitation"][];
+            organizationMembers?: components["schemas"]["OrganizationMember"][];
         };
         ForbiddenException: {
             statusCode: number;
@@ -257,21 +483,6 @@ export interface components {
         NotFoundException: {
             statusCode: number;
             message: string;
-        };
-        StringNullableFilter: {
-            equals?: string;
-            in?: string[];
-            notIn?: string[];
-            lt?: string;
-            lte?: string;
-            gt?: string;
-            gte?: string;
-            contains?: string;
-            startsWith?: string;
-            endsWith?: string;
-            /** @enum {string} */
-            mode?: "Default" | "Insensitive";
-            not?: string;
         };
         StringFilter: {
             equals?: string;
@@ -288,78 +499,198 @@ export interface components {
             mode?: "Default" | "Insensitive";
             not?: string;
         };
-        ClusterWhereInput: {
-            /** @enum {string} */
-            clusterType?: "kubeflow" | "flyte";
+        UserWhereUniqueInput: {
+            id: string;
+        };
+        OrganizationMemberWhereInput: {
             id?: components["schemas"]["StringFilter"];
+            user?: components["schemas"]["UserWhereUniqueInput"];
             organization?: components["schemas"]["OrganizationWhereUniqueInput"];
+            invitation?: components["schemas"]["InvitationWhereUniqueInput"];
+            /** @enum {string} */
+            status?: "PendingInvitation" | "Activated" | "Suspended" | "InvitationRevoked";
+        };
+        Array: Record<string, never>;
+        Number: Record<string, never>;
+        StringNullableFilter: {
+            equals?: string;
+            in?: string[];
+            notIn?: string[];
+            lt?: string;
+            lte?: string;
+            gt?: string;
+            gte?: string;
+            contains?: string;
+            startsWith?: string;
+            endsWith?: string;
+            /** @enum {string} */
+            mode?: "Default" | "Insensitive";
+            not?: string;
+        };
+        ClusterWhereInput: {
+            id?: components["schemas"]["StringFilter"];
+            /** @enum {string} */
+            clusterType?: "kubeflow" | "Flytes";
+            organization?: components["schemas"]["OrganizationWhereUniqueInput"];
+            /** @enum {string} */
+            plan?: "Free" | "Reserved_1";
         };
         ClusterListRelationFilter: {
             every?: components["schemas"]["ClusterWhereInput"];
             some?: components["schemas"]["ClusterWhereInput"];
             none?: components["schemas"]["ClusterWhereInput"];
         };
-        UserWhereInput: {
-            email?: components["schemas"]["StringNullableFilter"];
-            firstName?: components["schemas"]["StringNullableFilter"];
-            id?: components["schemas"]["StringFilter"];
-            lastName?: components["schemas"]["StringNullableFilter"];
-            organization?: components["schemas"]["StringNullableFilter"];
-            organizations?: components["schemas"]["OrganizationListRelationFilter"];
-            ownerOrganizations?: components["schemas"]["OrganizationListRelationFilter"];
-            username?: components["schemas"]["StringFilter"];
+        DateTimeNullableFilter: {
+            /** Format: date-time */
+            equals?: string;
+            in?: string[];
+            notIn?: string[];
+            /** Format: date-time */
+            lt?: string;
+            /** Format: date-time */
+            lte?: string;
+            /** Format: date-time */
+            gt?: string;
+            /** Format: date-time */
+            gte?: string;
+            /** Format: date-time */
+            not?: string;
         };
-        UserListRelationFilter: {
-            every?: components["schemas"]["UserWhereInput"];
-            some?: components["schemas"]["UserWhereInput"];
-            none?: components["schemas"]["UserWhereInput"];
+        OrganizationMemberListRelationFilter: {
+            every?: components["schemas"]["OrganizationMemberWhereInput"];
+            some?: components["schemas"]["OrganizationMemberWhereInput"];
+            none?: components["schemas"]["OrganizationMemberWhereInput"];
+        };
+        InvitationWhereInput: {
+            id?: components["schemas"]["StringFilter"];
+            email?: components["schemas"]["StringFilter"];
+            /** @enum {string} */
+            status?: "PENDING" | "ACCEPTED" | "REVOKED";
+            expirationDate?: components["schemas"]["DateTimeNullableFilter"];
+            organization?: components["schemas"]["OrganizationWhereUniqueInput"];
+            inviter?: components["schemas"]["UserWhereUniqueInput"];
+            code?: components["schemas"]["StringFilter"];
+            organizationMembers?: components["schemas"]["OrganizationMemberListRelationFilter"];
+        };
+        InvitationListRelationFilter: {
+            every?: components["schemas"]["InvitationWhereInput"];
+            some?: components["schemas"]["InvitationWhereInput"];
+            none?: components["schemas"]["InvitationWhereInput"];
         };
         OrganizationWhereInput: {
-            clusters?: components["schemas"]["ClusterListRelationFilter"];
             id?: components["schemas"]["StringFilter"];
-            members?: components["schemas"]["UserListRelationFilter"];
             name?: components["schemas"]["StringFilter"];
+            clusters?: components["schemas"]["ClusterListRelationFilter"];
+            gardenerProjectNamespace?: components["schemas"]["StringNullableFilter"];
+            invitations?: components["schemas"]["InvitationListRelationFilter"];
+            organizationMembers?: components["schemas"]["OrganizationMemberListRelationFilter"];
         };
         OrganizationListRelationFilter: {
             every?: components["schemas"]["OrganizationWhereInput"];
             some?: components["schemas"]["OrganizationWhereInput"];
             none?: components["schemas"]["OrganizationWhereInput"];
         };
-        Array: Record<string, never>;
-        Number: Record<string, never>;
+        UserWhereInput: {
+            id?: components["schemas"]["StringFilter"];
+            firstName?: components["schemas"]["StringNullableFilter"];
+            email?: components["schemas"]["StringNullableFilter"];
+            organization?: components["schemas"]["StringNullableFilter"];
+            lastName?: components["schemas"]["StringNullableFilter"];
+            ownerOrganizations?: components["schemas"]["OrganizationListRelationFilter"];
+            username?: components["schemas"]["StringFilter"];
+            invitations?: components["schemas"]["InvitationListRelationFilter"];
+            organizationMembers?: components["schemas"]["OrganizationMemberListRelationFilter"];
+        };
         ClusterWhereUniqueInput: {
             id: string;
         };
         ClusterCreateNestedManyWithoutOrganizationsInput: {
             connect?: components["schemas"]["ClusterWhereUniqueInput"][];
         };
-        UserWhereUniqueInput: {
-            id: string;
+        InvitationCreateNestedManyWithoutOrganizationsInput: {
+            connect?: components["schemas"]["InvitationWhereUniqueInput"][];
         };
-        UserCreateNestedManyWithoutOrganizationsInput: {
-            connect?: components["schemas"]["UserWhereUniqueInput"][];
+        OrganizationMemberCreateNestedManyWithoutOrganizationsInput: {
+            connect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
         };
         OrganizationCreateInput: {
-            clusters?: components["schemas"]["ClusterCreateNestedManyWithoutOrganizationsInput"];
-            members?: components["schemas"]["UserCreateNestedManyWithoutOrganizationsInput"];
             name: string;
             owner?: components["schemas"]["UserWhereUniqueInput"];
+            clusters?: components["schemas"]["ClusterCreateNestedManyWithoutOrganizationsInput"];
+            gardenerProjectNamespace?: string;
+            invitations?: components["schemas"]["InvitationCreateNestedManyWithoutOrganizationsInput"];
+            organizationMembers?: components["schemas"]["OrganizationMemberCreateNestedManyWithoutOrganizationsInput"];
         };
         ClusterUpdateManyWithoutOrganizationsInput: {
             connect?: components["schemas"]["ClusterWhereUniqueInput"][];
             disconnect?: components["schemas"]["ClusterWhereUniqueInput"][];
             set?: components["schemas"]["ClusterWhereUniqueInput"][];
         };
-        UserUpdateManyWithoutOrganizationsInput: {
-            connect?: components["schemas"]["UserWhereUniqueInput"][];
-            disconnect?: components["schemas"]["UserWhereUniqueInput"][];
-            set?: components["schemas"]["UserWhereUniqueInput"][];
+        InvitationUpdateManyWithoutOrganizationsInput: {
+            connect?: components["schemas"]["InvitationWhereUniqueInput"][];
+            disconnect?: components["schemas"]["InvitationWhereUniqueInput"][];
+            set?: components["schemas"]["InvitationWhereUniqueInput"][];
+        };
+        OrganizationMemberUpdateManyWithoutOrganizationsInput: {
+            connect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+            disconnect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+            set?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
         };
         OrganizationUpdateInput: {
-            clusters?: components["schemas"]["ClusterUpdateManyWithoutOrganizationsInput"];
-            members?: components["schemas"]["UserUpdateManyWithoutOrganizationsInput"];
             name?: string;
             owner?: components["schemas"]["UserWhereUniqueInput"];
+            clusters?: components["schemas"]["ClusterUpdateManyWithoutOrganizationsInput"];
+            gardenerProjectNamespace?: string;
+            invitations?: components["schemas"]["InvitationUpdateManyWithoutOrganizationsInput"];
+            organizationMembers?: components["schemas"]["OrganizationMemberUpdateManyWithoutOrganizationsInput"];
+        };
+        OrganizationMemberCreateNestedManyWithoutInvitationsInput: {
+            connect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+        };
+        InvitationCreateInput: {
+            email: string;
+            /** @enum {string} */
+            status?: "PENDING" | "ACCEPTED" | "REVOKED";
+            expirationDate?: Record<string, never>;
+            organization: components["schemas"]["OrganizationWhereUniqueInput"];
+            inviter: components["schemas"]["UserWhereUniqueInput"];
+            code: string;
+            organizationMembers?: components["schemas"]["OrganizationMemberCreateNestedManyWithoutInvitationsInput"];
+        };
+        OrganizationMemberUpdateManyWithoutInvitationsInput: {
+            connect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+            disconnect?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+            set?: components["schemas"]["OrganizationMemberWhereUniqueInput"][];
+        };
+        InvitationUpdateInput: {
+            email?: string;
+            /** @enum {string} */
+            status?: "PENDING" | "ACCEPTED" | "REVOKED";
+            expirationDate?: Record<string, never>;
+            organization?: components["schemas"]["OrganizationWhereUniqueInput"];
+            inviter?: components["schemas"]["UserWhereUniqueInput"];
+            code?: string;
+            organizationMembers?: components["schemas"]["OrganizationMemberUpdateManyWithoutInvitationsInput"];
+        };
+        OrganizationMemberUpdateStatusInput: {
+            /** @enum {string} */
+            status?: "PendingInvitation" | "Activated" | "Suspended" | "InvitationRevoked";
+        };
+        OrganizationMemberCreateInput: {
+            user?: components["schemas"]["UserWhereUniqueInput"];
+            organization: components["schemas"]["OrganizationWhereUniqueInput"];
+            invitation?: components["schemas"]["InvitationWhereUniqueInput"];
+            roles: Record<string, never>;
+            /** @enum {string} */
+            status: "PendingInvitation" | "Activated" | "Suspended" | "InvitationRevoked";
+        };
+        OrganizationMemberUpdateInput: {
+            user?: components["schemas"]["UserWhereUniqueInput"];
+            organization?: components["schemas"]["OrganizationWhereUniqueInput"];
+            invitation?: components["schemas"]["InvitationWhereUniqueInput"];
+            roles?: Record<string, never>;
+            /** @enum {string} */
+            status?: "PendingInvitation" | "Activated" | "Suspended" | "InvitationRevoked";
         };
     };
     responses: never;
@@ -485,6 +816,99 @@ export interface operations {
             };
         };
     };
+    UserController_findOrganizationMembers: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["OrganizationMemberWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UserController_connectOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UserController_disconnectOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UserController_updateOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     UserController_users: {
         parameters: {
             query?: {
@@ -514,99 +938,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ForbiddenException"];
                 };
-            };
-        };
-    };
-    UserController_findOrganizations: {
-        parameters: {
-            query?: {
-                where?: components["schemas"]["OrganizationWhereInput"];
-                orderBy?: components["schemas"]["Array"];
-                skip?: number;
-                take?: number;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_connectOrganizations: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": string[];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_disconnectOrganizations: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": string[];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_updateOrganizations: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": string[];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -703,6 +1034,99 @@ export interface operations {
             };
         };
     };
+    UserController_findInvitations: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["InvitationWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UserController_connectInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UserController_disconnectInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UserController_updateInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     OrganizationController_organizations: {
         parameters: {
             query?: {
@@ -763,6 +1187,192 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ForbiddenException"];
                 };
+            };
+        };
+    };
+    OrganizationController_findInvitations: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["InvitationWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_connectInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_disconnectInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_findOrganizationMembers: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["OrganizationMemberWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_connectOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_disconnectOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrganizationController_updateOrganizationMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -937,10 +1547,294 @@ export interface operations {
             };
         };
     };
-    OrganizationController_findMembers: {
+    InvitationController_pending: {
         parameters: {
             query?: {
-                where?: components["schemas"]["UserWhereInput"];
+                where?: components["schemas"]["InvitationWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"][];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+        };
+    };
+    InvitationController_invitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    InvitationController_deleteInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    InvitationController_updateInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InvitationUpdateInput"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    InvitationController_resendInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    InvitationController_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    InvitationController_invitations: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["InvitationWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"][];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+        };
+    };
+    InvitationController_createInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InvitationCreateInput"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invitation"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+        };
+    };
+    InvitationController_findOrganizationMembers: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["OrganizationMemberWhereInput"];
                 orderBy?: components["schemas"]["Array"];
                 skip?: number;
                 take?: number;
@@ -961,7 +1855,7 @@ export interface operations {
             };
         };
     };
-    OrganizationController_connectMembers: {
+    InvitationController_connectOrganizationMembers: {
         parameters: {
             query?: never;
             header?: never;
@@ -984,7 +1878,7 @@ export interface operations {
             };
         };
     };
-    OrganizationController_disconnectMembers: {
+    InvitationController_disconnectOrganizationMembers: {
         parameters: {
             query?: never;
             header?: never;
@@ -1007,7 +1901,7 @@ export interface operations {
             };
         };
     };
-    OrganizationController_updateMembers: {
+    InvitationController_updateOrganizationMembers: {
         parameters: {
             query?: never;
             header?: never;
@@ -1074,6 +1968,225 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Cluster"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    OrganizationMemberController_updateOrganizationMemberStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationMemberUpdateStatusInput"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMember"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    OrganizationMemberController_organizationMembers: {
+        parameters: {
+            query?: {
+                where?: components["schemas"]["OrganizationMemberWhereInput"];
+                orderBy?: components["schemas"]["Array"];
+                skip?: number;
+                take?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMember"][];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+        };
+    };
+    OrganizationMemberController_createOrganizationMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationMemberCreateInput"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMember"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+        };
+    };
+    OrganizationMemberController_organizationMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMember"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    OrganizationMemberController_deleteOrganizationMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMember"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForbiddenException"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundException"];
+                };
+            };
+        };
+    };
+    OrganizationMemberController_updateOrganizationMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationMemberUpdateInput"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationMember"];
                 };
             };
             403: {

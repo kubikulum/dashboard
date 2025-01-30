@@ -12,4 +12,5 @@ export class ClusterService extends ClusterServiceBase {
     const name = organization_id.length > 10 ? organization_id.substring(0, 10) : organization_id;
     return `garden-${name}`
   }
+  
 }

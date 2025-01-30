@@ -23,6 +23,9 @@ import { ApiNestedQuery } from "../decorators/api-nested-query.decorator";
 import { AclFilterResponseInterceptor } from "../interceptors/aclFilterResponse.interceptor";
 import { OrganizationMemberFindManyArgs } from "../organizationMember/base/OrganizationMemberFindManyArgs";
 import { UserRoles } from "nest-access-control";
+import { EnumOrganizationMemberStatus } from "@prisma/client";
+
+
 
 
 @swagger.ApiTags("organizations")
@@ -76,6 +79,7 @@ export class OrganizationController extends OrganizationControllerBase {
                 id: req.user.id
               }
             },
+            status: EnumOrganizationMemberStatus.Activated,
             roles: ['ADMIN']
           }
         }
@@ -149,8 +153,12 @@ export class OrganizationController extends OrganizationControllerBase {
     // Create Invatitation for logto auth management
 
     const promises = body.map(async (invitationRequest) => {
+
       const code = nanoid(10)
       const roleId = roles.find(role => role.name === invitationRequest.role)?.id
+      if(invitationRequest.role && !roles.find(role => role.name === invitationRequest.role)){
+        throw new Error('Role not found')
+      }
       if (!invitationRequest.email) {
         throw new Error('Email is required')
       }
@@ -175,7 +183,14 @@ export class OrganizationController extends OrganizationControllerBase {
           email: invitationRequest.email,
           expirationDate: now,
           code: code,
-          status: 'PENDING',
+          organizationMembers:{
+            
+            create:{
+              status: EnumOrganizationMemberStatus.PendingInvitation,
+              roles: ['Admin'],
+              organizationId: params.id,
+            }
+          }
           // role: invitationRequest.role
         }
       });
@@ -213,6 +228,7 @@ export class OrganizationController extends OrganizationControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        status: true,
 
         user: {
           select: {
@@ -230,7 +246,7 @@ export class OrganizationController extends OrganizationControllerBase {
         invitation: {
           select: {
             id: true,
-            status: true,
+            email: true,
           },
         },
 

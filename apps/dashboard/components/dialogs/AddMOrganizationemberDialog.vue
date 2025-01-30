@@ -42,6 +42,14 @@ watch(() => props.isDialogVisible, (val) => {
   }
 })
 
+const memberValidator = (email: string) => {
+
+  const members =  store.members;
+  const validMember = members.some((member) => member.user?.email === email || member.invitation?.email === email)
+
+  return !validMember || 'User is already a member'
+}
+
 const onClickEnterMember = async () => {
   if (!formRef.value ) {
     return
@@ -82,7 +90,8 @@ const onClickSendInvitations = async () => {
         </p> -->
         <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="onClickEnterMember">
           <AppTextField v-model="emailField" label="Add Member" placeholder="user@company.com"
-            append-inner-icon="tabler-arrow-back" @click:append-inner="onClickEnterMember" :rules="[requiredValidator,emailValidator]"
+            append-inner-icon="tabler-arrow-back" @click:append-inner="onClickEnterMember" 
+            :rules="[requiredValidator,emailValidator,memberValidator]"
             single-line />
         </v-form>
 

@@ -8,19 +8,22 @@ import * as errors from "../errors";
 import { firstValueFrom, of } from 'rxjs';
 import { catchError } from "rxjs/operators";
 import { AuthJwtToken } from "src/decorators/auth-token.decorator";
-import { CoreGardenerCloudV1beta1Service } from "src/gardener-client/api/coreGardenerCloudV1beta1.service";
+
 import { ForbiddenException } from "../errors";
 import { AxiosError } from "axios";
 import { Cluster } from "./base/Cluster";
+import { ClusterXK8sIoV1beta1Service } from "../../lib/generated/cluster.x-k8s.io/v1beta1/dist";
+import { ConfigService } from "@nestjs/config";
 
 @swagger.ApiTags("clusters")
 @common.Controller("clusters")
 export class ClusterController extends ClusterControllerBase {
   constructor(
-    protected readonly gardenerClientService: CoreGardenerCloudV1beta1Service,
     protected readonly service: ClusterService,
     @nestAccessControl.InjectRolesBuilder()
-    protected readonly rolesBuilder: nestAccessControl.RolesBuilder
+    protected readonly rolesBuilder: nestAccessControl.RolesBuilder,
+    protected readonly k8sClusterService: ClusterXK8sIoV1beta1Service,
+    protected readonly config: ConfigService
   ) {
     super(service, rolesBuilder);
   }
@@ -36,94 +39,52 @@ export class ClusterController extends ClusterControllerBase {
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  async createCluster(@AuthJwtToken() token: string, @common.Req() req: any) {
-    // the namespace is the organization id
-    const namespace = 'garden-binhk61nl4-b61d9'
-
-    const org = this.gardenerClientService.createCoreGardenerCloudV1beta1NamespacedShoot(namespace, {
-      metadata: { name: "test1" },
-      spec: {
-        cloudProfileName: "local",
-        kubernetes: {
-          version: "1.27.1",
-          kubeAPIServer: {
-            defaultNotReadyTolerationSeconds: 300,
-            defaultUnreachableTolerationSeconds: 300,
-            enableAnonymousAuthentication: false,
-            eventTTL: "1h0m0s",
-            logging: { verbosity: 2 },
-            requests: { maxMutatingInflight: 200, maxNonMutatingInflight: 400 },
-          },
-          kubeControllerManager: { nodeCIDRMaskSize: 24, nodeMonitorGracePeriod: "40s" },
-          kubeProxy: { enabled: true, mode: "IPTables" },
-          kubeScheduler: { profile: "balanced" },
-          kubelet: {
-            failSwapOn: true,
-            imageGCHighThresholdPercent: 50,
-            imageGCLowThresholdPercent: 40,
-            kubeReserved: { cpu: "80m", memory: "1Gi", pid: "20k" },
-            serializeImagePulls: true,
-          },
-          verticalPodAutoscaler: {
-            enabled: true,
-            evictAfterOOMThreshold: "10m0s",
-            evictionRateBurst: 1,
-            evictionRateLimit: -1,
-            evictionTolerance: 0.5,
-            recommendationMarginFraction: 0.15,
-            recommenderInterval: "1m0s",
-            targetCPUPercentile: 0.9,
-            updaterInterval: "1m0s",
-          },
-        },
-        networking: {
-          ipFamilies: ["IPv4"],
-          nodes: "10.250.0.0/16",
-          pods: "10.3.0.0/16",
-          services: "10.4.0.0/16",
-          type: "calico"
-        },
-        provider: {
-          type: "local",
-          workers: [
-            {
-              cri: { name: "containerd" },
-              machine: { architecture: "amd64", image: { name: "local", version: "1.0.0" }, type: "local" },
-              maxSurge: 1,
-              maxUnavailable: 0,
-              maximum: 2,
-              minimum: 1,
-              name: "worker-yuht7",
-              systemComponents: { allow: true },
-            },
-          ],
-          workersSettings: { sshAccess: { enabled: true } },
-        },
-        purpose: "evaluation",
-        region: "local",
-        schedulerName: "default-scheduler",
-        secretBindingName: "my-local-secret",
-        systemComponents: { coreDNS: { autoscaling: { mode: "horizontal" } } },
-        // tolerations: [{ key: "seed.gardener.cloud/protected" }],
+  async createCluster(@common.Req() req: any) {
+    const namespace = this.config.get("MGMT_KUBERNETES_CLUSTER_NAMESPACE");
+    const organizationId = req.user.contextOrganizationId;
+    const clusterName = `${organizationId}-cluster`
+    const clusterCreate = await firstValueFrom(this.k8sClusterService.createClusterXK8sIoV1beta1NamespacedCluster(namespace, {
+      kind: "Cluster",
+      apiVersion: "cluster.x-k8s.io/v1beta1",
+      metadata: {
+        name: clusterName,
+        labels: {
+          organizationId,
+          infra: "hetzner",
+          cni: "cilium"
+        }
       },
-
-    })
-    org.source = of(token);
-
-    const { data } = await firstValueFrom(
-      org.pipe(
-        catchError((error: AxiosError) => {
-          if (error.response?.status === 403) {
-            throw new ForbiddenException(
-              "Insufficient privileges to complete the operation"
-            );
+      spec: {
+        clusterNetwork: {
+          pods: {
+            cidrBlocks: [
+              "10.244.0.0/16"
+            ]
           }
-          throw error
-        }),
-      ),
-    );
+        },
+        topology: {
+          class: "kamaji-hetzner",
+          version: "v1.29.4",
+          controlPlane: {
+            replicas: 2
+          },
+          workers: {
+            machineDeployments: [
+              {
+                class: "default-worker",
+                name: "md-0",
+                replicas: 2,
+                failureDomain: "fsn1"
+              }
+            ]
+          }
+        }
+      }
+    })).catch((err: AxiosError) => {
+      console.log(err);
+    });
 
-    return data
+    return clusterCreate;
   }
 
 

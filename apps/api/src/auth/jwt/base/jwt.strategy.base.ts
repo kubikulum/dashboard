@@ -48,11 +48,15 @@ export class JwtStrategyBase extends PassportStrategy(Strategy) {
       },
     });
     const roles = ['user']
-    if (userPayload.organization_id) {
-      const organizationRole = userPayload.organizationRoles.find((org) => org.organizationId === userPayload.organization_id);
-      if (organizationRole) {
-        roles.push(organizationRole?.roleName);
-      }
+    // TODO: Add role member in amplication and uncomment this code
+    // if (userPayload.organization_id) {
+    //   const organizationRole = userPayload.organizationRoles.find((org) => org.organizationId === userPayload.organization_id);
+    //   if (organizationRole) {
+    //     roles.push(organizationRole?.roleName);
+    //   }
+    // }
+    if(!userPayload.organization_id){
+      throw new Error('User is not part of any organization')
     }
     return user ? { ...user, roles, contextOrganizationId: userPayload.organization_id } : null;
   }

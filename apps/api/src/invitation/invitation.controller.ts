@@ -13,6 +13,7 @@ import { OrganizationInvitationsService } from "src/logto-auth-management";
 import { firstValueFrom } from "rxjs";
 import { OrganizationService } from "src/organization/organization.service";
 import { isRecordNotFoundError } from "src/prisma.util";
+import { EnumOrganizationMemberStatus } from "src/organizationMember/base/EnumOrganizationMemberStatus";
 
 @swagger.ApiTags("invitations")
 @common.Controller("invitations")
@@ -67,7 +68,7 @@ export class InvitationController extends InvitationControllerBase {
     return result
   }
 
-  
+
 
   @common.Delete("/:id")
   @swagger.ApiOkResponse({ type: Invitation })
@@ -76,7 +77,7 @@ export class InvitationController extends InvitationControllerBase {
     resource: "Invitation",
     action: "delete",
     possession: "any",
-  },{
+  }, {
     resource: "Invitation",
     action: "delete",
     possession: "own",
@@ -84,36 +85,33 @@ export class InvitationController extends InvitationControllerBase {
   @swagger.ApiForbiddenResponse({
     type: errors.ForbiddenException,
   })
-  override async deleteInvitation(
+  async revokeInvitation(
+    @common.Req() request: any,
     @common.Param() params: InvitationWhereUniqueInput
   ): Promise<Invitation | null> {
+
+    if (this.rolesBuilder.can(request.user?.roles).updateOwn('Invitation').granted) {
+      const isFromCurrentOrganization = await this.service.isFromOrganization(request.user.contextOrganizationId, params.id)
+      if (!isFromCurrentOrganization) {
+        throw new errors.ForbiddenException(
+          `You don't have permission to read this resource`
+        );
+      }
+    }
+
     try {
-      const resultLogto = await firstValueFrom(this.logtoManagementService.deleteOrganizationInvitation(params.id))
-      return await this.service.deleteInvitation({
-        where: params,
-        select: {
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          email: true,
-          status: true,
-          expirationDate: true,
-
-          organization: {
-            select: {
-              id: true,
-            },
-          },
-
-          inviter: {
-            select: {
-              id: true,
-            },
-          },
-
-          code: true,
-        },
-      });
+      // const resultLogto = await firstValueFrom(this.logtoManagementService.deleteOrganizationInvitation(params.id))
+      return await this.service.updateInvitation({
+        where: { id: params.id }, data: {
+          status: 'REVOKED',
+          organizationMembers: {
+            update: {
+              where: { invitationId: params.id },
+              data: { status: EnumOrganizationMemberStatus.InvitationRevoked },
+            }
+          }
+        }
+      })
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw new errors.NotFoundException(
@@ -123,7 +121,7 @@ export class InvitationController extends InvitationControllerBase {
       throw error;
     }
   }
-  
+
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Post("/:id/resend")
   @swagger.ApiOkResponse({ type: Invitation })
@@ -142,9 +140,9 @@ export class InvitationController extends InvitationControllerBase {
     type: errors.ForbiddenException,
   })
   async resendInvitation(@common.Req() request: any, @common.Param() params: InvitationWhereUniqueInput,): Promise<Invitation> {
-   
+
     if (this.rolesBuilder.can(request.user?.roles).updateOwn('Invitation').granted) {
-      const isFromCurrentOrganization = await this.service.isFromOrganization(request.user.organizationId, params.id)
+      const isFromCurrentOrganization = await this.service.isFromOrganization(request.user.contextOrganizationId, params.id)
       if (!isFromCurrentOrganization) {
         throw new errors.ForbiddenException(
           `You don't have permission to read this resource`
@@ -163,8 +161,15 @@ export class InvitationController extends InvitationControllerBase {
 
     const resultLogto = await firstValueFrom(this.logtoManagementService.createOrganizationInvitationMessage(params.id, { code: invitation.code }))
     const result = await this.service.updateInvitation({
-      where: { code: params.id },
-      data: { status: 'PENDING' },
+      where: { id: params.id },
+      data: {
+        status: 'PENDING', organizationMembers: {
+          update: {
+            where: { invitationId: params.id },
+            data: { status: EnumOrganizationMemberStatus.PendingInvitation },
+          }
+        }
+      },
       select: {
         id: true,
         createdAt: true,
@@ -206,7 +211,7 @@ export class InvitationController extends InvitationControllerBase {
   async accept(@common.Req() request: any, @common.Param() params: InvitationWhereUniqueInput,): Promise<Invitation> {
 
 
-    const invitation = await this.service.invitation({ where: { code: params.id, organizationMembers: { some: { userId: request.user.id } } } })
+    const invitation = await this.service.invitation({ where: { code: params.id ,organizationId: request.user.contextOrganizationId}})
     if (!invitation) {
       throw new errors.NotFoundException('Invitation not found')
     }
@@ -221,10 +226,10 @@ export class InvitationController extends InvitationControllerBase {
       data: {
         status: 'ACCEPTED',
         organizationMembers: {
-          create: {
-            organizationId: invitation.organizationId,
-            userId: request.user.id,
-            roles: ['member']
+          update: {
+            where: { invitationId: invitation.id },
+            data: { userId: request.user.id, status: EnumOrganizationMemberStatus.Activated},
+          
           }
         }
 

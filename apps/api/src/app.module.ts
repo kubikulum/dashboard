@@ -68,4 +68,6 @@ import { OAuthModuleOptions } from "./oauth-client/oauth.service";
   ],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+
+}

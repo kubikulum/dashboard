@@ -9,20 +9,25 @@ export const localeLoaders = {
 }
 
 export const vueI18nConfigs = [
-  
+  () => import("../i18n.config.ts?hash=bffaebcb&config=1" /* webpackChunkName: "__i18n_config_ts_bffaebcb" */)
 ]
 
 export const nuxtI18nOptions = {
+  "restructureDir": "i18n",
   "experimental": {
     "localeDetector": "",
     "switchLocalePathLinkSSR": false,
-    "autoImportTranslationFunctions": false
+    "autoImportTranslationFunctions": false,
+    "typedPages": true,
+    "typedOptionsAndMessages": false,
+    "generatedLocaleFilePathFormat": "absolute"
   },
   "bundle": {
     "compositionOnly": true,
     "runtimeOnly": false,
     "fullInstall": true,
-    "dropMessageCompiler": false
+    "dropMessageCompiler": false,
+    "optimizeTranslationDirective": true
   },
   "compilation": {
     "jit": true,
@@ -33,16 +38,16 @@ export const nuxtI18nOptions = {
     "defaultSFCLang": "json",
     "globalSFCScope": false
   },
-  "vueI18n": "",
+  "vueI18n": "./i18n.config.ts",
   "locales": [],
-  "defaultLocale": "",
+  "defaultLocale": "en",
   "defaultDirection": "ltr",
   "routesNameSeparator": "___",
   "trailingSlash": false,
   "defaultLocaleRouteNameSuffix": "default",
   "strategy": "prefix_except_default",
   "lazy": false,
-  "langDir": null,
+  "langDir": "locales",
   "detectBrowserLanguage": {
     "alwaysRedirect": false,
     "cookieCrossOrigin": false,
@@ -55,13 +60,13 @@ export const nuxtI18nOptions = {
   },
   "differentDomains": false,
   "baseUrl": "",
-  "dynamicRouteParams": false,
   "customRoutes": "page",
   "pages": {},
   "skipSettingLocaleOnNavigate": false,
   "types": "composition",
   "debug": false,
   "parallelPlugin": false,
+  "multiDomainLocales": false,
   "i18nModules": []
 }
 
@@ -71,6 +76,6 @@ export const NUXT_I18N_MODULE_ID = "@nuxtjs/i18n"
 export const parallelPlugin = false
 export const isSSG = false
 
-export const DEFAULT_DYNAMIC_PARAMS_KEY = "nuxtI18n"
+export const DEFAULT_DYNAMIC_PARAMS_KEY = "nuxtI18nInternal"
 export const DEFAULT_COOKIE_KEY = "i18n_redirected"
 export const SWITCH_LOCALE_PATH_LINK_IDENTIFIER = "nuxt-i18n-slp"

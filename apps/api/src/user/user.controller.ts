@@ -103,6 +103,8 @@ export class UserController extends UserControllerBase {
         organization: {
           select: {
             id: true,
+            name: true,
+            ownerId: true,
           },
         },
 
