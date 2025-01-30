@@ -11,27 +11,31 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import {
-  IsString,
-  IsDate,
   IsEnum,
-  ValidateNested,
+  IsDate,
+  IsString,
+  MaxLength,
   IsOptional,
+  ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { EnumClusterClusterType } from "./EnumClusterClusterType";
 import { Organization } from "../../organization/base/Organization";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
 
 @ObjectType()
 class Cluster {
   @ApiProperty({
     required: true,
-    type: String,
+    enum: EnumClusterClusterType,
   })
-  @IsString()
-  @Field(() => String)
-  id!: string;
+  @IsEnum(EnumClusterClusterType)
+  @Field(() => EnumClusterClusterType, {
+    nullable: true,
+  })
+  clusterType?: "Kubeflow" | "Flytes";
 
   @ApiProperty({
     required: true,
@@ -42,22 +46,45 @@ class Cluster {
   createdAt!: Date;
 
   @ApiProperty({
-    required: true,
+    required: false,
+    type: String,
   })
-  @IsDate()
-  @Type(() => Date)
-  @Field(() => Date)
-  updatedAt!: Date;
+  @IsString()
+  @MaxLength(256)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerShootId!: string | null;
 
   @ApiProperty({
     required: true,
-    enum: EnumClusterClusterType,
+    type: String,
   })
-  @IsEnum(EnumClusterClusterType)
-  @Field(() => EnumClusterClusterType, {
-    nullable: true,
+  @IsString()
+  @Field(() => String)
+  id!: string;
+
+  @ApiProperty({
+    required: true,
+    type: String,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
 
   @ApiProperty({
     required: false,
@@ -69,15 +96,32 @@ class Cluster {
   organization?: Organization | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     enum: EnumClusterPlan,
   })
   @IsEnum(EnumClusterPlan)
-  @IsOptional()
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free" | null;
+  plan?: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: true,
+    enum: EnumClusterRegion,
+  })
+  @IsEnum(EnumClusterRegion)
+  @Field(() => EnumClusterRegion, {
+    nullable: true,
+  })
+  region?: "EuropeParis_1" | "UsOhio_1";
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  updatedAt!: Date;
 }
 
 export { Cluster as Cluster };

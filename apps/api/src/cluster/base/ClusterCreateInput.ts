@@ -12,10 +12,17 @@ https://docs.amplication.com/how-to/custom-code
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
-import { IsEnum, ValidateNested, IsOptional } from "class-validator";
+import {
+  IsEnum,
+  IsString,
+  MaxLength,
+  IsOptional,
+  ValidateNested,
+} from "class-validator";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { Type } from "class-transformer";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
 
 @InputType()
 class ClusterCreateInput {
@@ -25,7 +32,40 @@ class ClusterCreateInput {
   })
   @IsEnum(EnumClusterClusterType)
   @Field(() => EnumClusterClusterType)
-  clusterType!: "kubeflow" | "Flytes";
+  clusterType!: "Kubeflow" | "Flytes";
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(256)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  gardenerShootId?: string | null;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
 
   @ApiProperty({
     required: false,
@@ -40,15 +80,20 @@ class ClusterCreateInput {
   organization?: OrganizationWhereUniqueInput | null;
 
   @ApiProperty({
-    required: false,
+    required: true,
     enum: EnumClusterPlan,
   })
   @IsEnum(EnumClusterPlan)
-  @IsOptional()
-  @Field(() => EnumClusterPlan, {
-    nullable: true,
+  @Field(() => EnumClusterPlan)
+  plan!: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: true,
+    enum: EnumClusterRegion,
   })
-  plan?: "Free" | null;
+  @IsEnum(EnumClusterRegion)
+  @Field(() => EnumClusterRegion)
+  region!: "EuropeParis_1" | "UsOhio_1";
 }
 
 export { ClusterCreateInput as ClusterCreateInput };

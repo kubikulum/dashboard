@@ -13,18 +13,31 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
-  MaxLength,
   IsOptional,
+  MaxLength,
   ValidateNested,
 } from "class-validator";
+import { InvitationUpdateManyWithoutUsersInput } from "./InvitationUpdateManyWithoutUsersInput";
+import { Type } from "class-transformer";
+import { OrganizationMemberUpdateManyWithoutUsersInput } from "./OrganizationMemberUpdateManyWithoutUsersInput";
+import { OrganizationUpdateManyWithoutUsersInput } from "./OrganizationUpdateManyWithoutUsersInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
-import { OrganizationUpdateManyWithoutUsersInput } from "./OrganizationUpdateManyWithoutUsersInput";
-import { Type } from "class-transformer";
 
 @InputType()
 class UserUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  email?: string | null;
+
   @ApiProperty({
     required: false,
     type: String,
@@ -39,36 +52,15 @@ class UserUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: () => InvitationUpdateManyWithoutUsersInput,
   })
-  @IsString()
+  @ValidateNested()
+  @Type(() => InvitationUpdateManyWithoutUsersInput)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => InvitationUpdateManyWithoutUsersInput, {
     nullable: true,
   })
-  email?: string | null;
-
-  @ApiProperty({
-    required: false,
-  })
-  @IsJSONValue()
-  @IsOptional()
-  @Field(() => GraphQLJSON, {
-    nullable: true,
-  })
-  roles?: InputJsonValue;
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  organization?: string | null;
+  invitations?: InvitationUpdateManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,
@@ -84,15 +76,27 @@ class UserUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationUpdateManyWithoutUsersInput,
+    type: String,
   })
-  @ValidateNested()
-  @Type(() => OrganizationUpdateManyWithoutUsersInput)
+  @IsString()
+  @MaxLength(1000)
   @IsOptional()
-  @Field(() => OrganizationUpdateManyWithoutUsersInput, {
+  @Field(() => String, {
     nullable: true,
   })
-  organizations?: OrganizationUpdateManyWithoutUsersInput;
+  organization?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberUpdateManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,
@@ -115,7 +119,17 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  username?: string;
+  password?: string | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsJSONValue()
+  @IsOptional()
+  @Field(() => GraphQLJSON, {
+    nullable: true,
+  })
+  roles?: InputJsonValue;
 
   @ApiProperty({
     required: false,
@@ -126,7 +140,7 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  password?: string | null;
+  username?: string;
 }
 
 export { UserUpdateInput as UserUpdateInput };

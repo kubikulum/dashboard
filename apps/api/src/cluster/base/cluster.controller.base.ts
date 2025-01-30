@@ -49,10 +49,12 @@ export class ClusterControllerBase {
     const result = await this.service.cluster({
       where: params,
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
         clusterType: true,
+        createdAt: true,
+        description: true,
+        gardenerShootId: true,
+        id: true,
+        name: true,
 
         organization: {
           select: {
@@ -61,6 +63,8 @@ export class ClusterControllerBase {
         },
 
         plan: true,
+        region: true,
+        updatedAt: true,
       },
     });
     if (result === null) {

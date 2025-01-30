@@ -28,7 +28,7 @@ class ClusterOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  id?: SortOrder;
+  clusterType?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -50,7 +50,7 @@ class ClusterOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  updatedAt?: SortOrder;
+  description?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -61,7 +61,29 @@ class ClusterOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  clusterType?: SortOrder;
+  gardenerShootId?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
+  id?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
+  name?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -84,6 +106,28 @@ class ClusterOrderByInput {
     nullable: true,
   })
   plan?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
+  region?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
+  updatedAt?: SortOrder;
 }
 
 export { ClusterOrderByInput as ClusterOrderByInput };

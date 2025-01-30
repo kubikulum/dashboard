@@ -26,12 +26,15 @@ import { Organization } from "./Organization";
 import { OrganizationFindManyArgs } from "./OrganizationFindManyArgs";
 import { OrganizationWhereUniqueInput } from "./OrganizationWhereUniqueInput";
 import { OrganizationUpdateInput } from "./OrganizationUpdateInput";
-import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
-import { User } from "../../user/base/User";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ClusterFindManyArgs } from "../../cluster/base/ClusterFindManyArgs";
 import { Cluster } from "../../cluster/base/Cluster";
 import { ClusterWhereUniqueInput } from "../../cluster/base/ClusterWhereUniqueInput";
+import { InvitationFindManyArgs } from "../../invitation/base/InvitationFindManyArgs";
+import { Invitation } from "../../invitation/base/Invitation";
+import { InvitationWhereUniqueInput } from "../../invitation/base/InvitationWhereUniqueInput";
+import { OrganizationMemberFindManyArgs } from "../../organizationMember/base/OrganizationMemberFindManyArgs";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
+import { OrganizationMemberWhereUniqueInput } from "../../organizationMember/base/OrganizationMemberWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -65,9 +68,9 @@ export class OrganizationControllerBase {
           : undefined,
       },
       select: {
-        id: true,
         createdAt: true,
-        updatedAt: true,
+        gardenerProjectNamespace: true,
+        id: true,
         name: true,
 
         owner: {
@@ -76,7 +79,7 @@ export class OrganizationControllerBase {
           },
         },
 
-        gardenerProjectNamespace: true,
+        updatedAt: true,
       },
     });
   }
@@ -98,9 +101,9 @@ export class OrganizationControllerBase {
     return this.service.organizations({
       ...args,
       select: {
-        id: true,
         createdAt: true,
-        updatedAt: true,
+        gardenerProjectNamespace: true,
+        id: true,
         name: true,
 
         owner: {
@@ -109,7 +112,7 @@ export class OrganizationControllerBase {
           },
         },
 
-        gardenerProjectNamespace: true,
+        updatedAt: true,
       },
     });
   }
@@ -132,9 +135,9 @@ export class OrganizationControllerBase {
     const result = await this.service.organization({
       where: params,
       select: {
-        id: true,
         createdAt: true,
-        updatedAt: true,
+        gardenerProjectNamespace: true,
+        id: true,
         name: true,
 
         owner: {
@@ -143,7 +146,7 @@ export class OrganizationControllerBase {
           },
         },
 
-        gardenerProjectNamespace: true,
+        updatedAt: true,
       },
     });
     if (result === null) {
@@ -183,9 +186,9 @@ export class OrganizationControllerBase {
             : undefined,
         },
         select: {
-          id: true,
           createdAt: true,
-          updatedAt: true,
+          gardenerProjectNamespace: true,
+          id: true,
           name: true,
 
           owner: {
@@ -194,7 +197,7 @@ export class OrganizationControllerBase {
             },
           },
 
-          gardenerProjectNamespace: true,
+          updatedAt: true,
         },
       });
     } catch (error) {
@@ -205,107 +208,6 @@ export class OrganizationControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/members")
-  @ApiNestedQuery(UserFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "read",
-    possession: "any",
-  })
-  async findMembers(
-    @common.Req() request: Request,
-    @common.Param() params: OrganizationWhereUniqueInput
-  ): Promise<User[]> {
-    const query = plainToClass(UserFindManyArgs, request.query);
-    const results = await this.service.findMembers(params.id, {
-      ...query,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstName: true,
-        email: true,
-        roles: true,
-        organization: true,
-        lastName: true,
-        username: true,
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
-  @common.Post("/:id/members")
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
-    possession: "any",
-  })
-  async connectMembers(
-    @common.Param() params: OrganizationWhereUniqueInput,
-    @common.Body() body: UserWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      members: {
-        connect: body,
-      },
-    };
-    await this.service.updateOrganization({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Patch("/:id/members")
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
-    possession: "any",
-  })
-  async updateMembers(
-    @common.Param() params: OrganizationWhereUniqueInput,
-    @common.Body() body: UserWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      members: {
-        set: body,
-      },
-    };
-    await this.service.updateOrganization({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Delete("/:id/members")
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectMembers(
-    @common.Param() params: OrganizationWhereUniqueInput,
-    @common.Body() body: UserWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      members: {
-        disconnect: body,
-      },
-    };
-    await this.service.updateOrganization({
-      where: params,
-      data,
-      select: { id: true },
-    });
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
@@ -324,10 +226,12 @@ export class OrganizationControllerBase {
     const results = await this.service.findClusters(params.id, {
       ...query,
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
         clusterType: true,
+        createdAt: true,
+        description: true,
+        gardenerShootId: true,
+        id: true,
+        name: true,
 
         organization: {
           select: {
@@ -336,6 +240,8 @@ export class OrganizationControllerBase {
         },
 
         plan: true,
+        region: true,
+        updatedAt: true,
       },
     });
     if (results === null) {
@@ -402,6 +308,234 @@ export class OrganizationControllerBase {
   ): Promise<void> {
     const data = {
       clusters: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/invitations")
+  @ApiNestedQuery(InvitationFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Invitation",
+    action: "read",
+    possession: "any",
+  })
+  async findInvitations(
+    @common.Req() request: Request,
+    @common.Param() params: OrganizationWhereUniqueInput
+  ): Promise<Invitation[]> {
+    const query = plainToClass(InvitationFindManyArgs, request.query);
+    const results = await this.service.findInvitations(params.id, {
+      ...query,
+      select: {
+        code: true,
+        createdAt: true,
+        email: true,
+        expirationDate: true,
+        id: true,
+
+        inviter: {
+          select: {
+            id: true,
+          },
+        },
+
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+
+        status: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/invitations")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async connectInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invitations: {
+        connect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/invitations")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async updateInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invitations: {
+        set: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/invitations")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectInvitations(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: InvitationWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invitations: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/organizationMembers")
+  @ApiNestedQuery(OrganizationMemberFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "OrganizationMember",
+    action: "read",
+    possession: "any",
+  })
+  async findOrganizationMembers(
+    @common.Req() request: Request,
+    @common.Param() params: OrganizationWhereUniqueInput
+  ): Promise<OrganizationMember[]> {
+    const query = plainToClass(OrganizationMemberFindManyArgs, request.query);
+    const results = await this.service.findOrganizationMembers(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        id: true,
+
+        invitation: {
+          select: {
+            id: true,
+          },
+        },
+
+        organization: {
+          select: {
+            id: true,
+          },
+        },
+
+        roles: true,
+        status: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/organizationMembers")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async connectOrganizationMembers(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: OrganizationMemberWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      organizationMembers: {
+        connect: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/organizationMembers")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async updateOrganizationMembers(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: OrganizationMemberWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      organizationMembers: {
+        set: body,
+      },
+    };
+    await this.service.updateOrganization({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/organizationMembers")
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectOrganizationMembers(
+    @common.Param() params: OrganizationWhereUniqueInput,
+    @common.Body() body: OrganizationMemberWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      organizationMembers: {
         disconnect: body,
       },
     };

@@ -11,52 +11,20 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
 import {
-  IsString,
-  MaxLength,
   ValidateNested,
   IsOptional,
+  IsString,
+  MaxLength,
 } from "class-validator";
-import { UserCreateNestedManyWithoutOrganizationsInput } from "./UserCreateNestedManyWithoutOrganizationsInput";
 import { Type } from "class-transformer";
+import { InvitationCreateNestedManyWithoutOrganizationsInput } from "./InvitationCreateNestedManyWithoutOrganizationsInput";
+import { OrganizationMemberCreateNestedManyWithoutOrganizationsInput } from "./OrganizationMemberCreateNestedManyWithoutOrganizationsInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
-import { ClusterCreateNestedManyWithoutOrganizationsInput } from "./ClusterCreateNestedManyWithoutOrganizationsInput";
 
 @InputType()
 class OrganizationCreateInput {
-  @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @Field(() => String)
-  name!: string;
-
-  @ApiProperty({
-    required: false,
-    type: () => UserCreateNestedManyWithoutOrganizationsInput,
-  })
-  @ValidateNested()
-  @Type(() => UserCreateNestedManyWithoutOrganizationsInput)
-  @IsOptional()
-  @Field(() => UserCreateNestedManyWithoutOrganizationsInput, {
-    nullable: true,
-  })
-  members?: UserCreateNestedManyWithoutOrganizationsInput;
-
-  @ApiProperty({
-    required: false,
-    type: () => UserWhereUniqueInput,
-  })
-  @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
-  @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
-    nullable: true,
-  })
-  owner?: UserWhereUniqueInput | null;
-
   @ApiProperty({
     required: false,
     type: () => ClusterCreateNestedManyWithoutOrganizationsInput,
@@ -80,6 +48,51 @@ class OrganizationCreateInput {
     nullable: true,
   })
   gardenerProjectNamespace?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => InvitationCreateNestedManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => InvitationCreateNestedManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => InvitationCreateNestedManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  invitations?: InvitationCreateNestedManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrganizationMemberCreateNestedManyWithoutOrganizationsInput,
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMemberCreateNestedManyWithoutOrganizationsInput)
+  @IsOptional()
+  @Field(() => OrganizationMemberCreateNestedManyWithoutOrganizationsInput, {
+    nullable: true,
+  })
+  organizationMembers?: OrganizationMemberCreateNestedManyWithoutOrganizationsInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => UserWhereUniqueInput)
+  @IsOptional()
+  @Field(() => UserWhereUniqueInput, {
+    nullable: true,
+  })
+  owner?: UserWhereUniqueInput | null;
 }
 
 export { OrganizationCreateInput as OrganizationCreateInput };

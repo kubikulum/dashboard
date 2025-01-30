@@ -11,15 +11,50 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
-import { Type } from "class-transformer";
-import { IsOptional, IsEnum, ValidateNested } from "class-validator";
 import { EnumClusterClusterType } from "./EnumClusterClusterType";
+import { IsEnum, IsOptional, ValidateNested } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { Type } from "class-transformer";
+import { StringFilter } from "../../util/StringFilter";
 import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { EnumClusterPlan } from "./EnumClusterPlan";
+import { EnumClusterRegion } from "./EnumClusterRegion";
 
 @InputType()
 class ClusterWhereInput {
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterClusterType,
+  })
+  @IsEnum(EnumClusterClusterType)
+  @IsOptional()
+  @Field(() => EnumClusterClusterType, {
+    nullable: true,
+  })
+  clusterType?: "Kubeflow" | "Flytes";
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  description?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  gardenerShootId?: StringNullableFilter;
+
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -33,14 +68,14 @@ class ClusterWhereInput {
 
   @ApiProperty({
     required: false,
-    enum: EnumClusterClusterType,
+    type: StringFilter,
   })
-  @IsEnum(EnumClusterClusterType)
+  @Type(() => StringFilter)
   @IsOptional()
-  @Field(() => EnumClusterClusterType, {
+  @Field(() => StringFilter, {
     nullable: true,
   })
-  clusterType?: "kubeflow" | "Flytes";
+  name?: StringFilter;
 
   @ApiProperty({
     required: false,
@@ -63,7 +98,18 @@ class ClusterWhereInput {
   @Field(() => EnumClusterPlan, {
     nullable: true,
   })
-  plan?: "Free";
+  plan?: "Free" | "Reserved_1" | "Reserved_2" | "Entreprise";
+
+  @ApiProperty({
+    required: false,
+    enum: EnumClusterRegion,
+  })
+  @IsEnum(EnumClusterRegion)
+  @IsOptional()
+  @Field(() => EnumClusterRegion, {
+    nullable: true,
+  })
+  region?: "EuropeParis_1" | "UsOhio_1";
 }
 
 export { ClusterWhereInput as ClusterWhereInput };

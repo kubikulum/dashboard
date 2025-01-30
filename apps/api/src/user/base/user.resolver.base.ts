@@ -25,6 +25,10 @@ import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
+import { InvitationFindManyArgs } from "../../invitation/base/InvitationFindManyArgs";
+import { Invitation } from "../../invitation/base/Invitation";
+import { OrganizationMemberFindManyArgs } from "../../organizationMember/base/OrganizationMemberFindManyArgs";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 import { OrganizationFindManyArgs } from "../../organization/base/OrganizationFindManyArgs";
 import { Organization } from "../../organization/base/Organization";
 import { UserService } from "../user.service";
@@ -120,17 +124,39 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [Organization], { name: "organizations" })
+  @graphql.ResolveField(() => [Invitation], { name: "invitations" })
   @nestAccessControl.UseRoles({
-    resource: "Organization",
+    resource: "Invitation",
     action: "read",
     possession: "any",
   })
-  async findOrganizations(
+  async findInvitations(
     @graphql.Parent() parent: User,
-    @graphql.Args() args: OrganizationFindManyArgs
-  ): Promise<Organization[]> {
-    const results = await this.service.findOrganizations(parent.id, args);
+    @graphql.Args() args: InvitationFindManyArgs
+  ): Promise<Invitation[]> {
+    const results = await this.service.findInvitations(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [OrganizationMember], {
+    name: "organizationMembers",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "OrganizationMember",
+    action: "read",
+    possession: "any",
+  })
+  async findOrganizationMembers(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: OrganizationMemberFindManyArgs
+  ): Promise<OrganizationMember[]> {
+    const results = await this.service.findOrganizationMembers(parent.id, args);
 
     if (!results) {
       return [];

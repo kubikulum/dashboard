@@ -10,9 +10,12 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
+
 import {
   Prisma,
   User as PrismaUser,
+  Invitation as PrismaInvitation,
+  OrganizationMember as PrismaOrganizationMember,
   Organization as PrismaOrganization,
 } from "@prisma/client";
 
@@ -39,15 +42,26 @@ export class UserServiceBase {
     return this.prisma.user.delete(args);
   }
 
-  async findOrganizations(
+  async findInvitations(
     parentId: string,
-    args: Prisma.OrganizationFindManyArgs
-  ): Promise<PrismaOrganization[]> {
+    args: Prisma.InvitationFindManyArgs
+  ): Promise<PrismaInvitation[]> {
     return this.prisma.user
       .findUniqueOrThrow({
         where: { id: parentId },
       })
-      .organizations(args);
+      .invitations(args);
+  }
+
+  async findOrganizationMembers(
+    parentId: string,
+    args: Prisma.OrganizationMemberFindManyArgs
+  ): Promise<PrismaOrganizationMember[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .organizationMembers(args);
   }
 
   async findOwnerOrganizations(

@@ -11,70 +11,21 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { Cluster } from "../../cluster/base/Cluster";
 import {
-  IsString,
-  IsDate,
-  MaxLength,
   ValidateNested,
   IsOptional,
+  IsDate,
+  IsString,
+  MaxLength,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { Invitation } from "../../invitation/base/Invitation";
+import { OrganizationMember } from "../../organizationMember/base/OrganizationMember";
 import { User } from "../../user/base/User";
-import { Cluster } from "../../cluster/base/Cluster";
 
 @ObjectType()
 class Organization {
-  @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @Field(() => String)
-  id!: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsDate()
-  @Type(() => Date)
-  @Field(() => Date)
-  createdAt!: Date;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsDate()
-  @Type(() => Date)
-  @Field(() => Date)
-  updatedAt!: Date;
-
-  @ApiProperty({
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @MaxLength(1000)
-  @Field(() => String)
-  name!: string;
-
-  @ApiProperty({
-    required: false,
-    type: () => [User],
-  })
-  @ValidateNested()
-  @Type(() => User)
-  @IsOptional()
-  members?: Array<User>;
-
-  @ApiProperty({
-    required: false,
-    type: () => User,
-  })
-  @ValidateNested()
-  @Type(() => User)
-  @IsOptional()
-  owner?: User | null;
-
   @ApiProperty({
     required: false,
     type: () => [Cluster],
@@ -83,6 +34,14 @@ class Organization {
   @Type(() => Cluster)
   @IsOptional()
   clusters?: Array<Cluster>;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  createdAt!: Date;
 
   @ApiProperty({
     required: false,
@@ -95,6 +54,58 @@ class Organization {
     nullable: true,
   })
   gardenerProjectNamespace!: string | null;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @Field(() => String)
+  id!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Invitation],
+  })
+  @ValidateNested()
+  @Type(() => Invitation)
+  @IsOptional()
+  invitations?: Array<Invitation>;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @Field(() => String)
+  name!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => [OrganizationMember],
+  })
+  @ValidateNested()
+  @Type(() => OrganizationMember)
+  @IsOptional()
+  organizationMembers?: Array<OrganizationMember>;
+
+  @ApiProperty({
+    required: false,
+    type: () => User,
+  })
+  @ValidateNested()
+  @Type(() => User)
+  @IsOptional()
+  owner?: User | null;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  updatedAt!: Date;
 }
 
 export { Organization as Organization };

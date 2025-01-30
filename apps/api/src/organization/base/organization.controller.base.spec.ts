@@ -18,34 +18,34 @@ import { OrganizationService } from "../organization.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
-  id: "exampleId",
   createdAt: new Date(),
-  updatedAt: new Date(),
-  name: "exampleName",
   gardenerProjectNamespace: "exampleGardenerProjectNamespace",
+  id: "exampleId",
+  name: "exampleName",
+  updatedAt: new Date(),
 };
 const CREATE_RESULT = {
-  id: "exampleId",
   createdAt: new Date(),
-  updatedAt: new Date(),
-  name: "exampleName",
   gardenerProjectNamespace: "exampleGardenerProjectNamespace",
+  id: "exampleId",
+  name: "exampleName",
+  updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
-    id: "exampleId",
     createdAt: new Date(),
-    updatedAt: new Date(),
-    name: "exampleName",
     gardenerProjectNamespace: "exampleGardenerProjectNamespace",
+    id: "exampleId",
+    name: "exampleName",
+    updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
-  id: "exampleId",
   createdAt: new Date(),
-  updatedAt: new Date(),
-  name: "exampleName",
   gardenerProjectNamespace: "exampleGardenerProjectNamespace",
+  id: "exampleId",
+  name: "exampleName",
+  updatedAt: new Date(),
 };
 
 const service = {

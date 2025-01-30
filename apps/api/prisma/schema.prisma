@@ -8,47 +8,103 @@ generator client {
 }
 
 model User {
-  id                 String         @id @default(cuid())
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  firstName          String?
-  email              String?        @unique
-  roles              Json
-  organization       String?
-  lastName           String?
-  organizations      Organization[] @relation(name: "members")
-  ownerOrganizations Organization[] @relation(name: "owner")
-  username           String         @unique
-  password           String?
+  createdAt           DateTime             @default(now())
+  email               String?              @unique
+  firstName           String?
+  id                  String               @id @default(cuid())
+  invitations         Invitation[]
+  lastName            String?
+  organization        String?
+  organizationMembers OrganizationMember[]
+  ownerOrganizations  Organization[]
+  password            String?
+  roles               Json
+  updatedAt           DateTime             @updatedAt
+  username            String               @unique
 }
 
 model Organization {
-  id                       String    @id @default(cuid())
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
-  name                     String
-  members                  User[]    @relation(name: "members")
-  owner                    User?     @relation(name: "owner", fields: [ownerId], references: [id])
-  ownerId                  String?
   clusters                 Cluster[]
-  gardenerProjectNamespace String?   @unique
+  createdAt                DateTime             @default(now())
+  gardenerProjectNamespace String?              @unique
+  id                       String               @id @default(cuid())
+  invitations              Invitation[]
+  name                     String
+  organizationMembers      OrganizationMember[]
+  owner                    User?                @relation(fields: [ownerId], references: [id])
+  ownerId                  String?
+  updatedAt                DateTime             @updatedAt
 }
 
 model Cluster {
-  id             String                 @id @default(cuid())
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
-  clusterType    EnumClusterClusterType
-  organization   Organization?          @relation(fields: [organizationId], references: [id])
-  organizationId String?
-  plan           EnumClusterPlan?
+  clusterType     EnumClusterClusterType
+  createdAt       DateTime               @default(now())
+  description     String?
+  gardenerShootId String?                @unique
+  id              String                 @id @default(cuid())
+  name            String
+  organization    Organization?          @relation(fields: [organizationId], references: [id])
+  organizationId  String?
+  plan            EnumClusterPlan
+  region          EnumClusterRegion
+  updatedAt       DateTime               @updatedAt
+}
+
+model Invitation {
+  code                String                @unique
+  createdAt           DateTime              @default(now())
+  email               String
+  expirationDate      DateTime?
+  id                  String                @id @default(cuid())
+  inviter             User                  @relation(fields: [inviterId], references: [id])
+  inviterId           String
+  organization        Organization          @relation(fields: [organizationId], references: [id])
+  organizationId      String
+  organizationMembers OrganizationMember[]
+  status              EnumInvitationStatus?
+  updatedAt           DateTime              @updatedAt
+}
+
+model OrganizationMember {
+  createdAt      DateTime                     @default(now())
+  id             String                       @id @default(cuid())
+  invitation     Invitation?                  @relation(fields: [invitationId], references: [id])
+  invitationId   String?                      @unique
+  organization   Organization                 @relation(fields: [organizationId], references: [id])
+  organizationId String
+  roles          Json
+  status         EnumOrganizationMemberStatus
+  updatedAt      DateTime                     @updatedAt
+  user           User?                        @relation(fields: [userId], references: [id])
+  userId         String?
 }
 
 enum EnumClusterClusterType {
-  kubeflow
+  Kubeflow
   Flytes
 }
 
 enum EnumClusterPlan {
   Free
+  Reserved_1
+  Reserved_2
+  Entreprise
+}
+
+enum EnumClusterRegion {
+  EuropeParis_1
+  UsOhio_1
+}
+
+enum EnumInvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
+enum EnumOrganizationMemberStatus {
+  PendingInvitation
+  Activated
+  Suspended
+  InvitationRevoked
 }
