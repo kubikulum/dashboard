@@ -18,12 +18,12 @@ export class JwtStrategy extends JwtStrategyBase implements IAuthStrategy {
   async validate(userPayload: Auth0User): Promise<UserInfo> {
     let user;
     const validatedUser = await this.validateBase(userPayload);
-    
+
     // If the entity is valid, return it
-    
+
     if (validatedUser) {
       user = validatedUser;
-    }else{
+    } else {
 
       // Otherwise, make a new entity and return it
       const userFields = userPayload;
